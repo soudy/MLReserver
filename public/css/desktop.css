@@ -1,0 +1,74 @@
+/*
+ * desktop.css
+ * Copyright (C) 2015 soud
+ *
+ * Distributed under terms of the MIT license.
+ */
+
+html,
+body      {padding:0;margin:0;vertical-align:baseline;line-height:1;}
+
+*,
+*:before,
+*:after   {-webkit-box-sizing: border-box;
+              -moz-box-sizing: border-box;
+                   box-sizing: border-box;
+                   border:none;outline:none;}
+
+/*
+ * button                   {background:#3675BB;color:#FFF;font-size:15px;text-transform:uppercase;
+ *                           width:100%;padding:15px;font-family:"Ubuntu", "Helvetica", sans-serif;
+ *                           font-weight:700;}
+ * button:hover             {background:#2C629E}
+ * input                    {display:block;width:100%;border:1px solid #A8A8A8;margin:10px 0;
+ *                           padding:15px;font-size:15px;}
+ * input:hover, input:focus {background:#f9f9f9;}
+ */
+
+.container {width:900px;margin:0 auto;}
+.clear     {clear:both;}
+
+a       {color:#666666;}
+a:hover {color:#444444;}
+
+
+#log-in                      {width:300px;margin:10px auto;padding:20px;font-size:15px;}
+#log-in p, h1                {text-align:center;}
+#log-in input                {width:100%;margin:7px 0;font-size:15px;height:45px;}
+#log-in input[type="submit"] {margin:7px 0;width:100%;font-size:15px;}
+
+#error    {width:500px;margin:20px auto 50px auto;text-align:center;font-size:16px;}
+#error h1 {margin:30px 0 30px 0;}
+#error a  {cursor:pointer;}
+
+header               {overflow:hidden;padding:5px 0;margin:0 0 25px 0;}
+header #menu         {text-align:right;}
+header #menu a       {color:#3675BB}
+header #menu a:hover {color:#2C629E}
+header #menu ul      {list-style-type:none;}
+header #menu ul li   {float:right;padding:0 10px;}
+
+#content       {padding:15px;}
+#content h1    {text-align:left;padding:0;margin:10px 0;}
+#content input {margin:10px 0;border:1px solid #a8a8a8;padding:10px;}
+
+#content #search {width:100%;float:right;margin:0 0 10px 0;}
+#content #search input[type="text"] {float:right;width:200px;}
+
+#content .row h3                         {padding:0;margin:10px 0;}
+#content .thumbnail                      {padding:10px;overflow:hidden;}
+#content .thumbnail .alert               {padding:7px;margin:7px 0;}
+#content .btn-default                    {padding:6px;}
+#content .thumbnail input                {float:right;margin:0 10px 0 0;}
+#content .thumbnail input[type="number"] {width:30%;}
+
+#content #create {width:40%;}
+#content #create input {padding:7px;}
+
+#content #settings input {width:auto;}
+#content #edit input     {display:block;}
+#content #edit textarea  {display:block;border:1px solid #a8a8a8;padding:7px;}
+
+.dropdown:hover .dropdown-menu {display:inline !important}
+
+footer {text-align:center;font-size:15px;margin:10px 0;}

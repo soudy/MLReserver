@@ -1,0 +1,3 @@
+# redirect all traffic to public folder
+RewriteEngine on
+RewriteRule ^(.*) public/$1 [L]
