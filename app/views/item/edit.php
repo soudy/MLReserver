@@ -9,7 +9,7 @@
             <input type="text" name="image" placeholder="Image" value="<?= $this->item->image ?>" />
             <label for="count">Count</label>
             <input type="number" name="count" placeholder="Count" value="<?= $this->item->count ?>" />
-            <input type="submit" name="edit_item" value="Edit item" />
+            <input type="submit" name="edit_item" class="btn btn-primary" value="Submit" />
         </form>
     </div>
 </div>

@@ -42,6 +42,18 @@ class ItemController extends MainController
 
         $this->title = 'Reserver - Edit item';
         $this->view('item', 'edit');
+
+        // TODO: image uploading
+        if (isset($_POST['edit_item'])) {
+            $name        = $_POST['name'];
+            $description = $_POST['description'];
+            $image       = $_POST['image'];
+            $count       = $_POST['count'];
+
+            if ($this->model->edit_item($id, $name, $description, $image, $count))
+                header('Location: ' . URL . 'item/all');
+
+        }
     }
 
     public function detail($id)

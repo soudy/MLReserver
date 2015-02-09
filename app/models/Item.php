@@ -65,6 +65,25 @@ class Item extends Model
         return $query->execute($params);
     }
 
+    public function edit_item($id, $name = null, $description = null, 
+                              $image = null, $count = null)
+    {
+        $sql = 'UPDATE items SET name=:name, description=:description, 
+                                 image=:image, count=:count
+                             WHERE id=:id';
+
+        $query = $this->db->prepare($sql);
+        $params = array(
+            ':name'        => $name,
+            ':description' => $description,
+            ':image'       => $image,
+            ':count'       => $count,
+            ':id'          => $id
+        );
+
+        return $query->execute($params);
+    }
+
     public function remove_item($id)
     {
         $sql   = 'DELETE FROM items WHERE id=:id';
