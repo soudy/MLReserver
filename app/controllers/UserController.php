@@ -1,6 +1,7 @@
 <?php
 /*
- * MLReserver is a reservation system useful for sharing items in an honest way.
+ * MLReserver is a reservation system primarily made for making sharing items
+ * easy and clear between a large group of people.
  * Copyright (C) 2015 soud
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -158,7 +159,7 @@ class UserController extends MainController
             $access_group = $_POST['access_group'];
 
             if ($this->model->edit_user($uid, $username, $email, $full_name, $access_group))
-                header('Location: ' . URL . 'user/all');
+                echo 'User successfully changed';
 
         }
     }

@@ -18,7 +18,6 @@
                     </h3>
                     <p><?= $item->description; ?></p>
 
-                    <form action="" method="post">
                     <input type="hidden" name="item_id" value="<?= $item->id ?>" />
                     <?php if ($item->available_count > 0): ?>
                         <?php if ($item->available_count < floor($item->count / 4)): ?>
@@ -31,19 +30,17 @@
                         </p>
                         <?php endif; ?>
                         <?php if ($this->permissions->can_reserve): ?>
-                            <input type="datetime" name="date_from" placeholder="From" />
-                            <input type="datetime" name="date_to" placeholder="To" />
-                            <input type="submit" class="btn btn-success" name="reserve_item" value="Reserve" />
-                            <input type="number" name="count" value="1" />
+                            <a id="goto" href="<?= URL . 'reserve/reserve/' . $item->id?>">
+                                Reserve item &raquo;
+                            </a>
                         <?php elseif ($this->permissions->can_request): ?>
-                            <input type="submit" class="btn btn-primary" name="request_item" value="Request" />
-                            <input type="number" name="count" value="1" />
+                            <a id="goto" href="<?= URL . 'reserve/request/' . $item->id?>">
+                                Request item &raquo;
+                            </a>
                         <?php endif; ?>
                     <?php else: ?>
                         <p class="alert alert-danger">None available.</p>
                     <?php endif; ?>
-                    </form>
-
                 </div>
             </div>
         <?php endforeach; ?>

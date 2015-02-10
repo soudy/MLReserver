@@ -1,6 +1,7 @@
 <?php
 /*
- * MLReserver is a reservation system useful for sharing items in an honest way.
+ * MLReserver is a reservation system primarily made for making sharing items
+ * easy and clear between a large group of people.
  * Copyright (C) 2015 soud
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -35,7 +36,7 @@ class ReserveController extends MainController
 
     public function index()
     {
-        if ($this->permissions->can_allow_requests) {
+        if ($this->permissions->can_see_reservations) {
             $this->all();
             return true;
         } else {
@@ -46,7 +47,7 @@ class ReserveController extends MainController
 
     public function all()
     {
-        if (!$this->permissions->can_allow_requests) {
+        if (!$this->permissions->can_see_reservations) {
             $this->index();
             return false;
         }
@@ -55,13 +56,32 @@ class ReserveController extends MainController
         $this->view('reserve', 'all');
     }
 
-    public function reserve($id, $count)
+    public function reserve($id)
     {
+        $this->item = $this->model->get_item($id);
+
         $this->title = 'Reserver - Reserve item';
         $this->view('reserve', 'reserve');
     }
 
-    public function request($id, $count)
+    public function requests()
     {
+        if (!$this->permissions->can_allow_requests) {
+            $this->index();
+            return false;
+        }
+
+        $this->title = 'Reserver - Requests';
+        $this->view('reserve', 'requests');
+    }
+
+    public function detail($id)
+    {
+        if (!($id || $this->permissions->can_allow_requests)) {
+            $this->index();
+            return false;
+        }
+
+        $this->title = 'Reserver - Show reservation';
     }
 }

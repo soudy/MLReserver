@@ -1,6 +1,7 @@
 <?php
 /*
- * MLReserver is a reservation system useful for sharing items in an honest way.
+ * MLReserver is a reservation system primarily made for making sharing items
+ * easy and clear between a large group of people.
  * Copyright (C) 2015 soud
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -24,13 +25,54 @@
 
 class Reserve extends Model
 {
+    // TODO: http://php.net/manual/en/function.strptime.php
+    private $school_hours = array(
+        '0' => array('8:30',  '17:30'),
+        '1' => array('8:30',  '9:30'),
+        '2' => array('9:30',  '10:30'),
+        '3' => array('10:45', '11:45'),
+        '4' => array('11:45', '12:45'),
+        '5' => array('13:15', '14:15'),
+        '6' => array('14:15', '15:15'),
+        '7' => array('15:30', '16:30'),
+        '8' => array('16:30', '17:30')
+    );
+
     public function get_all_requests()
     {
-        $sql = 'SELECT * FROM reserved_items';
+        $sql = 'SELECT * FROM requests';
 
-        $query = $this->db->prepare($sql);
-        $query->execute();
+        $query = $this->db->query($sql);
 
         return $query->fetchAll(PDO::FETCH_OBJ);
     }
+
+    /**
+     * Reserve an item
+     * TODO: finish this method
+     *
+     * @return mixed|null
+     */
+    public function reserve_item($user_id, $item_id, $count)
+    {
+        // TODO: get a way of storing date including hours f.e: 09-02-2015 13:39
+        if (!$this->is_available($item_id))
+            return false;
+
+        $reserved_at = date();
+        echo $reserved_at;
+
+        $sql = 'INSERT INTO reserved_items (id, item_id, user_id, reserved_at,
+                                            reserved_from, reserved_until, returned,
+                                            returned_at, count)
+                                    VALUES (NULL, :item_id, :user_id, :reserved_at,
+                                            :reserved_from, :reserved_until,
+                                            NULL, NULL, :count)';
+    }
+
+    public function convert_from_school_time($hour)
+    {
+        return $this->school_hours[$hour];
+    }
+
 }

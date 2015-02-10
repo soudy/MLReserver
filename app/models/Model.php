@@ -1,6 +1,7 @@
 <?php
 /*
- * MLReserver is a reservation system useful for sharing items in an honest way.
+ * MLReserver is a reservation system primarily made for making sharing items
+ * easy and clear between a large group of people.
  * Copyright (C) 2015 soud
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -45,7 +46,7 @@ class Model
      *
      * @param int $uid
      *
-     * @return mixed
+     * @return mixed|null
      */
     public function get_user($uid)
     {
@@ -61,9 +62,9 @@ class Model
     }
 
     /**
-     * Return an object of the user's permissions
+     * Return an object of the user's permissions, or false if user id isn't set.
      *
-     * @return object
+     * @return mixed|null
      */
     public function get_user_permissions($uid)
     {
@@ -71,7 +72,7 @@ class Model
             return false;
 
         $access_group = $this->get_user($uid)->access_group;
-        $sql          = 'SELECT * FROM access_groups WHERE name = :name';
+        $sql          = 'SELECT * FROM access_groups WHERE name=:name';
 
         $query = $this->db->prepare($sql);
         $query->execute(array(':name' => $access_group));
@@ -80,9 +81,10 @@ class Model
     }
 
     /**
-     * Returns an object containing all info of item by id.
+     * Returns an object containing all info of item by id, or null if it can't
+     * be found.
      *
-     * @return mixed
+     * @return mixed|null
      */
     public function get_item($id)
     {
@@ -92,5 +94,51 @@ class Model
         $query->execute(array(':id' => $id));
 
         return $query->fetch(PDO::FETCH_OBJ);
+    }
+
+    /**
+     * Returns all existing items in the database. If uid is defined, return all
+     * items reserved by uid.
+     *
+     * @param int $uid
+     *
+     * @return mixed|null
+     */
+    public function get_all_items($uid)
+    {
+        if (!$uid) {
+            $sql = 'SELECT * FROM items';
+
+            $query = $this->db->query($sql);
+
+            return $query->fetchAll(PDO::FETCH_OBJ);
+        }
+
+        $sql = 'SELECT * FROM reserved_items WHERE user_id=:uid';
+
+        $query = $this->db->prepare($sql);
+        $query->execute(array('uid' => $uid));
+
+        return $query->fetchAll(PDO::FETCH_OBJ);
+    }
+
+    /**
+     * Check if an item is available.
+     *
+     * @param int $id
+     *
+     * @return mixed|null
+     */
+    protected function is_available($id)
+    {
+        if (!$id)
+            return false;
+
+        $sql = 'SELECT available_count FROM items WHERE id=:id';
+
+        $query = $this->db->prepare($sql);
+        $query->execute(array(':id' => $id));
+
+        return $query->fetch(PDO::FETCH_OBJ)->available_count;
     }
 }

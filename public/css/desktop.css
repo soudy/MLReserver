@@ -66,10 +66,12 @@ header #menu ul li   {float:right;padding:0 10px;}
 #content #create input {padding:7px;}
 
 #content #settings input {width:auto;}
+
 #content #edit input     {display:block;}
 #content #edit textarea  {display:block;border:1px solid #a8a8a8;padding:7px;}
-
 #content #edit select {width:18% !important;}
+
+#content a#goto {float:right;}
 
 .dropdown:hover .dropdown-menu {display:inline !important}
 

@@ -2,14 +2,16 @@
         <form action="" method="post" class="input-group">
             <h1>Reserve item</h1>
 
-            <input type="text" name="name" id="name" placeholder="Name" />
-
-            <input type="text" name="description" id="name" placeholder="Description" />
-
-            <input type="image" name="image" id="image" />
-
-            <input type="number" name="count" id="count" />
-            <input type="submit" name="add_item" id="add_item" value="Add item" />
+            <label for="items">Item</label>
+            <select name="items" class="form-control">
+            <?php foreach ($this->model->get_all_items() as $item): ?>
+                <?php if ($item->id === $this->item->id): ?>
+                    <option selected="selected" name="<?= $item->id ?>"><?= $item->name ?></option>
+                <?php else: ?>
+                    <option name="<?= $item->id?>"><?= $item->name ?></option>
+                <?php endif; ?>
+            <?php endforeach; ?>
+            </select>
         </form>
     </div>
 </div>

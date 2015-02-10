@@ -5,13 +5,15 @@
                 <a href="<?= URL . 'item/'?>">All items</a>
             </li>
 
+            <?php if ($this->model->get_all_items($_SESSION['logged_in'])): ?>
             <li id="user">
-                <a href="<?= URL . 'item/user'?>">My items</a>
+                <a href="<?= URL . 'item/user'?>">My reservations</a>
             </li>
+            <?php endif; ?>
 
             <?php if ($this->permissions->can_allow_requests): ?>
             <li id="request">
-                <a href="<?= URL . 'request/all'?>">Requests <span class="badge">11</span></a>
+                <a href="<?= URL . 'reserve/requests'?>">Requests <span class="badge">11</span></a>
             </li>
             <?php endif; ?>
 
@@ -38,6 +40,17 @@
                     </li>
                     <li>
                         <a href="<?= URL . 'user/all'?>">Edit users</a>
+                    </li>
+                </ul>
+            </li>
+            <?php endif; ?>
+
+            <?php if ($this->permissions->can_allow_requests): ?>
+            <li id="item" class="dropdown">
+                <a href="<?= URL . 'reserve/all'?>">Reservations<span class="caret"></span></a>
+                <ul class="dropdown-menu" role="menu">
+                    <li>
+                        <a href="<?= URL . 'reserve/all'?>">All reservations</a>
                     </li>
                 </ul>
             </li>

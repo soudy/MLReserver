@@ -1,6 +1,7 @@
 <?php
 /*
- * MLReserver is a reservation system useful for sharing items in an honest way.
+ * MLReserver is a reservation system primarily made for making sharing items
+ * easy and clear between a large group of people.
  * Copyright (C) 2015 soud
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -39,14 +40,13 @@ class User extends Model
     /**
      * Return an object of all users in the database
      *
-     * @return object
+     * @return object|null
      */
     public function get_all_users()
     {
         $sql = 'SELECT * FROM users';
 
-        $query = $this->db->prepare($sql);
-        $query->execute();
+        $query = $this->db->query($sql);
 
         return $query->fetchAll(PDO::FETCH_OBJ);
     }
@@ -54,14 +54,13 @@ class User extends Model
     /**
      * Return an object of all existing access groups
      *
-     * @return object
+     * @return object|null
      */
     public function get_all_access_groups()
     {
         $sql = 'SELECT * FROM access_groups';
 
-        $query = $this->db->prepare($sql);
-        $query->execute();
+        $query = $this->db->query($sql);
 
         return $query->fetchAll(PDO::FETCH_OBJ);
     }
@@ -113,7 +112,7 @@ class User extends Model
      * for the value of session. If the value of session in the database is the
      * same as the value of session in the cookie, the user may be logged in.
      *
-     * @return bool
+     * @return mixed|null
      */
     public function check_user_session()
     {
@@ -137,7 +136,7 @@ class User extends Model
      * @param string $access_group Decide what the user can or can not do, for
      * example reserve items, create items, create users etc.
      *
-     * @return bool
+     * @return bool|null
      */
     public function add_user($full_name, $email, $access_group = self::DEFAULT_ACCESS_GROUP)
     {
@@ -186,7 +185,7 @@ class User extends Model
      *
      * @param int $uid
      *
-     * @return bool
+     * @return bool|null
      */
     public function remove_user($uid)
     {
@@ -208,7 +207,7 @@ class User extends Model
      * @param string $full_name
      * @param string $access_group
      *
-     * @return bool
+     * @return mixed|null
      */
     public function edit_user($uid, $username = null, $email = null,
                               $full_name = null, $access_group = null)
@@ -240,7 +239,7 @@ class User extends Model
      * @param string $row
      * @param mixed $value
      *
-     * @return bool
+     * @return mixed|null
      */
     private function check_existance($table, $row, $value)
     {
@@ -259,7 +258,7 @@ class User extends Model
      *
      * @param int $uid
      *
-     * @return bool
+     * @return bool|null
      */
     private function set_user_session($uid)
     {

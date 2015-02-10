@@ -1,6 +1,7 @@
 <?php
 /*
- * MLReserver is a reservation system useful for sharing items in an honest way.
+ * MLReserver is a reservation system primarily made for making sharing items
+ * easy and clear between a large group of people.
  * Copyright (C) 2015 soud
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -26,62 +27,6 @@ class Item extends Model
 {
 
     /**
-     * Returns an object containing all the items reserved or queued by uid.
-     *
-     * @param int $uid
-     *
-     * @return mixed
-     */
-    public function get_all_users_item($uid)
-    {
-        $sql = 'SELECT * FROM reserved_items WHERE user_id=:uid';
-
-        $query = $this->db->prepare($sql);
-        $query->execute(array(':uid' => $uid));
-
-        return $query->fetch(PDO::FETCH_OBJ);
-    }
-
-    /**
-     * Returns all existing items in the database.
-     *
-     * @return mixed
-     */
-    public function get_all_items()
-    {
-        $sql = 'SELECT * FROM items';
-
-        $query = $this->db->prepare($sql);
-        $query->execute();
-
-        return $query->fetchAll(PDO::FETCH_OBJ);
-    }
-
-    /**
-     * Reserve an item. This will be inserted into the queue first and create a
-     * cron job to move it to the reserved_item table.
-     * TODO: finish this method
-     *
-     * @return mixed
-     */
-    public function reserve_item($user_id, $item_id, $count)
-    {
-        // TODO: get a way of storing date including hours f.e: 09-02-2015 13:39
-        if (!$this->is_available($item_id))
-            return false;
-
-        $reserved_at = date();
-        echo $reserved_at;
-
-        $sql = 'INSERT INTO reserved_items (id, item_id, user_id, reserved_at,
-                                            reserved_from, reserved_until, returned,
-                                            returned_at, count)
-                                    VALUES (NULL, :item_id, :user_id, :reserved_at,
-                                            :reserved_from, :reserved_until,
-                                            NULL, NULL, :count)';
-    }
-
-    /**
      * Add an item.
      *
      * @param string $name
@@ -89,7 +34,7 @@ class Item extends Model
      * @param string $count
      * @param string $image
      *
-     * @return bool
+     * @return bool|null
      */
     public function add_item($name, $description, $count, $image = '')
     {
@@ -117,7 +62,7 @@ class Item extends Model
      * @param string $image
      * @param int $count
      *
-     * @return bool
+     * @return bool|null
      */
     public function edit_item($id, $name = null, $description = null,
                               $image = null, $count = null)
@@ -146,7 +91,7 @@ class Item extends Model
      *
      * @param int $id
      *
-     * @return bool
+     * @return bool|null
      */
     public function remove_item($id)
     {
@@ -159,22 +104,4 @@ class Item extends Model
         return $query->execute(array(':id' => $id));
     }
 
-    /**
-     * Check if an item is available
-     *
-     * @param int $id
-     *
-     * @return int
-     */
-    private function is_available($id)
-    {
-        if (!$id)
-            return false;
-
-        $sql = 'SELECT available_count FROM items WHERE id=:id';
-        $query = $this->db->prepare($sql);
-
-        $query->execute(array(':id' => $id));
-        return $query->fetch(PDO::FETCH_OBJ)->available_count;
-    }
 }
