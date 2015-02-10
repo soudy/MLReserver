@@ -9,10 +9,13 @@
                 <a href="<?= URL . 'item/user'?>">My items</a>
             </li>
 
+            <?php if ($this->permissions->can_allow_requests): ?>
             <li id="request">
                 <a href="<?= URL . 'request/all'?>">Requests <span class="badge">11</span></a>
             </li>
+            <?php endif; ?>
 
+            <?php if ($this->permissions->can_change_users): ?>
             <li id="item" class="dropdown">
                 <a href="<?= URL . 'item/all'?>">Items<span class="caret"></span></a>
                 <ul class="dropdown-menu" role="menu">
@@ -24,7 +27,9 @@
                     </li>
                 </ul>
             </li>
+            <?php endif; ?>
 
+            <?php if ($this->permissions->can_change_items): ?>
             <li id="item" class="dropdown">
                 <a href="<?= URL . 'user/all'?>">Users<span class="caret"></span></a>
                 <ul class="dropdown-menu" role="menu">
@@ -36,6 +41,7 @@
                     </li>
                 </ul>
             </li>
+            <?php endif; ?>
         </ul>
     </nav>
 </div>

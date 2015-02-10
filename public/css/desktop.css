@@ -69,6 +69,8 @@ header #menu ul li   {float:right;padding:0 10px;}
 #content #edit input     {display:block;}
 #content #edit textarea  {display:block;border:1px solid #a8a8a8;padding:7px;}
 
+#content #edit select {width:18% !important;}
+
 .dropdown:hover .dropdown-menu {display:inline !important}
 
 footer {text-align:center;font-size:15px;margin:10px 0;}

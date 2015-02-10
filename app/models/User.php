@@ -1,4 +1,26 @@
 <?php
+/*
+ * MLReserver is a reservation system useful for sharing items in an honest way.
+ * Copyright (C) 2015 soud
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+ * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+ * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 
 class User extends Model
 {
@@ -15,26 +37,6 @@ class User extends Model
     const GENERATED_PASSWORD_LENGTH = 6;
 
     /**
-     * Returns an object containing all user information
-     *
-     * @param int $uid
-     *
-     * @return mixed
-     */
-    public function get_info($uid)
-    {
-        if (!$_SESSION['logged_in'])
-            return false;
-
-        $sql = 'SELECT * FROM users WHERE id=:id';
-
-        $query = $this->db->prepare($sql);
-        $query->execute(array(':id' => $uid));
-
-        return $query->fetch(PDO::FETCH_OBJ);
-    }
-
-    /**
      * Return an object of all users in the database
      *
      * @return object
@@ -47,22 +49,6 @@ class User extends Model
         $query->execute();
 
         return $query->fetchAll(PDO::FETCH_OBJ);
-    }
-
-    /**
-     * Return an object of the user's permissions
-     *
-     * @return object
-     */
-    public function get_user_permissions($uid)
-    {
-        $access_group = $this->get_info($uid)->access_group;
-        $sql          = 'SELECT * FROM access_groups WHERE name = :name';
-
-        $query = $this->db->prepare($sql);
-        $query->execute(array(':name' => $access_group));
-
-        return $query->fetch(PDO::FETCH_OBJ);
     }
 
     /**
@@ -162,7 +148,7 @@ class User extends Model
          * constant GENERATED_PASSWORD_LENGTH.
          */
         $username     = $this->generate_username($full_name);
-        $raw_password = $this->generate_password(self::GENERATED_PASSWORD_LENGTH);
+        $raw_password = $this->generate_password();
         $password     = password_hash($raw_password, PASSWORD_BCRYPT);
 
         if ($this->check_existance('users', 'username', $username))
@@ -204,10 +190,46 @@ class User extends Model
      */
     public function remove_user($uid)
     {
+        if (!$uid)
+            return false;
+
         $sql   = 'DELETE FROM users WHERE id=:id';
         $query = $this->db->prepare($sql);
 
         $query->execute(array(':id' => $uid));
+    }
+
+    /**
+     * Edit an user
+     *
+     * @param int $uid
+     * @param string $username
+     * @param string $email
+     * @param string $full_name
+     * @param string $access_group
+     *
+     * @return bool
+     */
+    public function edit_user($uid, $username = null, $email = null,
+                              $full_name = null, $access_group = null)
+    {
+        if (!$uid)
+            return false;
+
+        $sql = 'UPDATE users SET username=:username, email=:email,
+                                 full_name=:full_name, access_group=:access_group
+                             WHERE id=:uid';
+
+        $query = $this->db->prepare($sql);
+        $params = array(
+            ':username'     => $username,
+            ':email'        => $email,
+            ':full_name'    => $full_name,
+            ':access_group' => $access_group,
+            ':uid'          => $uid
+        );
+
+        return $query->execute($params);
     }
 
     /**
@@ -222,6 +244,9 @@ class User extends Model
      */
     private function check_existance($table, $row, $value)
     {
+        if (!($table || $row || $value))
+            return false;
+
         $sql   = "SELECT `$row` FROM `$table` WHERE `$row` = :value";
         $query = $this->db->prepare($sql);
 
@@ -238,6 +263,9 @@ class User extends Model
      */
     private function set_user_session($uid)
     {
+        if (!$uid)
+            return false;
+
         $_SESSION['logged_in'] = $uid;
 
         // Generate hash to store in database / cookie and verify upon entering
@@ -245,8 +273,8 @@ class User extends Model
         $salt = base64_encode(openssl_random_pseudo_bytes(16));
         $hash = md5($salt . $uid . $salt);
 
-        setcookie('session', $hash, time() + 3600 * 24 * 365, '/');
-        setcookie('uid', $uid, time() + 3600 * 24 * 365, '/');
+        setcookie('session' , $hash , time() + 3600 * 24 * 365 , '/');
+        setcookie('uid'     , $uid  , time() + 3600 * 24 * 365 , '/');
 
         // Insert hash into database to check later
         $sql = 'UPDATE users SET session=:hash WHERE id=:id';
@@ -270,6 +298,9 @@ class User extends Model
      */
     private function generate_username($full_name)
     {
+        if (!$full_name)
+            return false;
+
         $_username = split(' ', strtolower($full_name));
 
         for ($i = 0; $i < sizeof($_username); $i++) {
@@ -291,7 +322,7 @@ class User extends Model
      *
      * @return string
      */
-    private function generate_password($len)
+    private function generate_password($len = self::GENERATED_PASSWORD_LENGTH)
     {
         return substr(base64_encode(openssl_random_pseudo_bytes(128)), 0, $len);
     }
