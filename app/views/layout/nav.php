@@ -1,6 +1,6 @@
 <div id="dashboard">
     <nav>
-        <ul class="nav nav-tabs">
+        <ul class="nav nav-tabs nav-justified">
             <li id="all" class="active">
                 <a href="<?= URL . 'item/'?>">All items</a>
             </li>

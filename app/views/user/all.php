@@ -24,11 +24,11 @@
                     <td>
                         &nbsp;
                         <a href="<?= URL . "user/remove/$user->id"?>">
-                            <i class="fa fa-trash"></i>
+                            <i class="fa fa-trash fa-lg"></i>
                         </a>
                         &nbsp;
                         <a href="<?= URL . "user/edit/$user->id"?>">
-                            <i class="fa fa-pencil"></i>
+                            <i class="fa fa-pencil fa-lg"></i>
                         </a>
                     </td>
                 </tr>

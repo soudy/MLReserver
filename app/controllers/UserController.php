@@ -75,22 +75,33 @@ class UserController extends MainController
         $this->view('user', 'settings');
 
         // TODO: input verifying
-        if (isset($_POST['edit_user'])) {
+        if (isset($_POST['change_settings'])) {
             $email     = $_POST['email'];
             $full_name = $_POST['full_name'];
 
-            // TODO: check if the two new given passwords match
-            $password  = $_POST['confirm_new_password'];
+            $current_password     = $_POST['current_password'];
+            $new_password         = $_POST['new_password'];
+            $confirm_new_password = $_POST['confirm_new_password'];
+            $password             = $this->user->password;
 
-            if (!(isset($email) || isset($full_name) || isset($password))) {
-                echo 'Please fill in a field to change that property.';
-                return false;
+            if (isset($current_password) || isset($new_password) ||
+                isset($confirm_new_password)) {
+
+                try {
+                    $password = $this->model->new_password($_SESSION['logged_in'],
+                                                           $current_password, $new_password,
+                                                           $confirm_new_password);
+                } catch (Exception $e) {
+                    echo 'Failed to change password: ' . $e->getMessage();
+                }
             }
 
-            if ($this->model->edit_user($_SESSION['logged_in'], null,
-                                        $email, $full_name, null, $password))
-                header('Location: ' . URL . 'user/all');
-
+            try {
+                $this->model->edit_user($_SESSION['logged_in'], $this->user->username, $email,
+                                        $full_name, $this->user->access_group, $password);
+            } catch (Exception $e) {
+                echo 'Failed to change settings: ' . $e->getMessage();
+            }
         }
     }
 
@@ -125,7 +136,7 @@ class UserController extends MainController
 
             try {
                 $this->model->add_user($full_name, $email, $access_group);
-                header('Location: ' . URL . 'user/all');
+                /* header('Location: ' . URL . 'user/all'); */
             } catch (Exception $e) {
                 echo 'Adding user failed: ' . $e->getMessage();
             }

@@ -215,21 +215,6 @@ class User extends Model
         $query->execute(array(':id' => $uid));
     }
 
-    public function edit_settings($uid, $email = null, $full_name = null,
-                                  $send_reminders = null, $current_password = null,
-                                  $new_password = null, $confirm_password = null)
-    {
-        if (!$uid) {
-            throw new Exception('Missing arguments.');
-            return false;
-        }
-
-        $password = $this->change_password($uid, $current_password, $new_password, $confirm_password);
-
-        $sql = 'UPDATE users SET email=:email, full_name=:email,
-                                 send_reminders=:set_reminders, password=:password';
-    }
-
     /**
      * Edit an user
      *
@@ -242,14 +227,15 @@ class User extends Model
      * @return mixed|null
      */
     public function edit_user($uid, $username = null, $email = null,
-                              $full_name = null, $access_group = null)
+                              $full_name = null, $access_group = null,
+                              $password = null)
     {
         if (!$uid) {
             throw new Exception('Missing arguments.');
             return false;
         }
 
-        $sql = 'UPDATE users SET username=:username, email=:email,
+        $sql = 'UPDATE users SET username=:username, email=:email, password=:password,
                                  full_name=:full_name, access_group=:access_group
                              WHERE id=:uid';
 
@@ -257,12 +243,35 @@ class User extends Model
         $params = array(
             ':username'     => $username,
             ':email'        => $email,
+            ':password'     => $password,
             ':full_name'    => $full_name,
             ':access_group' => $access_group,
             ':uid'          => $uid
         );
 
         return $query->execute($params);
+    }
+
+    public function new_password($uid, $current_password, $new_password, $confirm_new_password)
+    {
+        if (!($current_password && $new_password && $confirm_new_password)) {
+            throw new Exception('Missing field(s).');
+            return false;
+        }
+
+        $user = $this->get_user($uid);
+
+        if ($new_password !== $confirm_new_password) {
+            throw new Exception('New passwords don\'t match.');
+            return false;
+        }
+
+        if (!password_verify($current_password, $user->password)) {
+            throw new Exception('Current password isn\'t correct.');
+            return false;
+        }
+
+        return password_hash($new_password, PASSWORD_BCRYPT);
     }
 
     private function change_password($uid, $current_password, $new_password, $confirm_password)

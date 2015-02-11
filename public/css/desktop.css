@@ -45,8 +45,9 @@ header               {overflow:hidden;padding:5px 0;margin:0 0 25px 0;}
 header #menu         {text-align:right;}
 header #menu a       {color:#3675BB}
 header #menu a:hover {color:#2C629E}
-header #menu ul      {list-style-type:none;}
-header #menu ul li   {float:right;padding:0 10px;}
+header #menu ul      {float:right;list-style-type:none;}
+header #menu ul li   {float:left;padding:0 10px;}
+header #user         {float:left;}
 
 #content       {padding:15px;}
 #content h1    {text-align:left;padding:0;margin:10px 0;}

@@ -47,11 +47,11 @@
                             <td><?= $request->message ?></td>
                             <td>
                                 <a href="<?= URL . "reserve/approve/$request->id"?>">
-                                    <span class="glyphicon glyphicon-ok"></span>
+                                    <i class="fa fa-check fa-lg"></i>
                                 </a>
                                 &nbsp;
                                 <a href="<?= URL . "reserve/deny/$request->id"?>">
-                                    <span class="glyphicon glyphicon-remove"></span>
+                                    <i class="fa fa-remove fa-lg"></i>
                                 </a>
                             </td>
                         </tr>
