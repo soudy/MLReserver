@@ -36,16 +36,20 @@ class Item extends Model
      *
      * @return bool|null
      */
-    public function add_item($name, $description, $count, $image = '')
+    public function add_item($name, $description, $count)
     {
-        $sql = 'INSERT INTO items (id, name, description, image, count, available_count)
-                           VALUES (NULL, :name, :description, :image, :count, :available_count)';
+        if (!($name && $description && $count)) {
+            throw new Exception('Missing fields.');
+            return false;
+        }
+
+        $sql = 'INSERT INTO items (id, name, description, count, available_count)
+                           VALUES (NULL, :name, :description, :count, :available_count)';
 
         $query = $this->db->prepare($sql);
         $params = array(
             ':name'            => $name,
             ':description'     => $description,
-            ':image'           => $image,
             ':count'           => $count,
             ':available_count' => $count
         );
@@ -64,23 +68,37 @@ class Item extends Model
      *
      * @return bool|null
      */
-    public function edit_item($id, $name = null, $description = null,
-                              $image = null, $count = null)
+    public function edit_item($id, $name = null, $description = null, $count = null)
     {
-        if (!$id)
+        if (!$id) {
+            throw new Exception('Please specify an item to edit.');
             return false;
+        }
 
-        $sql = 'UPDATE items SET name=:name, description=:description,
-                                 image=:image, count=:count
+        if (!intval($count)) {
+            throw new Exception('Please enter a valid count number.');
+            return false;
+        }
+
+        if($this->update_available_count($id, $count) === false) {
+            throw new Exception('Can\'t update item count because the amount
+                of currently reserved items is larger than the count you defined.');
+            return false;
+        } else {
+            $available_count = $this->update_available_count($id, $count);
+        }
+
+        $sql = 'UPDATE items SET name=:name, description=:description, count=:count,
+                                 available_count=:available_count
                              WHERE id=:id';
 
         $query = $this->db->prepare($sql);
         $params = array(
-            ':name'        => $name,
-            ':description' => $description,
-            ':image'       => $image,
-            ':count'       => $count,
-            ':id'          => $id
+            ':name'            => $name,
+            ':description'     => $description,
+            ':count'           => $count,
+            ':available_count' => $available_count,
+            ':id'              => $id
         );
 
         return $query->execute($params);
@@ -95,8 +113,10 @@ class Item extends Model
      */
     public function remove_item($id)
     {
-        if (!$id)
+        if (!$id) {
+            throw new Exception('Please specify an item to remove.');
             return false;
+        }
 
         $sql   = 'DELETE FROM items WHERE id=:id';
         $query = $this->db->prepare($sql);
@@ -104,4 +124,28 @@ class Item extends Model
         return $query->execute(array(':id' => $id));
     }
 
+    /**
+     * Update the available_count based on the new count entered. If the new
+     * count entered is lager than the amount of reservations of this item,
+     * return false.
+     *
+     * @param int $id
+     * @param int $new_count
+     *
+     * @return int|bool
+     */
+    private function update_available_count($id, $new_count)
+    {
+        $item              = $this->get_item($id);
+        $step              = $new_count - $item->count;
+        $unavailable_count = $item->count - $item->available_count;
+        $available_count   = $item->available_count + $step;
+
+        if ($new_count - $unavailable_count >= 0)
+            return $new_count - $unavailable_count;
+        else
+            return false;
+
+        return $available_count;
+    }
 }

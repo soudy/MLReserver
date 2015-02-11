@@ -1,15 +1,16 @@
     <div id="content">
-        <form action="" method="post" class="input-group">
+        <form action="" method="post" id="create">
             <h1>Add item</h1>
 
-            <input type="text" name="name" id="name" placeholder="Name" />
+            <label for="name">Name</label>
+            <input type="text" class="form-control" name="name" placeholder="Item name" />
 
-            <input type="text" name="description" id="name" placeholder="Description" />
+            <label for="description">Description</label>
+            <textarea name="description" rows="8" cols="51" placeholder="Short description"></textarea>
 
-            <input type="image" name="image" id="image" />
-
-            <input type="number" name="count" id="count" />
-            <input type="submit" name="add_item" id="add_item" value="Add item" />
+            <label for="count">Count</label>
+            <input type="number" class="form-control" name="count" value="1" />
+            <input type="submit" name="add_item" class="btn btn-primary" value="Add item" />
         </form>
     </div>
 </div>

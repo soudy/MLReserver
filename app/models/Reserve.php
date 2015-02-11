@@ -47,6 +47,15 @@ class Reserve extends Model
         return $query->fetchAll(PDO::FETCH_OBJ);
     }
 
+    public function get_all_reservations()
+    {
+        $sql = 'SELECT * FROM reserved_items';
+
+        $query = $this->db->query($sql);
+
+        return $query->fetchAll(PDO::FETCH_OBJ);
+    }
+
     /**
      * Reserve an item
      * TODO: finish this method

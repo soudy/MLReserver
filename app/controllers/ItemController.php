@@ -64,16 +64,18 @@ class ItemController extends MainController
         $this->title = 'Reserver - Edit item';
         $this->view('item', 'edit');
 
-        // TODO: image uploading
-        // TODO: input verifying
         if (isset($_POST['edit_item'])) {
             $name        = $_POST['name'];
             $description = $_POST['description'];
-            $image       = $_POST['image'];
             $count       = $_POST['count'];
 
-            if ($this->model->edit_item($id, $name, $description, $image, $count))
+            try {
+                $this->model->edit_item($id, $name, $description, $count);
                 header('Location: ' . URL . 'item/all');
+            } catch (Exception $e) {
+                // TODO: better notifying
+                echo 'Editing item failed: ' . $e->getMessage();
+            }
 
         }
     }
@@ -100,19 +102,18 @@ class ItemController extends MainController
         $this->view('item', 'add');
 
         if (isset($_POST['add_item'])) {
-            // TODO: image uploading
             // TODO: input verifying
             $name        = $_POST['name'];
             $description = $_POST['description'];
             $count       = $_POST['count'];
 
-            if (!($name || $description || $count)) {
-                echo 'Please fill in all fields.';
-                return false;
+            try {
+                $this->model->add_item($name, $description, $count);
+                header('Location: ' . URL . "item/all");
+            } catch (Exception $e) {
+                echo 'Adding item failed: ' . $e->getMessage();
             }
 
-            $this->model->add_item($name, $description, $count);
-            echo 'Item successfully added.';
         }
     }
 

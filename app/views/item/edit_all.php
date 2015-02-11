@@ -17,7 +17,7 @@
             <tbody>
                 <?php foreach ($this->model->get_all_items() as $item): ?>
                 <tr>
-                    <td><?= $item->id ?></td>
+                    <td id="<?= $item->id ?>"><?= $item->id ?></td>
                     <td>
                         <a href="<?= URL . "item/detail/$item->id"?>">
                             <?= $item->name ?>
@@ -30,11 +30,11 @@
                     <td>
                         &nbsp;
                         <a href="<?= URL . "item/remove/$item->id"?>">
-                            <span class="glyphicon glyphicon-trash"></span>
+                            <i class="fa fa-trash"></i>
                         </a>
                         &nbsp;
                         <a href="<?= URL . "item/edit/$item->id"?>">
-                            <span class="glyphicon glyphicon-pencil"></span>
+                            <i class="fa fa-pencil"></i>
                         </a>
                     </td>
                 </tr>

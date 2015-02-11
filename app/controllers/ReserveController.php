@@ -39,6 +39,9 @@ class ReserveController extends MainController
         if ($this->permissions->can_see_reservations) {
             $this->all();
             return true;
+        } elseif ($this->permissions->can_reserve) {
+            $this->reserve();
+            return true;
         } else {
             $this->request();
             return true;
@@ -58,6 +61,11 @@ class ReserveController extends MainController
 
     public function reserve($id)
     {
+        if (!$this->permissions->can_reserve) {
+            $this->request();
+            return false;
+        }
+
         $this->item = $this->model->get_item($id);
 
         $this->title = 'Reserver - Reserve item';
@@ -73,6 +81,22 @@ class ReserveController extends MainController
 
         $this->title = 'Reserver - Requests';
         $this->view('reserve', 'requests');
+    }
+
+    public function approve($id)
+    {
+        if (!$id) {
+            $this->index();
+            return false;
+        }
+    }
+
+    public function deny($id)
+    {
+        if (!$id) {
+            $this->index();
+            return false;
+        }
     }
 
     public function detail($id)

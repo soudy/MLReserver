@@ -1,6 +1,6 @@
     <div id="content">
         <h1>All reservations</h1>
-        <?php if (!$this->model->get_all_requests()): ?>
+        <?php if (!$this->model->get_all_reservations()): ?>
             <div class="alert alert-info">
                 There are no reserved items.
             </div>
@@ -16,11 +16,11 @@
                     <th>Reserved to</th>
                     <th>Returned</th>
                     <th>Count</th>
+                    <th>Action</th>
                 </thead>
 
                 <tbody>
-
-                    <?php foreach ($this->model->get_all_requests() as $reservation): ?>
+                    <?php foreach ($this->model->get_all_reservations() as $reservation): ?>
                     <tr>
                         <td><?= $reservation->id ?></td>
                         <td>
@@ -37,11 +37,11 @@
                         <td>
                             &nbsp;
                             <a href="<?= URL . "reserve/edit/$reservation->id"?>">
-                                <span class="glyphicon glyphicon-trash"></span>
+                                <i class="fa fa-pencil"></i>
                             </a>
                             &nbsp;
                             <a href="<?= URL . "reserve/remove/$reservation->id"?>">
-                                <span class="glyphicon glyphicon-pencil"></span>
+                                <span class="fa fa-trash"></span>
                             </a>
                         </td>
                     </tr>

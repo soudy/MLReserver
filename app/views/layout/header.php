@@ -3,11 +3,11 @@
         <div id="menu">
             <ul>
                 <li>
-                    <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+                    <i class="fa fa-sign-out"></i>
                     <a href="<?= URL . 'user/logout'?>">Log out</a>
                 </li>
                 <li>
-                    <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+                    <i class="fa fa-wrench"></i>
                     <a href="<?= URL . 'user/settings'?>">Settings</a>
                 </li>
             </ul>

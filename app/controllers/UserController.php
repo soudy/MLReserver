@@ -55,16 +55,11 @@ class UserController extends MainController
             $stay_logged_in = $_POST['stay_logged_in'];
 
             // TODO: better error message
-            if (!($username || $password)) {
-                echo 'Please fill in all fields.';
-                return false;
-            }
-
-            if ($this->model->log_in($username, $password, $stay_logged_in)) {
+            try {
+                $this->model->log_in($username, $password, $stay_logged_in);
                 header('Location: ' . URL . 'item');
-            } else {
-                echo 'Invalid username or password';
-                return false;
+            } catch (Exception $e) {
+                echo 'Log in failed: '. $e->getMessage();
             }
         }
     }
@@ -81,11 +76,19 @@ class UserController extends MainController
 
         // TODO: input verifying
         if (isset($_POST['edit_user'])) {
-            $username = $_POST['username'];
-            $email    = $_POST['email'];
-            $password = $_POST['access_group'];
+            $email     = $_POST['email'];
+            $full_name = $_POST['full_name'];
 
-            if ($this->model->edit_user($uid, $username, $email, $full_name, $access_group))
+            // TODO: check if the two new given passwords match
+            $password  = $_POST['confirm_new_password'];
+
+            if (!(isset($email) || isset($full_name) || isset($password))) {
+                echo 'Please fill in a field to change that property.';
+                return false;
+            }
+
+            if ($this->model->edit_user($_SESSION['logged_in'], null,
+                                        $email, $full_name, null, $password))
                 header('Location: ' . URL . 'user/all');
 
         }
@@ -120,10 +123,12 @@ class UserController extends MainController
             $email        = $_POST['email'];
             $access_group = $_POST['access_group'];
 
-            if ($this->model->add_user($full_name, $email, $access_group))
-                echo "User '$full_name' added.";
-            else
-                echo "User '$full_name' already exists in database.";
+            try {
+                $this->model->add_user($full_name, $email, $access_group);
+                header('Location: ' . URL . 'user/all');
+            } catch (Exception $e) {
+                echo 'Adding user failed: ' . $e->getMessage();
+            }
         }
     }
 
@@ -158,9 +163,12 @@ class UserController extends MainController
             $full_name    = $_POST['full_name'];
             $access_group = $_POST['access_group'];
 
-            if ($this->model->edit_user($uid, $username, $email, $full_name, $access_group))
-                echo 'User successfully changed';
-
+            try {
+                $this->model->edit_user($uid, $username, $email, $full_name, $access_group);
+                header('Location: ' . URL . "user/all#$uid");
+            } catch (Exception $e) {
+                echo 'Editing user failed: ' . $e->getMessage();
+            }
         }
     }
 

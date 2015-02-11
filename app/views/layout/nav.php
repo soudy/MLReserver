@@ -45,14 +45,9 @@
             </li>
             <?php endif; ?>
 
-            <?php if ($this->permissions->can_allow_requests): ?>
-            <li id="item" class="dropdown">
-                <a href="<?= URL . 'reserve/all'?>">Reservations<span class="caret"></span></a>
-                <ul class="dropdown-menu" role="menu">
-                    <li>
-                        <a href="<?= URL . 'reserve/all'?>">All reservations</a>
-                    </li>
-                </ul>
+            <?php if ($this->permissions->can_see_reservations): ?>
+            <li id="item">
+                <a href="<?= URL . 'reserve/all'?>">Reservations</a>
             </li>
             <?php endif; ?>
         </ul>

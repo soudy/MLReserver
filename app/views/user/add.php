@@ -1,5 +1,5 @@
     <div id="content">
-        <h1>Create user</h1>
+        <h1>Add user</h1>
         <div class="alert alert-info">
             The username and password will be generated and sent to the email address defined below.
         </div>
@@ -15,7 +15,7 @@
             <?php endforeach; ?>
             </select>
 
-            <input type="submit" name="add_user" class="btn btn-primary" value="Create user" />
+            <input type="submit" name="add_user" class="btn btn-primary" value="Add user" />
         </form>
     </div>
 </div>

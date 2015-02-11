@@ -16,7 +16,7 @@
             <tbody>
                 <?php foreach ($this->model->get_all_users() as $user): ?>
                 <tr>
-                    <td><?= $user->id ?></td>
+                    <td id="<?= $user->id ?>"><?= $user->id ?></td>
                     <td><?= $user->username ?></td>
                     <td><?= $user->email ?></td>
                     <td><?= $user->full_name ?></td>
@@ -24,11 +24,11 @@
                     <td>
                         &nbsp;
                         <a href="<?= URL . "user/remove/$user->id"?>">
-                            <span class="glyphicon glyphicon-trash"></span>
+                            <i class="fa fa-trash"></i>
                         </a>
                         &nbsp;
                         <a href="<?= URL . "user/edit/$user->id"?>">
-                            <span class="glyphicon glyphicon-pencil"></span>
+                            <i class="fa fa-pencil"></i>
                         </a>
                     </td>
                 </tr>

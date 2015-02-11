@@ -63,13 +63,15 @@ header #menu ul li   {float:right;padding:0 10px;}
 #content .thumbnail input[type="number"] {width:30%;}
 
 #content #create {width:40%;}
-#content #create input {padding:7px;}
 
 #content #settings input {width:auto;}
 
 #content #edit input     {display:block;}
 #content #edit textarea  {display:block;border:1px solid #a8a8a8;padding:7px;}
-#content #edit select {width:18% !important;}
+
+#content textarea {border:1px solid #a8a8a8;padding:6px;margin:0 0 10px 0;}
+#content select,
+         input[type="number"]   {width:22% !important;}
 
 #content a#goto {float:right;}
 
