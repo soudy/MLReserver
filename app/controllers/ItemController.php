@@ -27,7 +27,7 @@ class ItemController extends MainController
 {
     public function __construct()
     {
-        if (!$_SESSION['logged_in'])
+        if (!isset($_SESSION['logged_in']))
             header('Location: ' . URL . 'user/login');
 
         $this->model = new Item();
@@ -54,15 +54,13 @@ class ItemController extends MainController
 
     public function edit($id)
     {
-        if (!($id || $this->permissions->can_change_items)) {
+        if (!$id || !$this->permissions->can_change_items) {
             $this->index();
             return false;
         }
 
-        $this->item = $this->model->get_item($id);
-
+        $this->item  = $this->model->get_item($id);
         $this->title = 'Reserver - Edit item';
-        $this->view('item', 'edit');
 
         if (isset($_POST['edit_item'])) {
             $name        = $_POST['name'];
@@ -76,8 +74,9 @@ class ItemController extends MainController
                 // TODO: better notifying
                 echo 'Editing item failed: ' . $e->getMessage();
             }
-
         }
+
+        $this->view('item', 'edit');
     }
 
     public function detail($id)
@@ -99,7 +98,6 @@ class ItemController extends MainController
         }
 
         $this->title = 'Reserver - Add item';
-        $this->view('item', 'add');
 
         if (isset($_POST['add_item'])) {
             // TODO: input verifying
@@ -113,13 +111,14 @@ class ItemController extends MainController
             } catch (Exception $e) {
                 echo 'Adding item failed: ' . $e->getMessage();
             }
-
         }
+
+        $this->view('item', 'add');
     }
 
     public function remove($id)
     {
-        if (!($id || $this->permissions->can_change_items)) {
+        if (!$id || !$this->permissions->can_change_items) {
             $this->index();
             return false;
         }

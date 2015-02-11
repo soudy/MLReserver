@@ -49,6 +49,8 @@ header #menu ul      {float:right;list-style-type:none;}
 header #menu ul li   {float:left;padding:0 10px;}
 header #user         {float:left;}
 
+nav .dropdown-menu {width:100%}
+
 #content       {padding:15px;}
 #content h1    {text-align:left;padding:0;margin:10px 0;}
 #content input {margin:10px 0;border:1px solid #a8a8a8;padding:10px;}
@@ -63,7 +65,7 @@ header #user         {float:left;}
 #content .thumbnail input                {float:right;margin:0 10px 0 0;}
 #content .thumbnail input[type="number"] {width:30%;}
 
-#content #create {width:40%;}
+#content #create, #edit {width:40%;}
 
 #content #settings input {width:auto;}
 

@@ -29,13 +29,13 @@ class UserController extends MainController
     {
         $this->model = new User();
 
-        if ($_SESSION['logged_in'])
+        if (isset($_SESSION['logged_in']))
             $this->permissions = $this->model->get_user_permissions($_SESSION['logged_in']);
     }
 
     public function index()
     {
-        if ($_SESSION['logged_in'])
+        if (isset($_SESSION['logged_in']))
             $this->settings();
         else
             $this->login();
@@ -43,36 +43,34 @@ class UserController extends MainController
 
     public function login()
     {
-        if ($_SESSION['logged_in'])
+        if (isset($_SESSION['logged_in']))
             $this->error('You\'re already signed in.');
 
         $this->title = 'Reserver - Log in';
-        $this->view('user', 'login');
 
         if (isset($_POST['login'])) {
             $username       = $_POST['username'];
             $password       = $_POST['password'];
-            $stay_logged_in = $_POST['stay_logged_in'];
 
             // TODO: better error message
             try {
-                $this->model->log_in($username, $password, $stay_logged_in);
+                $this->model->log_in($username, $password);
                 header('Location: ' . URL . 'item');
             } catch (Exception $e) {
                 echo 'Log in failed: '. $e->getMessage();
             }
         }
+
+        $this->view('user', 'login');
     }
 
     public function settings()
     {
-        if (!$_SESSION['logged_in'])
+        if (!isset($_SESSION['logged_in']))
             $this->error('You need to be signed in to come here.');
 
-        $this->user = $this->model->get_user($_SESSION['logged_in']);
-
+        $this->user  = $this->model->get_user($_SESSION['logged_in']);
         $this->title = 'Reserver - Settings';
-        $this->view('user', 'settings');
 
         // TODO: input verifying
         if (isset($_POST['change_settings'])) {
@@ -82,10 +80,11 @@ class UserController extends MainController
             $current_password     = $_POST['current_password'];
             $new_password         = $_POST['new_password'];
             $confirm_new_password = $_POST['confirm_new_password'];
+            $send_reminders       = isset($_POST['send_reminders']) ? 1 : 0;
             $password             = $this->user->password;
 
-            if (isset($current_password) || isset($new_password) ||
-                isset($confirm_new_password)) {
+            if (!(empty($current_password) || empty($new_password) ||
+                empty($confirm_new_password))) {
 
                 try {
                     $password = $this->model->new_password($_SESSION['logged_in'],
@@ -97,17 +96,21 @@ class UserController extends MainController
             }
 
             try {
-                $this->model->edit_user($_SESSION['logged_in'], $this->user->username, $email,
-                                        $full_name, $this->user->access_group, $password);
+                $this->model->edit_user($this->user->id, $this->user->username, $email,
+                                        $full_name, $this->user->access_group, 
+                                        $password, $send_reminders);
+                header('Location: ' . URL . 'user/settings');
             } catch (Exception $e) {
                 echo 'Failed to change settings: ' . $e->getMessage();
             }
         }
+
+        $this->view('user', 'settings');
     }
 
     public function logout()
     {
-        if (!$_SESSION['logged_in']) {
+        if (!isset($_SESSION['logged_in'])) {
             $this->login();
             return false;
         }
@@ -117,7 +120,7 @@ class UserController extends MainController
 
     public function add()
     {
-        if (!$_SESSION['logged_in'])
+        if (!isset($_SESSION['logged_in']))
             $this->error('You need to be signed in to come here.');
 
         if (!$this->permissions->can_change_users) {
@@ -126,7 +129,6 @@ class UserController extends MainController
         }
 
         $this->title = 'Reserver - Add user';
-        $this->view('user', 'add');
 
         // TODO: check for valid email and full name
         if (isset($_POST['add_user'])) {
@@ -136,14 +138,16 @@ class UserController extends MainController
 
             try {
                 $this->model->add_user($full_name, $email, $access_group);
-                /* header('Location: ' . URL . 'user/all'); */
+                header('Location: ' . URL . 'user/all'); 
             } catch (Exception $e) {
                 echo 'Adding user failed: ' . $e->getMessage();
             }
         }
+
+        $this->view('user', 'add');
     }
 
-    public function all($uid)
+    public function all($uid = null)
     {
         if (!$this->permissions->can_change_users) {
             $this->index();
@@ -152,20 +156,17 @@ class UserController extends MainController
 
         $this->title = 'Reserver - Edit users';
         $this->view('user', 'all');
-
     }
 
     public function edit($uid)
     {
-        if (!($id || $this->permissions->can_change_users)) {
+        if (!$this->model->get_user($uid) || !$this->permissions->can_change_users) {
             $this->index();
             return false;
         }
 
-        $this->user = $this->model->get_user($uid);
-
+        $this->user  = $this->model->get_user($uid);
         $this->title = 'Reserver - Edit user';
-        $this->view('user', 'edit');
 
         // TODO: input verifying
         if (isset($_POST['edit_user'])) {
@@ -181,6 +182,8 @@ class UserController extends MainController
                 echo 'Editing user failed: ' . $e->getMessage();
             }
         }
+
+        $this->view('user', 'edit');
     }
 
     public function remove($uid)
@@ -200,11 +203,12 @@ class UserController extends MainController
             $this->error('User not found.');
 
         $this->title = 'Reserver - Remove user';
-        $this->view('user', 'remove');
 
         if (isset($_POST['remove_user'])) {
             $this->model->remove_user($uid);
             header('Location:' . URL . 'user/all');
         }
+
+        $this->view('user', 'remove');
     }
 }

@@ -6,7 +6,7 @@
             <input type="text" class="form-control" name="name" placeholder="Item name" />
 
             <label for="description">Description</label>
-            <textarea name="description" rows="8" cols="51" placeholder="Short description"></textarea>
+            <textarea name="description" rows="8" cols="44" placeholder="Short description"></textarea>
 
             <label for="count">Count</label>
             <input type="number" class="form-control" name="count" value="1" />

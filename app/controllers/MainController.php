@@ -78,18 +78,18 @@ class MainController
      */
     private function route()
     {
-        $this->url_actions = strtolower($_GET['a']);
+        $this->url_actions = isset($_GET['a']) ? strtolower($_GET['a']) : null;
 
         if (!$this->url_actions)
-            if (!$_SESSION['logged_in'])
+            if (!isset($_SESSION['logged_in']))
                 $this->url_actions = 'user/login';
             else
                 $this->url_actions = 'item';
 
-        $this->url_actions = split('/', $this->url_actions);
+        $this->url_actions = explode('/', $this->url_actions);
 
         $this->controller = $this->routes[$this->url_actions[0]];
-        $this->method     = $this->url_actions[1];
+        $this->method     = isset($this->url_actions[1]) ? $this->url_actions[1] : null;
         $this->params     = array_slice($this->url_actions, 2);
     }
 
@@ -97,7 +97,7 @@ class MainController
     {
         require_once APP . 'views/layout/head.php';
 
-        if ($_SESSION['logged_in']) {
+        if (isset($_SESSION['logged_in'])) {
             require_once APP . "views/layout/header.php";
 
             require_once APP . "views/layout/nav.php";

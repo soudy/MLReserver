@@ -8,7 +8,6 @@
                 <th>Id</th>
                 <th>Name</th>
                 <th>Description</th>
-                <th>Image</th>
                 <th>Count</th>
                 <th>Available</th>
                 <th>Change</th>
@@ -24,7 +23,6 @@
                         </a>
                     </td>
                     <td><?= $item->description ?></td>
-                    <td><?= $item->image ?></td>
                     <td><?= $item->count ?></td>
                     <td><?= $item->available_count ?></td>
                     <td>

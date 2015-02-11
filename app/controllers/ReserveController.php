@@ -27,7 +27,7 @@ class ReserveController extends MainController
 {
     public function __construct()
     {
-        if (!$_SESSION['logged_in'])
+        if (!isset($_SESSION['logged_in']))
             header('Location: ' . URL . 'user/login');
 
         $this->model = new Reserve();
@@ -85,7 +85,7 @@ class ReserveController extends MainController
 
     public function approve($id)
     {
-        if (!($id || $this->permissions->can_allow_requests)) {
+        if (!$id || $this->permissions->can_allow_requests) {
             $this->index();
             return false;
         }
@@ -93,7 +93,7 @@ class ReserveController extends MainController
 
     public function deny($id)
     {
-        if (!($id || $this->permissions->can_allow_requests)) {
+        if (!$id || !$this->permissions->can_allow_requests) {
             $this->index();
             return false;
         }
@@ -101,7 +101,7 @@ class ReserveController extends MainController
 
     public function detail($id)
     {
-        if (!($id || $this->permissions->can_allow_requests)) {
+        if (!$id || !$this->permissions->can_allow_requests) {
             $this->index();
             return false;
         }

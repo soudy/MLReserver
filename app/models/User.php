@@ -228,7 +228,7 @@ class User extends Model
      */
     public function edit_user($uid, $username = null, $email = null,
                               $full_name = null, $access_group = null,
-                              $password = null)
+                              $password = null, $send_reminders = null)
     {
         if (!$uid) {
             throw new Exception('Missing arguments.');
@@ -236,56 +236,57 @@ class User extends Model
         }
 
         $sql = 'UPDATE users SET username=:username, email=:email, password=:password,
-                                 full_name=:full_name, access_group=:access_group
+                                 full_name=:full_name, access_group=:access_group,
+                                 send_reminders=:send_reminders
                              WHERE id=:uid';
 
         $query = $this->db->prepare($sql);
         $params = array(
-            ':username'     => $username,
-            ':email'        => $email,
-            ':password'     => $password,
-            ':full_name'    => $full_name,
-            ':access_group' => $access_group,
-            ':uid'          => $uid
+            ':username'       => $username,
+            ':email'          => $email,
+            ':password'       => $password,
+            ':full_name'      => $full_name,
+            ':access_group'   => $access_group,
+            ':send_reminders' => $send_reminders,
+            ':uid'            => $uid
         );
 
         return $query->execute($params);
     }
 
+    /**
+     * Return a hashed new password chosen by the user if everything matches.
+     *
+     * @param int $uid
+     * @param string $current_password
+     * @param string $new_password
+     * @param string $confirm_new_password
+     *
+     * @return string|bool
+     */
     public function new_password($uid, $current_password, $new_password, $confirm_new_password)
     {
-        if (!($current_password && $new_password && $confirm_new_password)) {
+        if (!($current_password || $new_password || $confirm_new_password)) {
             throw new Exception('Missing field(s).');
             return false;
         }
 
         $user = $this->get_user($uid);
 
-        if ($new_password !== $confirm_new_password) {
-            throw new Exception('New passwords don\'t match.');
+        if (!password_verify($current_password, $user->password)) {
+            throw new Exception('Current password isn\'t correct.');
             return false;
         }
 
-        if (!password_verify($current_password, $user->password)) {
-            throw new Exception('Current password isn\'t correct.');
+        if ($new_password !== $confirm_new_password) {
+            throw new Exception('New passwords don\'t match.');
             return false;
         }
 
         return password_hash($new_password, PASSWORD_BCRYPT);
     }
 
-    private function change_password($uid, $current_password, $new_password, $confirm_password)
-    {
-        if (!($uid && $current_password && $new_password && $confirm_password)) {
-            throw new Exception('');
-            return false;
-        }
-
-        $user = $this->get_user($uid);
-    }
-
     /**
-     *
      * See if a row => value combination already exists.
      *
      * @param string $table

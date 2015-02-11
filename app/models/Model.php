@@ -50,7 +50,7 @@ class Model
      */
     public function get_user($uid)
     {
-        if (!($_SESSION['logged_in'] || $uid))
+        if (!isset($_SESSION['logged_in']) || !isset($uid))
             return false;
 
         $sql = 'SELECT * FROM users WHERE id=:id';
@@ -66,7 +66,7 @@ class Model
      *
      * @return mixed|null
      */
-    public function get_user_permissions($uid)
+    public function get_user_permissions($uid = null)
     {
         if (!$uid)
             return false;
@@ -104,9 +104,9 @@ class Model
      *
      * @return mixed|null
      */
-    public function get_all_items($uid)
+    public function get_all_items($uid = null)
     {
-        if (!$uid) {
+        if (!isset($uid)) {
             $sql = 'SELECT * FROM items';
 
             $query = $this->db->query($sql);
