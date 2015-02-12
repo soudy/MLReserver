@@ -64,6 +64,8 @@ class Model
     /**
      * Return an object of the user's permissions, or false if user id isn't set.
      *
+     * @param int $uid
+     *
      * @return mixed|null
      */
     public function get_user_permissions($uid = null)
@@ -83,6 +85,8 @@ class Model
     /**
      * Returns an object containing all info of item by id, or null if it can't
      * be found.
+     *
+     * @param int $id
      *
      * @return mixed|null
      */

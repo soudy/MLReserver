@@ -47,8 +47,24 @@ class Reserve extends Model
         return $query->fetchAll(PDO::FETCH_OBJ);
     }
 
-    public function get_all_reservations()
+    /**
+     * Get all reservations, or get all reservations of a specific user
+     *
+     * @param int $uid
+     *
+     * @return object|bool
+     */
+    public function get_all_reservations($uid = null)
     {
+        if (isset($uid)) {
+            $sql = 'SELECT * FROM reserved_items WHERE user_id=:uid';
+
+            $query = $this->db->prepare($sql);
+            $query->execute(array('uid' => $uid));
+
+            return $query->fetchAll(PDO::FETCH_OBJ);
+        }
+
         $sql = 'SELECT * FROM reserved_items';
 
         $query = $this->db->query($sql);
@@ -64,7 +80,6 @@ class Reserve extends Model
      */
     public function reserve_item($user_id, $item_id, $count)
     {
-        // TODO: get a way of storing date including hours f.e: 09-02-2015 13:39
         if (!$this->is_available($item_id))
             throw new Exception('Item is not available.');
 

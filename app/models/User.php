@@ -214,25 +214,54 @@ class User extends Model
      *
      * @return mixed|null
      */
-    public function edit_user($uid, $username = null, $email = null,
-                              $full_name = null, $access_group = null,
-                              $password = null, $send_reminders = null)
+    public function edit_user($uid, $username = '', $email = '',
+                              $full_name = '', $access_group = '')
     {
         if (!$uid)
             throw new Exception('Missing argument.');
 
-        $sql = 'UPDATE users SET username=:username, email=:email, password=:password,
-                                 full_name=:full_name, access_group=:access_group,
-                                 send_reminders=:send_reminders
+        $sql = 'UPDATE users SET username=:username, email=:email,
+                                 full_name=:full_name, access_group=:access_group
                              WHERE id=:uid';
 
         $query = $this->db->prepare($sql);
         $params = array(
             ':username'       => $username,
             ':email'          => $email,
-            ':password'       => $password,
             ':full_name'      => $full_name,
             ':access_group'   => $access_group,
+            ':uid'            => $uid
+        );
+
+        return $query->execute($params);
+    }
+
+    /**
+     * Edit user settings
+     *
+     * @param int $uid
+     * @param string $email
+     * @param string $full_name
+     * @param string $password
+     * @param int $send_reminders
+     *
+     * @return bool
+     */
+    public function edit_settings($uid, $email = '', $full_name = '',
+                                  $password = '', $send_reminders = '')
+    {
+        if (!$uid)
+            throw new Exception('Missing argument.');
+
+        $sql = 'UPDATE users SET email=:email, full_name=:full_name,
+                                 password=:password, send_reminders=:send_reminders
+                             WHERE id=:uid';
+
+        $query = $this->db->prepare($sql);
+        $params = array(
+            ':email'          => $email,
+            ':full_name'      => $full_name,
+            ':password'       => $password,
             ':send_reminders' => $send_reminders,
             ':uid'            => $uid
         );
@@ -299,7 +328,8 @@ class User extends Model
         $_SESSION['logged_in'] = $uid;
 
         /* Generate hash to store in database / cookie and verify upon entering
-        the site */
+         * the site
+         */
         $salt = base64_encode(openssl_random_pseudo_bytes(16));
         $hash = md5($salt . $uid . $salt);
 
@@ -328,7 +358,8 @@ class User extends Model
      */
     private function generate_username($full_name)
     {
-        $_username = split(' ', strtolower($full_name));
+        $_username = explode(' ', strtolower($full_name));
+        $username = '';
 
         for ($i = 0; $i < sizeof($_username); $i++) {
             if ($i === sizeof($_username) - 1) {

@@ -41,15 +41,6 @@ class MainController
 
     public function __construct()
     {
-        // TODO: find a better way to do this
-        /*
-         * if ($_COOKIE['uid'] && $_COOKIE['session']) {
-         *     $user = new User();
-         *     if ($user->check_user_session())
-         *         $_SESSION['logged_in'] = $_COOKIE['uid'];
-         * }
-         */
-
         $this->route();
 
         if (!file_exists(APP . "controllers/$this->controller.php"))

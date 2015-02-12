@@ -10,7 +10,7 @@
         </li>
         <?php endif; ?>
 
-        <?php if (isset($this->permissions->can_allow_requests)): ?>
+        <?php if ($this->permissions->can_allow_requests): ?>
         <li id="request">
             <a href="<?= URL . 'reserve/requests'?>">Requests <span class="badge">11</span></a>
         </li>

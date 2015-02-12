@@ -83,7 +83,7 @@ class UserController extends MainController
 
             if (!empty($current_password) || !empty($new_password) || !empty($confirm_new_password)) {
                 try {
-                    $password = $this->model->new_password($_SESSION['logged_in'],
+                    $password = $this->model->new_password($this->user->id,
                                                            $current_password, $new_password,
                                                            $confirm_new_password);
                 } catch (Exception $e) {
@@ -94,9 +94,8 @@ class UserController extends MainController
             }
 
             try {
-                $this->model->edit_user($this->user->id, $this->user->username, $email,
-                                        $full_name, $this->user->access_group,
-                                        $password, $send_reminders);
+                $this->model->edit_settings($this->user->id, $email,
+                                            $full_name, $password, $send_reminders);
                 header('Location: ' . URL . 'user/settings');
             } catch (Exception $e) {
                 $this->error_message = 'Failed to change settings: ' . $e->getMessage();
@@ -136,7 +135,7 @@ class UserController extends MainController
 
             try {
                 $this->model->add_user($full_name, $email, $access_group);
-                header('Location: ' . URL . 'user/all');
+                /* header('Location: ' . URL . 'user/all'); */
             } catch (Exception $e) {
                 $this->error_message = 'Adding user failed: ' . $e->getMessage();
             }
@@ -176,7 +175,7 @@ class UserController extends MainController
             try {
                 $this->model->edit_user($uid, $username, $email, $full_name, $access_group);
                 $this->success_message = 'User ' . $this->model->get_user($uid)->username .
-                                         'succesfully changed.';
+                                         ' succesfully changed.';
                 $this->all();
                 exit(1);
             } catch (Exception $e) {

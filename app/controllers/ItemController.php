@@ -42,6 +42,11 @@ class ItemController extends MainController
 
     public function all()
     {
+        if (!$this->permissions->can_change_items) {
+            $this->index();
+            return false;
+        }
+
         $this->title = 'Reserver - Edit items';
         $this->view('item', 'edit_all');
     }

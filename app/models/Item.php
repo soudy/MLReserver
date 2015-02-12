@@ -32,7 +32,6 @@ class Item extends Model
      * @param string $name
      * @param string $description
      * @param string $count
-     * @param string $image
      *
      * @return bool|null
      */
@@ -61,7 +60,6 @@ class Item extends Model
      * @param int $id
      * @param string $name
      * @param string $description
-     * @param string $image
      * @param int $count
      *
      * @return bool|null
@@ -69,10 +67,10 @@ class Item extends Model
     public function edit_item($id, $name = null, $description = null, $count = null)
     {
         if (!$id)
-            throw new Exception('Please specify an item to edit.');
+            throw new Exception('No item specified.');
 
         if (!intval($count))
-            throw new Exception('Please enter a valid count number.');
+            throw new Exception('No valid count number specified.');
 
         if ($this->update_available_count($id, $count) === false) {
             throw new Exception('Can\'t update item count because the amount
@@ -108,7 +106,7 @@ class Item extends Model
     public function remove_item($id)
     {
         if (!$id)
-            throw new Exception('Please specify an item to remove.');
+            throw new Exception('No item specified.');
 
         $sql   = 'DELETE FROM items WHERE id=:id';
         $query = $this->db->prepare($sql);

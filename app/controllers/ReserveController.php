@@ -32,6 +32,9 @@ class ReserveController extends MainController
 
         $this->model = new Reserve();
         $this->permissions = $this->model->get_user_permissions($_SESSION['logged_in']);
+
+        if (!$this->permissions->can_request)
+            header('Location: ' . URL . 'item/all');
     }
 
     public function index()
@@ -81,6 +84,17 @@ class ReserveController extends MainController
 
         $this->title = 'Reserver - Requests';
         $this->view('reserve', 'requests');
+    }
+
+    public function request()
+    {
+        if (!$this->permissions->can_request) {
+            $this->index();
+            return false;
+        }
+
+        $this->title = 'Reserver - Request';
+        $this->view('reserve', 'request');
     }
 
     public function approve($id)

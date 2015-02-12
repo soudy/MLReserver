@@ -61,7 +61,7 @@ nav .dropdown:hover .dropdown-menu {display:inline !important}
 #content h1    {text-align:center;padding:0;margin:10px 0;}
 #content form  {margin:0 auto;}
 #content input {margin:15px 0;height:45px;}
-#content textarea {display:block;padding:7px;width:100%;min-height:200px;}
+#content textarea {display:block;width:100%;min-height:200px;}
 
 #search {width:30%;margin:15px 0 5px 0;float:right}
 #search input[type="text"] {float:right;width:200px;}
