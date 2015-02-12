@@ -1,7 +1,7 @@
 <?php
 
 error_reporting(E_ALL);
-ini_set('display_errors', 1); 
+ini_set('display_errors', 1);
 
 define('BASE_URL', "http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['SCRIPT_NAME']) .
                    DIRECTORY_SEPARATOR);

@@ -38,9 +38,9 @@ class Reserve extends Model
         '8' => array('16:30', '17:30')
     );
 
-    public function get_all_requests()
+    public function get_all_requests($order = 'requested_at')
     {
-        $sql = 'SELECT * FROM requests';
+        $sql = "SELECT * FROM requests ORDER BY `$order` ASC";
 
         $query = $this->db->query($sql);
 
@@ -66,10 +66,9 @@ class Reserve extends Model
     {
         // TODO: get a way of storing date including hours f.e: 09-02-2015 13:39
         if (!$this->is_available($item_id))
-            return false;
+            throw new Exception('Item is not available.');
 
         $reserved_at = date();
-        echo $reserved_at;
 
         $sql = 'INSERT INTO reserved_items (id, item_id, user_id, reserved_at,
                                             reserved_from, reserved_until, returned,

@@ -38,10 +38,8 @@ class Item extends Model
      */
     public function add_item($name, $description, $count)
     {
-        if (!($name && $description && $count)) {
+        if (!($name && $description && $count))
             throw new Exception('Missing fields.');
-            return false;
-        }
 
         $sql = 'INSERT INTO items (id, name, description, count, available_count)
                            VALUES (NULL, :name, :description, :count, :available_count)';
@@ -70,20 +68,16 @@ class Item extends Model
      */
     public function edit_item($id, $name = null, $description = null, $count = null)
     {
-        if (!$id) {
+        if (!$id)
             throw new Exception('Please specify an item to edit.');
-            return false;
-        }
 
-        if (!intval($count)) {
+        if (!intval($count))
             throw new Exception('Please enter a valid count number.');
-            return false;
-        }
 
-        if($this->update_available_count($id, $count) === false) {
+        if ($this->update_available_count($id, $count) === false) {
             throw new Exception('Can\'t update item count because the amount
-                of currently reserved items is larger than the count you defined.');
-            return false;
+                                 of currently reserved items is larger than the count
+                                 you defined.');
         } else {
             $available_count = $this->update_available_count($id, $count);
         }
@@ -113,10 +107,8 @@ class Item extends Model
      */
     public function remove_item($id)
     {
-        if (!$id) {
+        if (!$id)
             throw new Exception('Please specify an item to remove.');
-            return false;
-        }
 
         $sql   = 'DELETE FROM items WHERE id=:id';
         $query = $this->db->prepare($sql);

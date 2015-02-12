@@ -1,6 +1,14 @@
 <form id="log-in" method="post" class="input-group">
+    <?php if (isset($this->error_message)): ?>
+        <div id="error-msg">
+            <div class="alert alert-danger">
+                <?= $this->error_message ?>
+            </div>
+        </div>
+    <?php endif; ?>
+
     <h1>MLReserver</h1>
-    <input type="text" name="username" id="u_username" class="form-control" 
+    <input type="text" name="username" id="u_username" class="form-control"
     value="<?= isset($_POST['username']) ? $_POST['username'] : ''; ?>" placeholder="Username" required />
     <input type="password" name="password" id="u_password" class="form-control" placeholder="Password" required />
     <!--<input type="checkbox" name="stay_logged_in" id="stay_logged_in" />

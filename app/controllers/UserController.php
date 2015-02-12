@@ -52,12 +52,11 @@ class UserController extends MainController
             $username       = $_POST['username'];
             $password       = $_POST['password'];
 
-            // TODO: better error message
             try {
                 $this->model->log_in($username, $password);
                 header('Location: ' . URL . 'item');
             } catch (Exception $e) {
-                echo 'Log in failed: '. $e->getMessage();
+                $this->error_message = 'Log in failed: ' . $e->getMessage();
             }
         }
 
@@ -74,34 +73,33 @@ class UserController extends MainController
 
         // TODO: input verifying
         if (isset($_POST['change_settings'])) {
-            $email     = $_POST['email'];
-            $full_name = $_POST['full_name'];
-
+            $email                = $_POST['email'];
+            $full_name            = $_POST['full_name'];
             $current_password     = $_POST['current_password'];
             $new_password         = $_POST['new_password'];
             $confirm_new_password = $_POST['confirm_new_password'];
             $send_reminders       = isset($_POST['send_reminders']) ? 1 : 0;
             $password             = $this->user->password;
 
-            if (!(empty($current_password) || empty($new_password) ||
-                empty($confirm_new_password))) {
-
+            if (!empty($current_password) || !empty($new_password) || !empty($confirm_new_password)) {
                 try {
                     $password = $this->model->new_password($_SESSION['logged_in'],
                                                            $current_password, $new_password,
                                                            $confirm_new_password);
                 } catch (Exception $e) {
-                    echo 'Failed to change password: ' . $e->getMessage();
+                    $this->error_message = 'Failed to change password: ' . $e->getMessage();
+                    $this->view('user', 'settings');
+                    return false;
                 }
             }
 
             try {
                 $this->model->edit_user($this->user->id, $this->user->username, $email,
-                                        $full_name, $this->user->access_group, 
+                                        $full_name, $this->user->access_group,
                                         $password, $send_reminders);
                 header('Location: ' . URL . 'user/settings');
             } catch (Exception $e) {
-                echo 'Failed to change settings: ' . $e->getMessage();
+                $this->error_message = 'Failed to change settings: ' . $e->getMessage();
             }
         }
 
@@ -138,9 +136,9 @@ class UserController extends MainController
 
             try {
                 $this->model->add_user($full_name, $email, $access_group);
-                header('Location: ' . URL . 'user/all'); 
+                header('Location: ' . URL . 'user/all');
             } catch (Exception $e) {
-                echo 'Adding user failed: ' . $e->getMessage();
+                $this->error_message = 'Adding user failed: ' . $e->getMessage();
             }
         }
 
@@ -177,9 +175,12 @@ class UserController extends MainController
 
             try {
                 $this->model->edit_user($uid, $username, $email, $full_name, $access_group);
-                header('Location: ' . URL . "user/all#$uid");
+                $this->success_message = 'User ' . $this->model->get_user($uid)->username .
+                                         'succesfully changed.';
+                $this->all();
+                exit(1);
             } catch (Exception $e) {
-                echo 'Editing user failed: ' . $e->getMessage();
+                $this->error_message = 'Editing user failed: ' . $e->getMessage();
             }
         }
 

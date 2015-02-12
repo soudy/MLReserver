@@ -55,7 +55,7 @@ class ReserveController extends MainController
             return false;
         }
 
-        $this->title = 'Reserver - All reserved items';
+        $this->title = 'Reserver - All reservations';
         $this->view('reserve', 'all');
     }
 

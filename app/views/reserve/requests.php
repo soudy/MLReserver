@@ -44,7 +44,13 @@
                                 ?>
                             </td>
                             <td><?= isset($request->status) ? 'awaiting' : $request->status ?></td>
-                            <td><?= $request->message ?></td>
+                            <td>
+                            <?= 
+                                strlen($request->message) > 75
+                                ? substr($request->message, 0, 75) . '...'
+                                : $request->message
+                            ?>
+                            </td>
                             <td>
                                 <a href="<?= URL . "reserve/approve/$request->id"?>">
                                     <i class="fa fa-check fa-lg"></i>

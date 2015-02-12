@@ -1,22 +1,27 @@
-    <div id="content">
+    <div class="input-group" id="search">
+        <input type="text" name="search_term" class="form-control" placeholder="Search for..." />
+        <span class="input-group-btn">
+            <input type="submit" class="btn btn-default" name="search_item" value="Search" />
+        </span>
+    </div>
 
-        <div class="input-group" id="search">
-            <input type="text" name="search_term" class="form-control" placeholder="Search for..." />
-            <span class="input-group-btn">
-                <input type="submit" class="btn btn-default" name="search_item" value="Search" />
-            </span>
-        </div>
-
+    <div id="content" class="clear">
         <div class="row">
         <?php foreach ($this->model->get_all_items() as $item): ?>
-            <div class="col-sm-4 col-md-3">
-                <div class="thumbnail">
-                    <h3>
+            <div class="panel panel-default">
+                    <h4>
                         <a href="<?= URL . "item/detail/$item->id" ?>">
-                            <?= $item->name; ?>
+                            <?=
+                                strlen($item->name) > 50
+                                ? substr($item->name, 0, 50) . '...'
+                                : $item->name ?>
                         </a>
-                    </h3>
-                    <p><?= $item->description; ?></p>
+                    </h4>
+                    <p>
+                        <?= strlen($item->description) > 160
+                            ? substr($item->description, 0, 150) . '...'
+                            : $item->description ?>
+                    </p>
 
                     <input type="hidden" name="item_id" value="<?= $item->id ?>" />
                     <?php if ($item->available_count > 0): ?>
@@ -41,7 +46,6 @@
                     <?php else: ?>
                         <p class="alert alert-danger">None available.</p>
                     <?php endif; ?>
-                </div>
             </div>
         <?php endforeach; ?>
         </div>

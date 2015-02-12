@@ -25,7 +25,7 @@ body      {padding:0;margin:0;vertical-align:baseline;line-height:1;}
  * input:hover, input:focus {background:#f9f9f9;}
  */
 
-.container {width:900px;margin:0 auto;}
+.container {width:60%;margin:0 auto;}
 .clear     {clear:both;}
 
 a       {color:#666666;}
@@ -41,6 +41,11 @@ a:hover {color:#444444;}
 #error h1 {margin:30px 0 30px 0;}
 #error a  {cursor:pointer;}
 
+#error-msg, #success-msg .alert {margin:10px auto 0 auto;width:50%;text-align:center}
+#log-in #error-msg              {width:100%;margin:0;}
+
+.alert-info {background:#4F9BE8 !important}
+
 header               {overflow:hidden;padding:5px 0;margin:0 0 25px 0;}
 header #menu         {text-align:right;}
 header #menu a       {color:#3675BB}
@@ -49,35 +54,29 @@ header #menu ul      {float:right;list-style-type:none;}
 header #menu ul li   {float:left;padding:0 10px;}
 header #user         {float:left;}
 
-nav .dropdown-menu {width:100%}
+nav .dropdown-menu                 {width:100%}
+nav .dropdown:hover .dropdown-menu {display:inline !important}
 
-#content       {padding:15px;}
-#content h1    {text-align:left;padding:0;margin:10px 0;}
-#content input {margin:10px 0;border:1px solid #a8a8a8;padding:10px;}
+#content       {padding:15px;text-align:center;}
+#content h1    {text-align:center;padding:0;margin:10px 0;}
+#content form  {margin:0 auto;}
+#content input {margin:15px 0;height:45px;}
+#content textarea {display:block;padding:7px;width:100%;min-height:200px;}
 
-#content #search {width:100%;float:right;margin:0 0 10px 0;}
-#content #search input[type="text"] {float:right;width:200px;}
+#search {width:30%;margin:15px 0 5px 0;float:right}
+#search input[type="text"] {float:right;width:200px;}
 
-#content .row h3                         {padding:0;margin:10px 0;}
-#content .thumbnail                      {padding:10px;overflow:hidden;}
-#content .thumbnail .alert               {padding:7px;margin:7px 0;}
-#content .btn-default                    {padding:6px;}
-#content .thumbnail input                {float:right;margin:0 10px 0 0;}
-#content .thumbnail input[type="number"] {width:30%;}
-
-#content #create, #edit {width:40%;}
-
-#content #settings input {width:auto;}
-
-#content #edit input     {display:block;}
-#content #edit textarea  {display:block;border:1px solid #a8a8a8;padding:7px;}
-
-#content textarea {border:1px solid #a8a8a8;padding:6px;margin:0 0 10px 0;}
-#content select,
-         input[type="number"]   {width:22% !important;}
+#content #create, #edit, #settings {width:40%;}
 
 #content a#goto {float:right;}
 
-.dropdown:hover .dropdown-menu {display:inline !important}
+table th {text-align:center;}
 
 footer {text-align:center;font-size:15px;margin:10px 0;}
+
+.row          {-webkit-column-width: 25em;
+               -webkit-column-gap: 3em;
+                  -moz-column-gap: 3em;
+                  -moz-column-width: 25em;}
+.panel        {display:inline-block;padding:10px;width:100%}
+.panel .alert {padding:7px;margin:5px 0;}

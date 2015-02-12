@@ -71,14 +71,12 @@ class User extends Model
      * @param string $username
      * @param string $password
      *
-     * @return bool
+     * @return void
      */
     public function log_in($username, $password)
     {
-        if (!($username && $password)) {
+        if (!($username && $password))
             throw new Exception('Please enter all fields.');
-            return false;
-        }
 
         $sql   = 'SELECT password, id FROM users WHERE username = :username';
         $query = $this->db->prepare($sql);
@@ -91,10 +89,8 @@ class User extends Model
 
         if (password_verify($password, $hashed_password)) {
             $this->set_user_session($uid);
-            return true;
         } else {
             throw new Exception('Username and password don\'t match.');
-            return false;
         }
     }
 
@@ -122,10 +118,8 @@ class User extends Model
      */
     public function check_user_session()
     {
-        if (!($_COOKIE['uid'] && $_COOKIE['session'])) {
+        if (!($_COOKIE['uid'] && $_COOKIE['session']))
             throw new Exception('You\'re not logged in.');
-            return false;
-        }
 
         $sql = 'SELECT session FROM users WHERE id=:id';
 
@@ -148,10 +142,8 @@ class User extends Model
      */
     public function add_user($full_name, $email, $access_group = self::DEFAULT_ACCESS_GROUP)
     {
-        if (!($full_name && $email)) {
+        if (!($full_name && $email))
             throw new Exception('Missing fields.');
-            return false;
-        }
 
         /*
          * Username and password will get generated. The username will exist of a
@@ -163,10 +155,8 @@ class User extends Model
         $raw_password = $this->generate_password();
         $password     = password_hash($raw_password, PASSWORD_BCRYPT);
 
-        if ($this->check_existance('users', 'username', $username)) {
+        if ($this->check_existance('users', 'username', $username))
             throw new Exception('User already exists in database.');
-            return false;
-        }
 
         // XXX: Temporary way of showing username/password combination. will be
         // changed into a mail later
@@ -204,10 +194,8 @@ class User extends Model
      */
     public function remove_user($uid)
     {
-        if (!$uid) {
+        if (!$uid)
             throw new Exception('Missing arguments.');
-            return false;
-        }
 
         $sql   = 'DELETE FROM users WHERE id=:id';
         $query = $this->db->prepare($sql);
@@ -230,10 +218,8 @@ class User extends Model
                               $full_name = null, $access_group = null,
                               $password = null, $send_reminders = null)
     {
-        if (!$uid) {
-            throw new Exception('Missing arguments.');
-            return false;
-        }
+        if (!$uid)
+            throw new Exception('Missing argument.');
 
         $sql = 'UPDATE users SET username=:username, email=:email, password=:password,
                                  full_name=:full_name, access_group=:access_group,
@@ -266,22 +252,13 @@ class User extends Model
      */
     public function new_password($uid, $current_password, $new_password, $confirm_new_password)
     {
-        if (!($current_password || $new_password || $confirm_new_password)) {
-            throw new Exception('Missing field(s).');
-            return false;
-        }
-
         $user = $this->get_user($uid);
 
-        if (!password_verify($current_password, $user->password)) {
-            throw new Exception('Current password isn\'t correct.');
-            return false;
-        }
+        if (!password_verify($current_password, $user->password))
+            throw new Exception('Current password doesn\'t match.');
 
-        if ($new_password !== $confirm_new_password) {
+        if ($new_password !== $confirm_new_password)
             throw new Exception('New passwords don\'t match.');
-            return false;
-        }
 
         return password_hash($new_password, PASSWORD_BCRYPT);
     }
@@ -297,10 +274,8 @@ class User extends Model
      */
     private function check_existance($table, $row, $value)
     {
-        if (!($table || $row || $value)) {
-            throw new Exception('Missing arguments.');
-            return false;
-        }
+        if (!($table || $row || $value))
+            throw new Exception('Missing argument(s).');
 
         $sql   = "SELECT `$row` FROM `$table` WHERE `$row` = :value";
         $query = $this->db->prepare($sql);
@@ -318,15 +293,13 @@ class User extends Model
      */
     private function set_user_session($uid)
     {
-        if (!$uid) {
-            throw new Exception('Missing arguments.');
-            return false;
-        }
+        if (!$uid)
+            throw new Exception('Missing argument.');
 
         $_SESSION['logged_in'] = $uid;
 
-        // Generate hash to store in database / cookie and verify upon entering
-        // the site
+        /* Generate hash to store in database / cookie and verify upon entering
+        the site */
         $salt = base64_encode(openssl_random_pseudo_bytes(16));
         $hash = md5($salt . $uid . $salt);
 
@@ -355,11 +328,6 @@ class User extends Model
      */
     private function generate_username($full_name)
     {
-        if (!$full_name) {
-            throw new Exception('Missing arguments.');
-            return false;
-        }
-
         $_username = split(' ', strtolower($full_name));
 
         for ($i = 0; $i < sizeof($_username); $i++) {

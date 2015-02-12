@@ -3,7 +3,6 @@
 session_start();
 
 define('APP', dirname(__DIR__) . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR);
-define('PUB', dirname(__DIR__) . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR);
 
 function __autoload($class)
 {

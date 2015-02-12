@@ -69,10 +69,9 @@ class ItemController extends MainController
 
             try {
                 $this->model->edit_item($id, $name, $description, $count);
-                header('Location: ' . URL . 'item/all');
+                header('Location: ' . URL . "item/all#$id");
             } catch (Exception $e) {
-                // TODO: better notifying
-                echo 'Editing item failed: ' . $e->getMessage();
+                $this->error_message = 'Adding item failed: ' . $e->getMessage();
             }
         }
 
@@ -107,9 +106,10 @@ class ItemController extends MainController
 
             try {
                 $this->model->add_item($name, $description, $count);
+                $this->success_message = 'Item successfully created.';
                 header('Location: ' . URL . "item/all");
             } catch (Exception $e) {
-                echo 'Adding item failed: ' . $e->getMessage();
+                $this->error_message = 'Adding item failed: ' . $e->getMessage();
             }
         }
 
@@ -131,6 +131,7 @@ class ItemController extends MainController
 
         if (isset($_POST['remove_item'])) {
             $this->model->remove_item($id);
+            $this->success_message = 'Item ' . $this->model->get_item($id)->name . ' successfully removed.';
             header('Location:' . URL . 'item/all');
         }
     }
