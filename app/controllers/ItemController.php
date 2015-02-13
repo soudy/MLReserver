@@ -104,7 +104,6 @@ class ItemController extends MainController
         $this->title = 'Reserver - Add item';
 
         if (isset($_POST['add_item'])) {
-            // TODO: input verifying
             $name        = $_POST['name'];
             $description = $_POST['description'];
             $count       = $_POST['count'];

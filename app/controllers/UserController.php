@@ -167,7 +167,6 @@ class UserController extends MainController
         $this->user  = $this->model->get_user($uid);
         $this->title = 'Reserver - Edit user';
 
-        // TODO: input verifying
         if (isset($_POST['edit_user'])) {
             $username     = $_POST['username'];
             $email        = $_POST['email'];
@@ -212,5 +211,22 @@ class UserController extends MainController
         }
 
         $this->view('user', 'remove');
+    }
+
+    public function import()
+    {
+        if (!$this->permissions->can_change_users) {
+            $this->index();
+            return false;
+        }
+
+        $this->title = 'Reserver - Import users from Magister';
+
+        if (isset($_POST['import_users'])) {
+            $filename = $_POST['csv'];
+            $this->model->import_from_magister($filename);
+        }
+
+        $this->view('user', 'import');
     }
 }

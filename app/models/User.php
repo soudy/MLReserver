@@ -40,7 +40,7 @@ class User extends Model
     /**
      * Return an object of all users in the database
      *
-     * @return object|null
+     * @return object|false
      */
     public function get_all_users()
     {
@@ -54,7 +54,7 @@ class User extends Model
     /**
      * Return an object of all existing access groups
      *
-     * @return object|null
+     * @return object|bool
      */
     public function get_all_access_groups()
     {
@@ -75,9 +75,6 @@ class User extends Model
      */
     public function log_in($username, $password)
     {
-        if (!($username && $password))
-            throw new Exception('Please enter all fields.');
-
         $sql   = 'SELECT password, id FROM users WHERE username = :username';
         $query = $this->db->prepare($sql);
 
@@ -124,7 +121,6 @@ class User extends Model
         $sql = 'SELECT session FROM users WHERE id=:id';
 
         $query = $this->db->prepare($sql);
-
         $query->execute(array(':id' => $_COOKIE['uid']));
 
         return isset($query->fetch()['session']);
@@ -145,13 +141,14 @@ class User extends Model
         if (!($full_name && $email))
             throw new Exception('Missing fields.');
 
-        // TODO: email and full name checking
+        if (!preg_match('/^[A-Z0-9._%+=]+\@[A-Z0-9.-]+\.[A-Z]{2,4}$/i', $email))
+            throw new Exception('Invalid e-mail address.');
 
         /*
          * Username and password will get generated. The username will exist of a
          * first name + last name combination and password will be a randomly
-         * generated string. The length of the password is decided by the
-         * constant GENERATED_PASSWORD_LENGTH.
+         * generated base64 encoded string. The length of the password is decided by
+         * the constant GENERATED_PASSWORD_LENGTH.
          */
         $username     = $this->generate_username($full_name);
         $raw_password = $this->generate_password();
@@ -164,7 +161,6 @@ class User extends Model
         // changed into a mail later
         echo $username . '<br />';
         echo $raw_password;
-
 
         $sql = 'INSERT INTO users (id, username, password, email, full_name,
                                    access_group, send_reminders, session)
@@ -221,6 +217,9 @@ class User extends Model
     {
         if (!$uid)
             throw new Exception('Missing argument.');
+
+        if (!preg_match('/^[A-Z0-9._%+=]+\@[A-Z0-9.-]+\.[A-Z]{2,4}$/i', $email))
+            throw new Exception('Invalid e-mail address.');
 
         $sql = 'UPDATE users SET username=:username, email=:email,
                                  full_name=:full_name, access_group=:access_group
@@ -279,7 +278,7 @@ class User extends Model
      * @param string $new_password
      * @param string $confirm_new_password
      *
-     * @return string|bool
+     * @return string
      */
     public function new_password($uid, $current_password, $new_password, $confirm_new_password)
     {
@@ -294,8 +293,14 @@ class User extends Model
         return password_hash($new_password, PASSWORD_BCRYPT);
     }
 
+    public function import_from_magister($filename)
+    {
+        // TODO
+        throw new Exception('Not yet implemented');
+    }
+
     /**
-     * See if a row => value combination already exists.
+     * See if a row => value combination exists in database.
      *
      * @param string $table
      * @param string $row

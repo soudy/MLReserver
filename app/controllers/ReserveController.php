@@ -96,7 +96,7 @@ class ReserveController extends MainController
 
     public function approve($id)
     {
-        if (!$id || $this->permissions->can_allow_requests) {
+        if (!$id || !$this->permissions->can_allow_requests) {
             $this->index();
             return false;
         }

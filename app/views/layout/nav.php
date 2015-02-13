@@ -40,6 +40,9 @@
                 <li>
                     <a href="<?= URL . 'user/all'?>">Edit users</a>
                 </li>
+                <li>
+                    <a href="<?= URL . 'user/import'?>">Import from Magister</a>
+                </li>
             </ul>
         </li>
         <?php endif; ?>

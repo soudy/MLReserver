@@ -40,6 +40,9 @@ class Item extends Model
         if (!($name && $description && $count))
             throw new Exception('Missing fields.');
 
+        if (!intval($count))
+            throw new Exception('No valid count number specified.');
+
         $sql = 'INSERT INTO items (id, name, description, count, available_count)
                            VALUES (NULL, :name, :description, :count, :available_count)';
 
@@ -108,6 +111,7 @@ class Item extends Model
             throw new Exception('No item specified.');
 
         $sql   = 'DELETE FROM items WHERE id=:id';
+
         $query = $this->db->prepare($sql);
 
         return $query->execute(array(':id' => $id));
