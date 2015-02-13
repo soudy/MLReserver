@@ -96,6 +96,7 @@ class UserController extends MainController
             try {
                 $this->model->edit_settings($this->user->id, $email,
                                             $full_name, $password, $send_reminders);
+                $this->success_message = 'Settings successfully changed.';
                 header('Location: ' . URL . 'user/settings');
             } catch (Exception $e) {
                 $this->error_message = 'Failed to change settings: ' . $e->getMessage();
@@ -135,6 +136,7 @@ class UserController extends MainController
 
             try {
                 $this->model->add_user($full_name, $email, $access_group);
+                // XXX: temporary disable redirecting until mailing works
                 /* header('Location: ' . URL . 'user/all'); */
             } catch (Exception $e) {
                 $this->error_message = 'Adding user failed: ' . $e->getMessage();

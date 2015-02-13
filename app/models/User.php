@@ -145,6 +145,8 @@ class User extends Model
         if (!($full_name && $email))
             throw new Exception('Missing fields.');
 
+        // TODO: email and full name checking
+
         /*
          * Username and password will get generated. The username will exist of a
          * first name + last name combination and password will be a randomly

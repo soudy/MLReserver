@@ -72,13 +72,12 @@ class Item extends Model
         if (!intval($count))
             throw new Exception('No valid count number specified.');
 
-        if ($this->update_available_count($id, $count) === false) {
+        if ($this->update_available_count($id, $count) === false)
             throw new Exception('Can\'t update item count because the amount
                                  of currently reserved items is larger than the count
                                  you defined.');
-        } else {
+        else
             $available_count = $this->update_available_count($id, $count);
-        }
 
         $sql = 'UPDATE items SET name=:name, description=:description, count=:count,
                                  available_count=:available_count

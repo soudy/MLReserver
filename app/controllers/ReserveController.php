@@ -32,9 +32,6 @@ class ReserveController extends MainController
 
         $this->model = new Reserve();
         $this->permissions = $this->model->get_user_permissions($_SESSION['logged_in']);
-
-        if (!$this->permissions->can_request)
-            header('Location: ' . URL . 'item/all');
     }
 
     public function index()

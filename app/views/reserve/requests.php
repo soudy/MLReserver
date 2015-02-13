@@ -45,7 +45,7 @@
                             </td>
                             <td><?= isset($request->status) ? 'awaiting' : $request->status ?></td>
                             <td>
-                            <?= 
+                            <?=
                                 strlen($request->message) > 75
                                 ? substr($request->message, 0, 75) . '...'
                                 : $request->message
