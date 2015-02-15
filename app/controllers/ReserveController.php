@@ -94,7 +94,7 @@ class ReserveController extends MainController
         $this->view('reserve', 'request');
     }
 
-    public function approve($id)
+    public function approve($id = null)
     {
         if (!$id || !$this->permissions->can_allow_requests) {
             $this->index();
@@ -102,7 +102,7 @@ class ReserveController extends MainController
         }
     }
 
-    public function deny($id)
+    public function deny($id = null)
     {
         if (!$id || !$this->permissions->can_allow_requests) {
             $this->index();

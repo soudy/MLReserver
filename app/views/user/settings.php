@@ -8,12 +8,16 @@
             <label for="full_name">Full name</label>
             <input type="text" class="form-control" name="full_name" placeholder="Full name" value="<?= $this->user->full_name ?>" />
 
-            Send reminders
+            <label for="send_reminders">
+                Send reminders
+            </label>
             <?php if ($this->user->send_reminders): ?>
                 <input type="checkbox" name="send_reminders" checked="checked" />
             <?php else: ?>
                 <input type="checkbox" name="send_reminders" />
             <?php endif; ?>
+
+            <p><a href="<?= URL . 'user/remove'?>">Remove account</a></p>
 
             <h3>Password</h3>
             <!--<label for="current_password">Current password</label>-->
@@ -23,7 +27,7 @@
             <input type="password" class="form-control" name="new_password" placeholder="New Password" />
 
             <!--<label for="confirm_password">Confirm new password</label>-->
-            <input type="password" class="form-control" name="confirm_new_password" placeholder="Confirm Password" />
+            <input type="password" class="form-control" name="confirm_new_password" placeholder="Confirm New Password" />
 
             <input type="submit" class="btn btn-primary" name="change_settings" value="Submit" />
         </form>

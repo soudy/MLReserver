@@ -60,7 +60,7 @@ nav .dropdown:hover .dropdown-menu {display:inline !important}
 #search {width:30%;margin:15px 0 5px 0;float:right}
 #search input[type="text"] {float:right;width:200px;}
 
-#content #create, #edit, #settings {width:40%;}
+#content #create, #edit, #settings, #remove {width:40%;}
 
 #content a#goto {float:right;}
 

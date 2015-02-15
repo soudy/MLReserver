@@ -157,7 +157,7 @@ class UserController extends MainController
         $this->view('user', 'all');
     }
 
-    public function edit($uid)
+    public function edit($uid = null)
     {
         if (!$this->model->get_user($uid) || !$this->permissions->can_change_users) {
             $this->index();
@@ -187,16 +187,15 @@ class UserController extends MainController
         $this->view('user', 'edit');
     }
 
-    public function remove($uid)
+    public function remove($uid = null)
     {
-
-        if (!$this->permissions->can_change_users) {
-            $this->index();
+        if (!$uid) {
+            $this->remove_account();
             return false;
         }
 
-        if (!$uid) {
-            $this->all();
+        if (!$this->permissions->can_change_users) {
+            $this->index();
             return false;
         }
 
@@ -228,5 +227,29 @@ class UserController extends MainController
         }
 
         $this->view('user', 'import');
+    }
+
+    private function remove_account()
+    {
+        $uid = $_SESSION['logged_in'];
+
+        $this->title = 'Reserver - Remove account';
+
+        if (!$this->user = $this->model->get_user($uid))
+            $this->error('User not found.');
+
+        if (isset($_POST['remove_account'])) {
+            $password         = $_POST['password'];
+            $confirm_password = $_POST['confirm_password'];
+
+            try {
+                $this->model->remove_account($uid, $password, $confirm_password);
+                $this->logout();
+            } catch (Exception $e) {
+                $this->error_message = 'Removing account failed: ' . $e->getMessage();
+            }
+        }
+
+        $this->view('user', 'remove_account');
     }
 }

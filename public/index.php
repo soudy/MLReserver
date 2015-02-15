@@ -1,5 +1,6 @@
 <?php
 
+session_set_cookie_params(3600 * 24 * 183);
 session_start();
 
 define('APP', dirname(__DIR__) . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR);

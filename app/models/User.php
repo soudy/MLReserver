@@ -178,9 +178,7 @@ class User extends Model
             ':send_reminders' => self::SEND_USER_REMINDERS
         );
 
-        $query->execute($params);
-
-        return true;
+        return $query->execute($params);
     }
 
     /**
@@ -198,7 +196,32 @@ class User extends Model
         $sql   = 'DELETE FROM users WHERE id=:id';
         $query = $this->db->prepare($sql);
 
-        $query->execute(array(':id' => $uid));
+        return $query->execute(array(':id' => $uid));
+    }
+
+    /**
+     *
+     * Remove the current user.
+     *
+     * @param int $uid
+     * @param string $password
+     * @param string $confirm_password
+     *
+     * @return bool|null
+     */
+    public function remove_account($uid, $password, $confirm_password)
+    {
+        if (!($uid && $password && $confirm_password))
+            throw new Exception('Missing fields.');
+
+        if (!password_verify($password         , $this->get_user($uid)->password) ||
+            !password_verify($confirm_password , $this->get_user($uid)->password))
+            throw new Exception('Incorrect password(s).');
+
+        $sql   = 'DELETE FROM users WHERE id=:id';
+        $query = $this->db->prepare($sql);
+
+        return $query->execute(array(':id' => $uid));
     }
 
     /**

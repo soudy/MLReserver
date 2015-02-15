@@ -57,7 +57,7 @@ class ItemController extends MainController
         $this->view('item', 'user');
     }
 
-    public function edit($id)
+    public function edit($id = null)
     {
         if (!$id || !$this->permissions->can_change_items) {
             $this->index();
@@ -83,7 +83,7 @@ class ItemController extends MainController
         $this->view('item', 'edit');
     }
 
-    public function detail($id)
+    public function detail($id = null)
     {
         $this->item = $this->model->get_item($id);
 
@@ -120,7 +120,7 @@ class ItemController extends MainController
         $this->view('item', 'add');
     }
 
-    public function remove($id)
+    public function remove($id = null)
     {
         if (!$id || !$this->permissions->can_change_items) {
             $this->index();
