@@ -146,8 +146,11 @@ class UserController extends MainController
         $this->view('user', 'add');
     }
 
-    public function all($uid = null)
+    public function all()
     {
+        if (!isset($_SESSION['logged_in']))
+            $this->error('You need to be signed in to come here.');
+
         if (!$this->permissions->can_change_users) {
             $this->index();
             return false;
@@ -159,6 +162,9 @@ class UserController extends MainController
 
     public function edit($uid = null)
     {
+        if (!isset($_SESSION['logged_in']))
+            $this->error('You need to be signed in to come here.');
+
         if (!$this->model->get_user($uid) || !$this->permissions->can_change_users) {
             $this->index();
             return false;
@@ -189,6 +195,9 @@ class UserController extends MainController
 
     public function remove($uid = null)
     {
+        if (!isset($_SESSION['logged_in']))
+            $this->error('You need to be signed in to come here.');
+
         if (!$uid) {
             $this->remove_account();
             return false;
@@ -214,6 +223,9 @@ class UserController extends MainController
 
     public function import()
     {
+        if (!isset($_SESSION['logged_in']))
+            $this->error('You need to be signed in to come here.');
+
         if (!$this->permissions->can_change_users) {
             $this->index();
             return false;
@@ -231,6 +243,9 @@ class UserController extends MainController
 
     private function remove_account()
     {
+        if (!isset($_SESSION['logged_in']))
+            $this->error('You need to be signed in to come here.');
+
         $uid = $_SESSION['logged_in'];
 
         $this->title = 'Reserver - Remove account';

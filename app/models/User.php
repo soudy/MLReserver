@@ -85,7 +85,7 @@ class User extends Model
         $uid             = $query['id'];
 
         if (password_verify($password, $hashed_password)) {
-            $this->set_user_session($uid);
+            $_SESSION['logged_in'] = $uid;
         } else {
             throw new Exception('Username and password don\'t match.');
         }
@@ -104,26 +104,6 @@ class User extends Model
         setcookie('session', '', time() - 3600, '/');
 
         header('Location: ' . URL);
-    }
-
-    /**
-     * If the cookies session and uid are set, check the database entry of uid
-     * for the value of session. If the value of session in the database is the
-     * same as the value of session in the cookie, the user may be logged in.
-     *
-     * @return mixed|null
-     */
-    public function check_user_session()
-    {
-        if (!($_COOKIE['uid'] && $_COOKIE['session']))
-            throw new Exception('You\'re not logged in.');
-
-        $sql = 'SELECT session FROM users WHERE id=:id';
-
-        $query = $this->db->prepare($sql);
-        $query->execute(array(':id' => $_COOKIE['uid']));
-
-        return isset($query->fetch()['session']);
     }
 
     /**
@@ -163,9 +143,9 @@ class User extends Model
         echo $raw_password;
 
         $sql = 'INSERT INTO users (id, username, password, email, full_name,
-                                   access_group, send_reminders, session)
+                                   access_group, send_reminders)
                            VALUES (NULL, :username, :password, :email, :full_name,
-                                   :access_group, :send_reminders, NULL)';
+                                   :access_group, :send_reminders)';
 
         $query = $this->db->prepare($sql);
 
@@ -277,6 +257,9 @@ class User extends Model
         if (!$uid)
             throw new Exception('Missing argument.');
 
+        if (!preg_match('/^[A-Z0-9._%+=]+\@[A-Z0-9.-]+\.[A-Z]{2,4}$/i', $email))
+            throw new Exception('Invalid email.');
+
         $sql = 'UPDATE users SET email=:email, full_name=:full_name,
                                  password=:password, send_reminders=:send_reminders
                              WHERE id=:uid';
@@ -344,42 +327,6 @@ class User extends Model
     }
 
     /**
-     * Setting a user login session a.k.a actually logging the user in.
-     *
-     * @param int $uid
-     *
-     * @return bool|null
-     */
-    private function set_user_session($uid)
-    {
-        if (!$uid)
-            throw new Exception('Missing argument.');
-
-        $_SESSION['logged_in'] = $uid;
-
-        /* Generate hash to store in database / cookie and verify upon entering
-         * the site
-         */
-        $salt = base64_encode(openssl_random_pseudo_bytes(16));
-        $hash = md5($salt . $uid . $salt);
-
-        setcookie('session' , $hash , time() + 3600 * 24 * 365 , '/');
-        setcookie('uid'     , $uid  , time() + 3600 * 24 * 365 , '/');
-
-        // Insert hash into database to check later
-        $sql = 'UPDATE users SET session=:hash WHERE id=:id';
-
-        $query = $this->db->prepare($sql);
-
-        $params = array(
-            ':hash' => $hash,
-            ':id'   => $uid
-        );
-
-        return $query->execute($params);
-    }
-
-    /**
      * Generate a username based on fullname, eg Dennis Ritchie => dritchie
      *
      * @param string $full_name
@@ -389,7 +336,7 @@ class User extends Model
     private function generate_username($full_name)
     {
         $_username = explode(' ', strtolower($full_name));
-        $username = '';
+        $username  = '';
 
         for ($i = 0; $i < sizeof($_username); $i++) {
             if ($i === sizeof($_username) - 1) {
