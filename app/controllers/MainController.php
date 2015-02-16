@@ -25,18 +25,18 @@
 
 class MainController
 {
-    protected $controller;
-    protected $method;
-    protected $params;
-
-    protected $title;
-    protected $url_actions;
+    private $controller;
+    private $method;
+    private $params;
+    private $url_actions;
 
     private $routes = array(
         'user'    => 'UserController',
         'item'    => 'ItemController',
         'reserve' => 'ReserveController'
     );
+
+    protected $title;
 
 
     public function __construct()
@@ -89,9 +89,9 @@ class MainController
         require_once APP . 'views/layout/head.php';
 
         if (isset($_SESSION['logged_in'])) {
-            require_once APP . "views/layout/header.php";
+            require_once APP . 'views/layout/header.php';
 
-            require_once APP . "views/layout/nav.php";
+            require_once APP . 'views/layout/nav.php';
         }
 
         require_once APP . "views/$route/$page.php";
@@ -105,7 +105,7 @@ class MainController
 
         require_once APP . 'views/layout/head.php';
 
-        require_once APP . "views/error.php";
+        require_once APP . 'views/error.php';
 
         require_once APP . 'views/layout/footer.php';
 

@@ -114,6 +114,7 @@ class UserController extends MainController
         }
 
         $this->model->logout();
+        header('Location: ' . URL);
     }
 
     public function add()

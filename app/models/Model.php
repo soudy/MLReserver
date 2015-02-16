@@ -37,7 +37,7 @@ class Model
             $this->db = new PDO(DB_DRIVER . ':host=' . DB_HOST . ';dbname=' . DB_NAME .
                                 ';charset=' . DB_CHARSET, DB_USER, DB_PASS);
         } catch (PDOException $e) {
-            die("Failed to open PDO database connection: $e");
+            die('Failed to open PDO database connection: ' . $e->getMessage());
         }
     }
 
@@ -46,7 +46,7 @@ class Model
      *
      * @param int $uid
      *
-     * @return mixed|null
+     * @return object|bool
      */
     public function get_user($uid)
     {
@@ -66,13 +66,10 @@ class Model
      *
      * @param int $uid
      *
-     * @return mixed|null
+     * @return object|bool
      */
-    public function get_user_permissions($uid = null)
+    public function get_user_permissions($uid)
     {
-        if (!$uid)
-            return false;
-
         $access_group = $this->get_user($uid)->access_group;
         $sql          = 'SELECT * FROM access_groups WHERE name=:name';
 
@@ -88,7 +85,7 @@ class Model
      *
      * @param int $id
      *
-     * @return mixed|null
+     * @return object|bool
      */
     public function get_item($id)
     {
@@ -135,9 +132,6 @@ class Model
      */
     protected function is_available($id)
     {
-        if (!$id)
-            return false;
-
         $sql = 'SELECT available_count FROM items WHERE id=:id';
 
         $query = $this->db->prepare($sql);

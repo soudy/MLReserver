@@ -58,9 +58,9 @@ nav .dropdown:hover .dropdown-menu {display:inline !important}
 #content textarea {display:block;width:100%;min-height:200px;}
 
 #search {width:30%;margin:15px 0 5px 0;float:right}
-#search input[type="text"] {float:right;width:200px;}
+#search input[type="text"] {float:right;width:250px;}
 
-#content #create, #edit, #settings, #remove {width:40%;}
+#content #create, #edit, #settings, #remove, #detail {width:40%;}
 
 #content a#goto {float:right;}
 

@@ -1,8 +1,5 @@
     <div class="input-group" id="search">
-        <input type="text" name="search_term" class="form-control" placeholder="Search for..." />
-        <span class="input-group-btn">
-            <input type="submit" class="btn btn-default" name="search_item" value="Search" />
-        </span>
+        <input type="text" name="search_term" id="search_item" class="form-control" placeholder="Search for..." />
     </div>
 
     <div id="content" class="clear">

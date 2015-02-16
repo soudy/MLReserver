@@ -83,6 +83,14 @@ class ItemController extends MainController
         $this->view('item', 'edit');
     }
 
+    public function search($query)
+    {
+        $this->title = 'Reserver - Search';
+        echo $query;
+
+        var_dump($this->model->search($query));
+    }
+
     public function detail($id = null)
     {
         $this->item = $this->model->get_item($id);

@@ -79,16 +79,15 @@ class User extends Model
         $query = $this->db->prepare($sql);
 
         $query->execute(array(':username' => $username));
-        $query = $query->fetch();
+        $query = $query->fetch(PDO::FETCH_OBJ);
 
-        $hashed_password = $query['password'];
-        $uid             = $query['id'];
+        $hashed_password = $query->password;
+        $uid             = $query->id;
 
-        if (password_verify($password, $hashed_password)) {
+        if (password_verify($password, $hashed_password))
             $_SESSION['logged_in'] = $uid;
-        } else {
+        else
             throw new Exception('Username and password don\'t match.');
-        }
     }
 
     /**
@@ -102,8 +101,6 @@ class User extends Model
 
         setcookie('uid',     '', time() - 3600, '/');
         setcookie('session', '', time() - 3600, '/');
-
-        header('Location: ' . URL);
     }
 
     /**
@@ -114,7 +111,7 @@ class User extends Model
      * @param string $access_group Decide what the user can or can not do, for
      * example reserve items, create items, create users etc.
      *
-     * @return bool|null
+     * @return bool
      */
     public function add_user($full_name, $email, $access_group = self::DEFAULT_ACCESS_GROUP)
     {
@@ -166,12 +163,12 @@ class User extends Model
      *
      * @param int $uid
      *
-     * @return bool|null
+     * @return bool
      */
     public function remove_user($uid)
     {
-        if (!$uid)
-            throw new Exception('Missing arguments.');
+        if (!$this->check_existance('users', 'id', $uid))
+            throw new Exception('User not found.');
 
         $sql   = 'DELETE FROM users WHERE id=:id';
         $query = $this->db->prepare($sql);
@@ -187,10 +184,13 @@ class User extends Model
      * @param string $password
      * @param string $confirm_password
      *
-     * @return bool|null
+     * @return bool
      */
     public function remove_account($uid, $password, $confirm_password)
     {
+        if (!$this->check_existance('users', 'id', $uid))
+            throw new Exception('User not found.');
+
         if (!($uid && $password && $confirm_password))
             throw new Exception('Missing fields.');
 
@@ -213,13 +213,13 @@ class User extends Model
      * @param string $full_name
      * @param string $access_group
      *
-     * @return mixed|null
+     * @return bool
      */
     public function edit_user($uid, $username = '', $email = '',
                               $full_name = '', $access_group = '')
     {
-        if (!$uid)
-            throw new Exception('Missing argument.');
+        if (!$this->get_user($uid))
+            throw new Exception('User not found.');
 
         if (!preg_match('/^[A-Z0-9._%+=]+\@[A-Z0-9.-]+\.[A-Z]{2,4}$/i', $email))
             throw new Exception('Invalid e-mail address.');
@@ -254,8 +254,8 @@ class User extends Model
     public function edit_settings($uid, $email = '', $full_name = '',
                                   $password = '', $send_reminders = '')
     {
-        if (!$uid)
-            throw new Exception('Missing argument.');
+        if (!$this->get_user($uid))
+            throw new Exception('User not found.');
 
         if (!preg_match('/^[A-Z0-9._%+=]+\@[A-Z0-9.-]+\.[A-Z]{2,4}$/i', $email))
             throw new Exception('Invalid email.');
@@ -288,6 +288,9 @@ class User extends Model
      */
     public function new_password($uid, $current_password, $new_password, $confirm_new_password)
     {
+        if (!$this->get_user($uid))
+            throw new Exception('User not found.');
+
         $user = $this->get_user($uid);
 
         if (!password_verify($current_password, $user->password))
@@ -335,15 +338,16 @@ class User extends Model
      */
     private function generate_username($full_name)
     {
-        $_username = explode(' ', strtolower($full_name));
-        $username  = '';
+        $username_parts = explode(' ', strtolower($full_name));
+        $username       = '';
 
-        for ($i = 0; $i < sizeof($_username); $i++) {
-            if ($i === sizeof($_username) - 1) {
-                $username .= $_username[$i];
+        for ($i = 0; $i < sizeof($username_parts); $i++) {
+            if ($i === sizeof($username_parts) - 1) {
+                $username .= $username_parts[$i];
                 break;
             }
-            $username .= $_username[$i][0];
+
+            $username .= $username_parts[$i][0];
         }
 
         return $username;

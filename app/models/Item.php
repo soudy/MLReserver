@@ -33,7 +33,7 @@ class Item extends Model
      * @param string $description
      * @param string $count
      *
-     * @return bool|null
+     * @return bool
      */
     public function add_item($name, $description, $count)
     {
@@ -65,13 +65,10 @@ class Item extends Model
      * @param string $description
      * @param int $count
      *
-     * @return bool|null
+     * @return bool
      */
     public function edit_item($id, $name = null, $description = null, $count = null)
     {
-        if (!$id)
-            throw new Exception('No item specified.');
-
         if (!intval($count))
             throw new Exception('No valid count number specified.');
 
@@ -98,17 +95,30 @@ class Item extends Model
         return $query->execute($params);
     }
 
+    public function search($query = null)
+    {
+        if (!$query)
+            return $this->get_all_items();
+
+        $sql = 'SELECT * FROM items LIKE :query';
+
+        $query = $this->db->prepare($sql);
+        $query->execute(array(':query' => $query));
+
+        return $query->fetchAll(PDO::FETCH_OBJ);
+    }
+
     /**
      * Remove an item.
      *
      * @param int $id
      *
-     * @return bool|null
+     * @return bool
      */
     public function remove_item($id)
     {
-        if (!$id)
-            throw new Exception('No item specified.');
+        if (!$this->get_item($id))
+            throw new Exception('Item not found.');
 
         $sql   = 'DELETE FROM items WHERE id=:id';
 
