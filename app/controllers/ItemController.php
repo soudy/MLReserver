@@ -64,6 +64,9 @@ class ItemController extends MainController
             return false;
         }
 
+        if (!$this->model->get_item($id))
+            $this->error('Can\'t find item.');
+
         $this->item  = $this->model->get_item($id);
         $this->title = 'Reserver - Edit item';
 
@@ -86,9 +89,8 @@ class ItemController extends MainController
     public function search($query)
     {
         $this->title = 'Reserver - Search';
-        echo $query;
 
-        var_dump($this->model->search($query));
+        echo json_encode($this->model->search($query));
     }
 
     public function detail($id = null)

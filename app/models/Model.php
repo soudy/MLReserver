@@ -103,7 +103,7 @@ class Model
      *
      * @param int $uid
      *
-     * @return mixed|null
+     * @return object|bool
      */
     public function get_all_items($uid = null)
     {

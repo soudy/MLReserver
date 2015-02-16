@@ -6,8 +6,9 @@
  */
 
 /*jslint browser:true */
-function ajax(url)
+function search(query)
 {
+    var search_url = url + 'item/search/' + query;
     var xmlhttp;
 
     xmlhttp = new XMLHttpRequest();
@@ -18,13 +19,13 @@ function ajax(url)
         }
     };
 
-    xmlhttp.open("GET", url, true);
+    xmlhttp.open("GET", search_url, true);
     xmlhttp.send();
 }
 
 (function()
 {
     document.querySelector('#search_item').onkeyup = function() {
-        ajax(url + 'item/search/' + this.value);
+        search(this.value);
     };
 }());

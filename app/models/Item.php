@@ -95,15 +95,16 @@ class Item extends Model
         return $query->execute($params);
     }
 
-    public function search($query = null)
+    public function search($query = '')
     {
+
         if (!$query)
             return $this->get_all_items();
 
-        $sql = 'SELECT * FROM items LIKE :query';
+        $sql = "SELECT * FROM items WHERE name LIKE '%$query%'";
 
         $query = $this->db->prepare($sql);
-        $query->execute(array(':query' => $query));
+        $query->execute();
 
         return $query->fetchAll(PDO::FETCH_OBJ);
     }
