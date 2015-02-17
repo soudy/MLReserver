@@ -157,7 +157,8 @@ class UserController extends MainController
             return false;
         }
 
-        $this->edit();
+        $this->title = 'Edit users';
+        $this->view('user', 'all');
     }
 
     public function edit($uid = null)

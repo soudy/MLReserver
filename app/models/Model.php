@@ -139,4 +139,26 @@ class Model
 
         return $query->fetch(PDO::FETCH_OBJ)->available_count;
     }
+
+    /**
+     * See if a row => value combination exists in given table.
+     *
+     * @param string $table
+     * @param string $row
+     * @param mixed $value
+     *
+     * @return mixed|null
+     */
+    protected function check_existance($table, $row, $value)
+    {
+        if (!($table || $row || $value))
+            throw new Exception('Missing argument(s).');
+
+        $sql   = "SELECT `$row` FROM `$table` WHERE `$row` = :value";
+        $query = $this->db->prepare($sql);
+
+        $query->execute(array(':value' => $value));
+        return $query->fetch();
+    }
+
 }

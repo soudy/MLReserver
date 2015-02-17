@@ -17,19 +17,18 @@
                 <input type="checkbox" name="send_reminders" />
             <?php endif; ?>
 
-            <p><a href="<?= URL . 'user/remove'?>">Remove account</a></p>
-
             <h3>Password</h3>
-            <!--<label for="current_password">Current password</label>-->
             <input type="password" class="form-control" name="current_password" placeholder="Current Password" />
 
-            <!--<label for="new_password">New password</label>-->
             <input type="password" class="form-control" name="new_password" placeholder="New Password" />
 
-            <!--<label for="confirm_password">Confirm new password</label>-->
             <input type="password" class="form-control" name="confirm_new_password" placeholder="Confirm New Password" />
 
             <input type="submit" class="btn btn-primary" name="change_settings" value="Submit" />
         </form>
+
+        <hr />
+
+        <p><a id="remove_account" href="<?= URL . 'user/remove'?>">Remove account</a></p>
     </div>
 </div>

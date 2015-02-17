@@ -75,6 +75,9 @@ class User extends Model
      */
     public function log_in($username, $password)
     {
+        if (!$this->check_existance('users', 'username', $username))
+            throw new Exception("User $username not found.");
+
         $sql   = 'SELECT password, id FROM users WHERE username = :username';
         $query = $this->db->prepare($sql);
 
@@ -99,8 +102,8 @@ class User extends Model
     {
         session_destroy();
 
-        setcookie('uid',     '', time() - 3600, '/');
-        setcookie('session', '', time() - 3600, '/');
+        setcookie('uid'     , '' , time() - 3600 , '/');
+        setcookie('session' , '' , time() - 3600 , '/');
     }
 
     /**
@@ -167,7 +170,7 @@ class User extends Model
      */
     public function remove_user($uid)
     {
-        if (!$this->check_existance('users', 'id', $uid))
+        if (!$this->get_user($uid))
             throw new Exception('User not found.');
 
         $sql   = 'DELETE FROM users WHERE id=:id';
@@ -306,27 +309,6 @@ class User extends Model
     {
         // TODO
         throw new Exception('Not yet implemented');
-    }
-
-    /**
-     * See if a row => value combination exists in database.
-     *
-     * @param string $table
-     * @param string $row
-     * @param mixed $value
-     *
-     * @return mixed|null
-     */
-    private function check_existance($table, $row, $value)
-    {
-        if (!($table || $row || $value))
-            throw new Exception('Missing argument(s).');
-
-        $sql   = "SELECT `$row` FROM `$table` WHERE `$row` = :value";
-        $query = $this->db->prepare($sql);
-
-        $query->execute(array(':value' => $value));
-        return $query->fetch();
     }
 
     /**

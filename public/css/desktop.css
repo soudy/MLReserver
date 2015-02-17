@@ -28,7 +28,7 @@ body      {padding:0;margin:0;vertical-align:baseline;line-height:1;}
 .container {width:60%;margin:0 auto;}
 .clear     {clear:both;}
 
-#log-in                      {width:300px;margin:10px auto;padding:20px;font-size:15px;}
+#log-in                      {width:25%;margin:10px auto;padding:20px;font-size:15px;}
 #log-in p, h1                {text-align:center;}
 #log-in input                {width:100%;margin:7px 0;font-size:15px;height:45px;}
 #log-in input[type="submit"] {margin:7px 0;width:100%;font-size:15px;}
@@ -51,16 +51,19 @@ header #user         {float:left;}
 nav .dropdown-menu                 {width:100%}
 nav .dropdown:hover .dropdown-menu {display:inline !important}
 
-#content       {padding:15px;text-align:center;}
-#content h1    {text-align:center;padding:0;margin:10px 0;}
-#content form  {margin:0 auto;}
-#content input {margin:15px 0;height:45px;}
-#content textarea {display:block;width:100%;min-height:200px;}
+#content                 {padding:15px;text-align:center;}
+#content h1              {text-align:center;padding:0;margin:10px 0;}
+#content form            {margin:0 auto;}
+#content input           {margin:15px 0;height:45px;}
+#content textarea        {display:block;width:100%;min-height:200px;}
+
+#remove_account {color:#e74c3c;font-size:1.1em;font-weight:700;}
 
 #search {width:30%;margin:15px 0 5px 0;float:right}
 #search input[type="text"] {float:right;width:250px;}
 
-#content #create, #edit, #settings, #remove, #detail {width:40%;}
+#content #create, #edit, #settings, #remove, 
+#detail, #reserve, hr {margin:0 auto;width:45%;}
 
 #content a#goto {float:right;}
 
