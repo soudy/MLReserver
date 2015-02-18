@@ -1,5 +1,6 @@
 <?php
 /*
+ *
  * MLReserver is a reservation system primarily made for making sharing items
  * easy and clear between a large group of people.
  * Copyright (C) 2015 soud
@@ -38,9 +39,9 @@ class Reserve extends Model
         '8' => array('16:30', '17:30')
     );
 
-    public function get_all_requests($order = 'requested_at')
+    public function get_all_requests()
     {
-        $sql = "SELECT * FROM requests ORDER BY `$order` ASC";
+        $sql = 'SELECT * FROM requests';
 
         $query = $this->db->query($sql);
 
@@ -57,7 +58,7 @@ class Reserve extends Model
     public function get_all_reservations($uid = null)
     {
         if (isset($uid)) {
-            $sql = 'SELECT * FROM reserved_items WHERE user_id=:uid';
+            $sql = 'SELECT * FROM reservations WHERE user_id=:uid';
 
             $query = $this->db->prepare($sql);
             $query->execute(array('uid' => $uid));
@@ -65,7 +66,7 @@ class Reserve extends Model
             return $query->fetchAll(PDO::FETCH_OBJ);
         }
 
-        $sql = 'SELECT * FROM reserved_items';
+        $sql = 'SELECT * FROM reservations';
 
         $query = $this->db->query($sql);
 
@@ -80,17 +81,6 @@ class Reserve extends Model
      */
     public function reserve_item($user_id, $item_id, $count)
     {
-        if (!$this->is_available($item_id))
-            throw new Exception('Item is not available.');
-
-        $reserved_at = date();
-
-        $sql = 'INSERT INTO reserved_items (id, item_id, user_id, reserved_at,
-                                            reserved_from, reserved_until, returned,
-                                            returned_at, count)
-                                    VALUES (NULL, :item_id, :user_id, :reserved_at,
-                                            :reserved_from, :reserved_until,
-                                            NULL, NULL, :count)';
     }
 
     public function convert_from_school_time($hour)

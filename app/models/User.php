@@ -25,20 +25,17 @@
 
 class User extends Model
 {
-    /**
-     * @var int Send user reminders to return items if it's not returned in time
-     */
+    /* @var int Send user reminders to return items if it's not returned in time */
     const SEND_USER_REMINDERS = 0;
 
-    /**
-     * @var string The default access a user gets when created
-     */
+    /* @var string The default access a user gets when created */
     const DEFAULT_ACCESS_GROUP = 'student';
 
+    /* @var int Length of randomly generated password */
     const GENERATED_PASSWORD_LENGTH = 6;
 
     /**
-     * Return an object of all users in the database
+     * Return an object of all users
      *
      * @return object|false
      */

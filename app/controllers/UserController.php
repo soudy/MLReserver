@@ -157,7 +157,7 @@ class UserController extends MainController
             return false;
         }
 
-        $this->title = 'Edit users';
+        $this->title = 'Reserver - Edit users';
         $this->view('user', 'all');
     }
 

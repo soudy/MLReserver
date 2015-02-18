@@ -25,6 +25,8 @@
 
 class MainController
 {
+    const DEFAULT_METHOD_NAME = 'index';
+
     private $controller;
     private $method;
     private $params;
@@ -49,8 +51,8 @@ class MainController
         $this->controller = new $this->controller();
 
         if (!$this->method)
-            if (method_exists($this->controller, 'index'))
-                $this->method = 'index';
+            if (method_exists($this->controller, self::DEFAULT_METHOD_NAME))
+                $this->method = self::DEFAULT_METHOD_NAME;
 
         if (method_exists($this->controller, $this->method)) {
             if (!$this->params)

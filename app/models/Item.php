@@ -25,7 +25,6 @@
 
 class Item extends Model
 {
-
     /**
      * Add an item.
      *
@@ -97,7 +96,6 @@ class Item extends Model
 
     public function search($query = '')
     {
-
         if (!$query)
             return $this->get_all_items();
 
@@ -110,7 +108,7 @@ class Item extends Model
     }
 
     /**
-     * Remove an item.
+     * Remove an item
      *
      * @param int $id
      *
