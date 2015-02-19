@@ -67,6 +67,9 @@ nav .dropdown:hover .dropdown-menu {display:inline !important}
 
 #content a#goto {float:right;}
 
+#reserve select {margin:0 0 20px 0;}
+.date select {float:left;width:33.3%;margin:5px 0;}
+
 table th {text-align:center;}
 
 footer {text-align:center;font-size:15px;margin:10px 0;}

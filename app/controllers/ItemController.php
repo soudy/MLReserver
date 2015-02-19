@@ -25,6 +25,9 @@
 
 class ItemController extends MainController
 {
+    protected $model;
+    protected $permissions;
+
     public function __construct()
     {
         if (!isset($_SESSION['logged_in']))

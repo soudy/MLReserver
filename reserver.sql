@@ -59,7 +59,7 @@ CREATE TABLE `items` (
   `count` int(1) NOT NULL,
   `available_count` int(1) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -68,7 +68,7 @@ CREATE TABLE `items` (
 
 LOCK TABLES `items` WRITE;
 /*!40000 ALTER TABLE `items` DISABLE KEYS */;
-INSERT INTO `items` VALUES (3,'Raspberry Pi 2 Model B','The Raspberry Pi 2 Model B is the second generation Raspberry Pi. It replaced the original Raspberry Pi 1 Model B+ in February 2015.',30,1),(4,'Ooculus Rift','The Rift is an upcoming virtual reality head-mounted display, being developed by Oculus VR.',5,0),(5,' Arduino','Arduino is an open-source computer hardware and software company, project and user community that designs and manufactures kits for building digital devices and interactive objects that can sense and control the physical world.',20,4),(7,'Kiwifruit','The kiwifruit or Chinese gooseberry (sometimes shortened to kiwi outside New Zealand), is the edible berry of a woody vine in the genus Actinidia.',44,44),(8,'Asus MX239H 23\" IPS HD LED-backlit LCD Monitor','Monitor.',3,3);
+INSERT INTO `items` VALUES (3,'Raspberry Pi 2 Model B','The Raspberry Pi 2 Model B is the second generation Raspberry Pi. It replaced the original Raspberry Pi 1 Model B+ in February 2015.',30,1),(4,'Ooculus Rift','The Rift is an upcoming virtual reality head-mounted display, being developed by Oculus VR.',5,0),(5,' Arduino','Arduino is an open-source computer hardware and software company, project and user community that designs and manufactures kits for building digital devices and interactive objects that can sense and control the physical world.',20,4),(7,'Kiwifruit','The kiwifruit or Chinese gooseberry (sometimes shortened to kiwi outside New Zealand), is the edible berry of a woody vine in the genus Actinidia.',44,44),(8,'Asus MX239H 23\" IPS HD LED-backlit LCD Monitor','Monitor.',3,3),(9,'Raspberry Pi 2 Model A+','The Model A+ is the low-cost variant of the Raspberry Pi. It replaced the original Model A in November 2014.',10,10);
 /*!40000 ALTER TABLE `items` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -104,34 +104,29 @@ LOCK TABLES `requests` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `reserved_items`
+-- Table structure for table `reservations`
 --
 
-DROP TABLE IF EXISTS `reserved_items`;
+DROP TABLE IF EXISTS `reservations`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `reserved_items` (
+CREATE TABLE `reservations` (
   `id` int(1) NOT NULL AUTO_INCREMENT,
   `item_id` int(1) NOT NULL,
   `user_id` int(1) NOT NULL,
-  `reserved_at` varchar(255) NOT NULL,
-  `from_date` date NOT NULL,
-  `to_date` date NOT NULL,
-  `from_hour` int(1) NOT NULL,
-  `to_hour` int(1) NOT NULL,
-  `returned` int(1) DEFAULT NULL,
   `count` int(1) NOT NULL,
+  `hours` varchar(5) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `reserved_items`
+-- Dumping data for table `reservations`
 --
 
-LOCK TABLES `reserved_items` WRITE;
-/*!40000 ALTER TABLE `reserved_items` DISABLE KEYS */;
-/*!40000 ALTER TABLE `reserved_items` ENABLE KEYS */;
+LOCK TABLES `reservations` WRITE;
+/*!40000 ALTER TABLE `reservations` DISABLE KEYS */;
+/*!40000 ALTER TABLE `reservations` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -149,9 +144,8 @@ CREATE TABLE `users` (
   `full_name` varchar(255) NOT NULL,
   `access_group` varchar(255) NOT NULL,
   `send_reminders` int(1) DEFAULT NULL,
-  `session` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=59 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=56 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -160,7 +154,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (46,'soud','$2y$10$9iRjsUiUqgbR2OmoDkM//uNAIBBdh58c1TfAkZGqI2gmtaI9OhtyO','b@b.co.uk','Steven Oud','admin',0,'3489dbb2e1a7c22f887e3226fe5e1253'),(55,'ppom','$2y$10$Ly/0BFuYdlibHK6TDyqYg.Yo7gzZRvYITjyX8EmUzOpNBU5NU1qwe','ppom@gmail.com','Pim Pom','teacher',0,'e61804a54ddcc0dba6803829f7cd9604');
+INSERT INTO `users` VALUES (46,'soud','$2y$10$9iRjsUiUqgbR2OmoDkM//uNAIBBdh58c1TfAkZGqI2gmtaI9OhtyO','b@b.co.uk','Steven Oud','admin',0),(55,'ppom','$2y$10$Ly/0BFuYdlibHK6TDyqYg.Yo7gzZRvYITjyX8EmUzOpNBU5NU1qwe','ppom@gmail.com','Pim Pom','student',1);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -173,4 +167,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-02-13 19:33:32
+-- Dump completed on 2015-02-19 12:41:19

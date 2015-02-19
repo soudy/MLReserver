@@ -28,7 +28,6 @@ class Reserve extends Model
 {
     // TODO: http://php.net/manual/en/function.strptime.php
     private $school_hours = array(
-        '0' => array('8:30',  '17:30'),
         '1' => array('8:30',  '9:30'),
         '2' => array('9:30',  '10:30'),
         '3' => array('10:45', '11:45'),
@@ -75,17 +74,46 @@ class Reserve extends Model
 
     /**
      * Reserve an item
-     * TODO: finish this method
      *
-     * @return mixed|null
+     * @param int $user_id
+     * @param int $item_id
+     * @param int $count
+     * @param string $date_from
+     * @param string $date_to
+     * @param string $hours
+     *
+     * @return bool
      */
-    public function reserve_item($user_id, $item_id, $count)
+    public function reserve_item($user_id, $item_id, $count, $date_from, $date_to,
+                                 $hours)
     {
+        if (empty($user_id) || empty($item_id) || empty($count) || empty($date_from)
+            || empty($date_to))
+              throw new Exception('Missing fields.');
+
+        if ($count > $this->get_item($item_id)->available_count)
+              throw new Exception('You tried to reserve more items than there are available.');
+
+        $dates = $this->date_range($date_from, $date_to);
+
+        if (sizeof($dates) > 14)
+            throw new Exception('The maximum amount of days you can reserve is 14 days.
+                                 Please shorten your reservation.');
     }
 
-    public function convert_from_school_time($hour)
+    private function date_range($from, $to)
     {
-        return $this->school_hours[$hour];
+        $dates    = array();
+
+        $current  = strtotime($from);
+        $to       = strtotime($to);
+
+        while ($current <= $to) {
+            $dates[] = date('d-m-Y', $current);
+            $current = strtotime('+1 day', $current);
+        }
+
+        return $dates;
     }
 
 }

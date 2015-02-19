@@ -25,6 +25,9 @@
 
 class UserController extends MainController
 {
+    protected $model;
+    protected $permissions;
+
     public function __construct()
     {
         $this->model = new User();
@@ -113,7 +116,7 @@ class UserController extends MainController
             return false;
         }
 
-        $this->model->logout();
+        $this->model->log_out();
         header('Location: ' . URL);
     }
 

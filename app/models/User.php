@@ -37,7 +37,7 @@ class User extends Model
     /**
      * Return an object of all users
      *
-     * @return object|false
+     * @return object|bool
      */
     public function get_all_users()
     {
@@ -95,7 +95,7 @@ class User extends Model
      *
      * @return void
      */
-    public function logout()
+    public function log_out()
     {
         session_destroy();
 

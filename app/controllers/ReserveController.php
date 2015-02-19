@@ -25,6 +25,9 @@
 
 class ReserveController extends MainController
 {
+    protected $model;
+    protected $permissions;
+
     public function __construct()
     {
         if (!isset($_SESSION['logged_in']))
@@ -66,9 +69,37 @@ class ReserveController extends MainController
             return false;
         }
 
-        $this->item = $this->model->get_item($id);
+        if (!$this->model->get_item($id)) {
+            $this->error('Item not found.');
+        }
 
+        $this->item = $this->model->get_item($id);
         $this->title = 'Reserver - Reserve item';
+
+        if (isset($_POST['reserve_item'])) {
+            $user_id = $_SESSION['logged_in'];
+            $item_id = $_POST['item'];
+            $count   = $_POST['count'];
+
+            $hours = "%d-%d";
+            sprintf($hours, $_POST['hours_from'], $_POST['hours_to']);
+
+            $date_from = "%d-%d-%d";
+            $date_from = sprintf($date_from, $_POST['day_from'], $_POST['month_from'],
+                                 $_POST['year_from']);
+
+            $date_to = "%d-%d-%d";
+            $date_to = sprintf($date_to, $_POST['day_to'], $_POST['month_to'],
+                               $_POST['year_to']);
+
+            try {
+                $this->model->reserve_item($user_id, $item_id, $count, $date_from,
+                                           $date_to, $hours);
+            } catch (Exception $e) {
+                $this->error_message = 'Failed to reserve item: ' . $e->getMessage();
+            }
+        }
+
         $this->view('reserve', 'reserve');
     }
 
