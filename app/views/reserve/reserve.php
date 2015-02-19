@@ -15,8 +15,8 @@
             </select>
 
             <label for="count">Count</label>
-                <select name="day_from" class="form-control">
-                    <?php for ($i = 1; $i <= $this->item->available_count; ++$i): ?>
+                <select name="count" class="form-control">
+                    <?php for ($i = 1; $i <= $this->item->count; ++$i): ?>
                         <option value="<?= $i ?>"><?= $i ?></option>
                     <?php endfor; ?>
                 </select>
@@ -103,7 +103,7 @@
 
                 <label for="hours_to">To</label>
                 <select name="hours_to" class="form-control">
-                    <?php for($i = 1; $i <= 8; ++$i): ?>
+                    <?php for($i = 2; $i <= 8; ++$i): ?>
                         <option><?= $i ?></option>
                     <?php endfor; ?>
                 </select>

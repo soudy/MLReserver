@@ -81,6 +81,9 @@ class MainController
 
         $this->url_actions = explode('/', $this->url_actions);
 
+        if (!array_key_exists($this->url_actions[0], $this->routes))
+            $this->error('Page not found.');
+
         $this->controller = $this->routes[$this->url_actions[0]];
         $this->method     = isset($this->url_actions[1]) ? $this->url_actions[1] : null;
         $this->params     = array_slice($this->url_actions, 2);

@@ -94,13 +94,53 @@ class Reserve extends Model
         if ($count > $this->get_item($item_id)->available_count)
               throw new Exception('You tried to reserve more items than there are available.');
 
+        if (!preg_match('/\b\d{1,2}\-\d{1,2}-\d{4}\b/', $date_from) ||
+            !preg_match('/\b\d{1,2}\-\d{1,2}-\d{4}\b/', $date_to))
+              throw new Exception('Invalid date format.');
+
+        if (!preg_match('/^[1-8]\-[1-8]/', $hours))
+              throw new Exception('Invalid hours format.');
+
         $dates = $this->date_range($date_from, $date_to);
+
+        $date_from = '%d-%d-%d %s';
+        $date_to   = '%d-%d-%d %s';
 
         if (sizeof($dates) > 14)
             throw new Exception('The maximum amount of days you can reserve is 14 days.
                                  Please shorten your reservation.');
+
+        if (sizeof($dates) > 1)
+            $hours = null;
+
+        $sql = 'INSERT INTO reservations (id, item_id, user_id, reserved_at, date_from,
+                                          date_to, count, hours)
+                                  VALUES (null, :item_id, :user_id, :reserved_at,
+                                          :date_from, :date_to, :count, :hours)';
+
+        $query = $this->db->prepare($sql);
+
+        $params = array(
+            ':item_id'     => $item_id,
+            ':user_id'     => $user_id,
+            ':reserved_at' => date('d-m-Y G:i:s'),
+            ':date_from'   => $date_from,
+            ':date_to'     => $date_to,
+            ':count'       => $count,
+            ':hours'       => $hours
+        );
+
+        $query->execute($params);
     }
 
+    /**
+     * Get all dates inbetween 2 given dates
+     *
+     * @param string $from
+     * @param string $to
+     *
+     * @return array
+     */
     private function date_range($from, $to)
     {
         $dates    = array();
@@ -116,4 +156,15 @@ class Reserve extends Model
         return $dates;
     }
 
+    /**
+     * After reserving an item, update the availability count of that item
+     *
+     * @param string $item
+     * @param string $count
+     *
+     * @return array
+     */
+    private function update_availability($item, $count)
+    {
+    }
 }

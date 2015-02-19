@@ -105,20 +105,11 @@ class Model
      *
      * @return object|bool
      */
-    public function get_all_items($uid = null)
+    public function get_all_items()
     {
-        if (!isset($uid)) {
-            $sql = 'SELECT * FROM items';
+        $sql = 'SELECT * FROM items';
 
-            $query = $this->db->query($sql);
-
-            return $query->fetchAll(PDO::FETCH_OBJ);
-        }
-
-        $sql = 'SELECT * FROM reserved_items WHERE user_id=:uid';
-
-        $query = $this->db->prepare($sql);
-        $query->execute(array('uid' => $uid));
+        $query = $this->db->query($sql);
 
         return $query->fetchAll(PDO::FETCH_OBJ);
     }
@@ -128,7 +119,7 @@ class Model
      *
      * @param int $id
      *
-     * @return mixed|null
+     * @return object|bool
      */
     protected function is_available($id)
     {
@@ -147,7 +138,7 @@ class Model
      * @param string $row
      * @param mixed $value
      *
-     * @return mixed|null
+     * @return bool
      */
     protected function check_existance($table, $row, $value)
     {

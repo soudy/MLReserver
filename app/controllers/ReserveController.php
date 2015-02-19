@@ -81,14 +81,14 @@ class ReserveController extends MainController
             $item_id = $_POST['item'];
             $count   = $_POST['count'];
 
-            $hours = "%d-%d";
-            sprintf($hours, $_POST['hours_from'], $_POST['hours_to']);
+            $hours = '%d-%d';
+            $hours = sprintf($hours, $_POST['hours_from'], $_POST['hours_to']);
 
-            $date_from = "%d-%d-%d";
+            $date_from = '%d-%d-%d';
             $date_from = sprintf($date_from, $_POST['day_from'], $_POST['month_from'],
                                  $_POST['year_from']);
 
-            $date_to = "%d-%d-%d";
+            $date_to = '%d-%d-%d';
             $date_to = sprintf($date_to, $_POST['day_to'], $_POST['month_to'],
                                $_POST['year_to']);
 

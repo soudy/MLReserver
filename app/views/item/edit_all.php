@@ -9,7 +9,6 @@
                 <th>Name</th>
                 <th>Description</th>
                 <th>Count</th>
-                <th>Available</th>
                 <th>Change</th>
             </thead>
 
@@ -19,12 +18,11 @@
                     <td id="<?= $item->id ?>"><?= $item->id ?></td>
                     <td>
                         <a href="<?= URL . "item/detail/$item->id"?>">
-                            <?= $item->name ?>
+                            <?= htmlspecialchars($item->name) ?>
                         </a>
                     </td>
-                    <td><?= $item->description ?></td>
+                    <td><?= htmlspecialchars($item->description) ?></td>
                     <td><?= $item->count ?></td>
-                    <td><?= $item->available_count ?></td>
                     <td>
                         &nbsp;
                         <a href="<?= URL . "item/remove/$item->id"?>">

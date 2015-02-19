@@ -154,7 +154,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (46,'soud','$2y$10$9iRjsUiUqgbR2OmoDkM//uNAIBBdh58c1TfAkZGqI2gmtaI9OhtyO','b@b.co.uk','Steven Oud','admin',0),(55,'ppom','$2y$10$Ly/0BFuYdlibHK6TDyqYg.Yo7gzZRvYITjyX8EmUzOpNBU5NU1qwe','ppom@gmail.com','Pim Pom','student',1);
+INSERT INTO `users` VALUES (46,'soud','$2y$10$9iRjsUiUqgbR2OmoDkM//uNAIBBdh58c1TfAkZGqI2gmtaI9OhtyO','b@b.co.uk','Steven Oud','admin',0),(55,'ppom','$2y$10$Ly/0BFuYdlibHK6TDyqYg.Yo7gzZRvYITjyX8EmUzOpNBU5NU1qwe','ppom@gmail.com','Pim Pom','teacher',1);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

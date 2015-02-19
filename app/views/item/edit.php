@@ -1,4 +1,5 @@
     <div id="content">
+    <a href="#" onclick="history.go(-1);">&laquo; Back</a>
         <form id="edit" action="" method="post">
             <h1>Edit item</h1>
 
