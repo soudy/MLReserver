@@ -101,10 +101,10 @@ class Reserve extends Model
         if (!preg_match('/^[1-8]\-[1-8]/', $hours))
               throw new Exception('Invalid hours format.');
 
-        $dates = $this->date_range($date_from, $date_to);
+        if (strtotime($date_from) < strtotime(date('d-n-Y')))
+              throw new Exception('You can\'t reserve in the past!');
 
-        $date_from = '%d-%d-%d %s';
-        $date_to   = '%d-%d-%d %s';
+        $dates = $this->date_range($date_from, $date_to);
 
         if (sizeof($dates) > 14)
             throw new Exception('The maximum amount of days you can reserve is 14 days.
@@ -131,6 +131,15 @@ class Reserve extends Model
         );
 
         $query->execute($params);
+    }
+
+    public function remove_reservation($id)
+    {
+        $sql = 'DELETE FROM reservations WHERE id=:id';
+
+        $query = $this->db->prepare($sql);
+
+        return $query->execute(array('id' => $id));
     }
 
     /**

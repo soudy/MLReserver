@@ -141,6 +141,23 @@ class ReserveController extends MainController
         }
     }
 
+    public function remove($id)
+    {
+        if (!$id || !$this->permissions->can_see_reservations) {
+            $this->index();
+            return false;
+        }
+
+        $this->title = 'Reserver - Remove reservation';
+
+        if (isset($_POST['remove_reservation'])) {
+            $this->model->remove_reservation($id);
+            header('Location:' . URL . 'reserve/all');
+        }
+
+        $this->view('reserve', 'remove');
+    }
+
     public function detail($id)
     {
         if (!$id || !$this->permissions->can_allow_requests) {

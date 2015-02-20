@@ -63,7 +63,7 @@ nav .dropdown:hover .dropdown-menu {display:inline !important}
 #search input[type="text"] {float:right;width:250px;}
 
 #content #create, #edit, #settings, #remove,
-#detail, #reserve, hr {margin:0 auto;width:45%;}
+#detail, #reserve, hr {margin:0 auto;width:47.5%;}
 
 #content a#goto {float:right;}
 

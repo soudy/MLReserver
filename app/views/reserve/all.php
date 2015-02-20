@@ -15,6 +15,7 @@
                         <th>Reserved at</th>
                         <th>Reserved from</th>
                         <th>Reserved to</th>
+                        <th>Reserved hours</th>
                         <th>Count</th>
                         <th>Action</th>
                     </thead>
@@ -25,13 +26,14 @@
                             <td><?= $reservation->id ?></td>
                             <td>
                                 <a href="<?= URL . "item/detail/$reservation->item_id"?>">
-                                    <?= $this->model->get_item($reservation->item_id)->name ?>
+                                    <?= htmlspecialchars($this->model->get_item($reservation->item_id)->name) ?>
                                 </a>
                             </td>
-                            <td><?= $this->model->get_user($reservation->user_id)->username ?></td>
+                            <td><?= htmlspecialchars($this->model->get_user($reservation->user_id)->username) ?></td>
                             <td><?= $reservation->reserved_at ?></td>
                             <td><?= $reservation->date_from ?></td>
                             <td><?= $reservation->date_to ?></td>
+                            <td><?= $reservation->hours ?></td>
                             <td><?= $reservation->count ?></td>
                             <td>
                                 &nbsp;

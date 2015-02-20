@@ -98,10 +98,25 @@ class Model
     }
 
     /**
-     * Returns all existing items in the database. If uid is defined, return all
-     * items reserved by uid.
+     * Returns an object containing all reservations by a user or false if the
+     * user has no reservations.
      *
      * @param int $uid
+     *
+     * @return object|bool
+     */
+    public function get_reservations($uid)
+    {
+        $sql = 'SELECT * FROM reservations WHERE user_id=:uid';
+
+        $query = $this->db->prepare($sql);
+        $query->execute(array(':uid' => $uid));
+
+        return $query->fetch(PDO::FETCH_OBJ);
+    }
+
+    /**
+     * Returns all existing items in the database
      *
      * @return object|bool
      */
@@ -112,23 +127,6 @@ class Model
         $query = $this->db->query($sql);
 
         return $query->fetchAll(PDO::FETCH_OBJ);
-    }
-
-    /**
-     * Check if an item is available.
-     *
-     * @param int $id
-     *
-     * @return object|bool
-     */
-    protected function is_available($id)
-    {
-        $sql = 'SELECT available_count FROM items WHERE id=:id';
-
-        $query = $this->db->prepare($sql);
-        $query->execute(array(':id' => $id));
-
-        return $query->fetch(PDO::FETCH_OBJ)->available_count;
     }
 
     /**
@@ -145,7 +143,7 @@ class Model
         if (!($table || $row || $value))
             throw new Exception('Missing argument(s).');
 
-        $sql   = "SELECT `$row` FROM `$table` WHERE `$row` = :value";
+        $sql   = "SELECT `$row` FROM `$table` WHERE `$row`=:value";
         $query = $this->db->prepare($sql);
 
         $query->execute(array(':value' => $value));

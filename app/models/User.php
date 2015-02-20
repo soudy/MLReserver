@@ -136,7 +136,7 @@ class User extends Model
 
         // XXX: Temporary way of showing username/password combination. will be
         // changed into a mail later
-        echo $username . '<br />';
+        echo htmlspecialchars($username) . '<br />';
         echo $raw_password;
 
         $sql = 'INSERT INTO users (id, username, password, email, full_name,

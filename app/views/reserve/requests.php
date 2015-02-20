@@ -31,7 +31,7 @@
                                         <?= $this->model->get_item($request->item_id)->name ?>
                                     </a>
                                 </td>
-                                <td><?= $this->model->get_user($request->user_id)->username ?></td>
+                                <td><?= htmlspecialchars($this->model->get_user($request->user_id)->username) ?></td>
                                 <td><?= $request->requested_at ?></td>
                                 <td>
                                     <?=

@@ -17,9 +17,9 @@
                 <?php foreach ($this->model->get_all_users() as $user): ?>
                 <tr>
                     <td id="<?= $user->id ?>"><?= $user->id ?></td>
-                    <td><?= $user->username ?></td>
-                    <td><?= $user->email ?></td>
-                    <td><?= $user->full_name ?></td>
+                    <td><?= htmlspecialchars($user->username) ?></td>
+                    <td><?= htmlspecialchars($user->email) ?></td>
+                    <td><?= htmlspecialchars($user->full_name) ?></td>
                     <td><?= $user->access_group ?></td>
                     <td>
                         &nbsp;

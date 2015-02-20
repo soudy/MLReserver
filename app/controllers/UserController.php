@@ -100,7 +100,7 @@ class UserController extends MainController
                 $this->model->edit_settings($this->user->id, $email,
                                             $full_name, $password, $send_reminders);
                 $this->success_message = 'Settings successfully changed.';
-                header('Location: ' . URL . 'user/settings');
+                /* header('Location: ' . URL . 'user/settings'); */
             } catch (Exception $e) {
                 $this->error_message = 'Failed to change settings: ' . $e->getMessage();
             }

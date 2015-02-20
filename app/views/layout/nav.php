@@ -4,7 +4,7 @@
             <a href="<?= URL . 'item/'?>">All items</a>
         </li>
 
-        <?php if ($this->model->get_all_items($_SESSION['logged_in'])): ?>
+        <?php if ($this->model->get_reservations($_SESSION['logged_in'])): ?>
         <li id="user">
             <a href="<?= URL . 'item/user'?>">My reservations</a>
         </li>

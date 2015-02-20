@@ -39,7 +39,7 @@ class MainController
     );
 
     protected $title;
-
+    protected $model;
 
     public function __construct()
     {
