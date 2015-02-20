@@ -10,13 +10,19 @@
         </li>
         <?php endif; ?>
 
-        <?php if ($this->permissions->can_allow_requests): ?>
+        <?php if ($this->model->get_requests($_SESSION['logged_in'])): ?>
+        <li id="user">
+            <a href="<?= URL . 'item/requests'?>">My requests</a>
+        </li>
+        <?php endif; ?>
+
+        <?php if ($this->model->get_permission('can_allow_requests')): ?>
         <li id="request">
             <a href="<?= URL . 'reserve/requests'?>">Requests <span class="badge">11</span></a>
         </li>
         <?php endif; ?>
 
-        <?php if ($this->permissions->can_change_users): ?>
+        <?php if ($this->model->get_permission('can_change_users')): ?>
         <li id="item" class="dropdown">
             <a href="<?= URL . 'item/all'?>">Items<span class="caret"></span></a>
             <ul class="dropdown-menu" role="menu">
@@ -30,7 +36,7 @@
         </li>
         <?php endif; ?>
 
-        <?php if ($this->permissions->can_change_items): ?>
+        <?php if ($this->model->get_permission('can_change_items')): ?>
         <li id="item" class="dropdown">
             <a href="<?= URL . 'user/all'?>">Users<span class="caret"></span></a>
             <ul class="dropdown-menu" role="menu">
@@ -47,7 +53,7 @@
         </li>
         <?php endif; ?>
 
-        <?php if ($this->permissions->can_see_reservations): ?>
+        <?php if ($this->model->get_permission('can_see_reservations')): ?>
         <li id="item">
             <a href="<?= URL . 'reserve/all'?>">Reservations</a>
         </li>

@@ -26,7 +26,6 @@
 class ItemController extends MainController
 {
     protected $model;
-    protected $permissions;
 
     public function __construct()
     {
@@ -34,7 +33,6 @@ class ItemController extends MainController
             header('Location: ' . URL . 'user/login');
 
         $this->model = new Item();
-        $this->permissions = $this->model->get_user_permissions($_SESSION['logged_in']);
     }
 
     public function index()
@@ -45,7 +43,7 @@ class ItemController extends MainController
 
     public function all()
     {
-        if (!$this->permissions->can_change_items) {
+        if (!$this->model->get_permission('can_change_items')) {
             $this->index();
             return false;
         }
@@ -62,13 +60,13 @@ class ItemController extends MainController
 
     public function edit($id = null)
     {
-        if (!$id || !$this->permissions->can_change_items) {
+        if (!$id || !$this->model->get_permission('can_change_items')) {
             $this->index();
             return false;
         }
 
         if (!$this->model->get_item($id))
-            $this->error('Can\'t find item.');
+            $this->error('Item not found.', 404);
 
         $this->item  = $this->model->get_item($id);
         $this->title = 'Reserver - Edit item';
@@ -101,7 +99,7 @@ class ItemController extends MainController
         $this->item = $this->model->get_item($id);
 
         if (!$this->item)
-            $this->error('Item not found.');
+            $this->error('Item not found.', 404);
 
         $this->title = 'Reserver - ' . $this->item->name;
         $this->view('item', 'detail');
@@ -109,7 +107,7 @@ class ItemController extends MainController
 
     public function add()
     {
-        if (!$this->permissions->can_change_items) {
+        if (!$this->model->get_permission('can_change_items')) {
             $this->index();
             return false;
         }
@@ -135,13 +133,13 @@ class ItemController extends MainController
 
     public function remove($id = null)
     {
-        if (!$id || !$this->permissions->can_change_items) {
+        if (!$id || !$this->model->get_permission('can_change_items')) {
             $this->index();
             return false;
         }
 
         if (!$this->item = $this->model->get_item($id))
-            $this->error('Item not found.');
+            $this->error('Item not found.', 404);
 
         $this->title = 'Reserver - Remove item';
         $this->view('item', 'remove');

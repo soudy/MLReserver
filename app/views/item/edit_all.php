@@ -25,12 +25,12 @@
                     <td><?= $item->count ?></td>
                     <td>
                         &nbsp;
-                        <a href="<?= URL . "item/remove/$item->id"?>">
-                            <i class="fa fa-trash fa-lg"></i>
-                        </a>
-                        &nbsp;
                         <a href="<?= URL . "item/edit/$item->id"?>">
                             <i class="fa fa-pencil fa-lg"></i>
+                        </a>
+                        &nbsp;
+                        <a href="<?= URL . "item/remove/$item->id"?>">
+                            <i class="fa fa-trash fa-lg"></i>
                         </a>
                     </td>
                 </tr>

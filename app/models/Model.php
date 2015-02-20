@@ -26,6 +26,7 @@
 class Model
 {
     protected $db;
+    protected $permissions;
 
     /*
      * Not using a singleton for database
@@ -39,6 +40,19 @@ class Model
         } catch (PDOException $e) {
             die('Failed to open PDO database connection: ' . $e->getMessage());
         }
+
+        if (isset($_SESSION['logged_in']))
+            $this->permissions = $this->get_user_permissions($_SESSION['logged_in']);
+    }
+
+    /**
+     * Returns user permissions table
+     *
+     * @return object|bool
+     */
+    public function get_permission($permission)
+    {
+        return $this->permissions->$permission;
     }
 
     /**
@@ -112,7 +126,25 @@ class Model
         $query = $this->db->prepare($sql);
         $query->execute(array(':uid' => $uid));
 
-        return $query->fetch(PDO::FETCH_OBJ);
+        return $query->fetchAll(PDO::FETCH_OBJ);
+    }
+
+    /**
+     * Returns an object containing all requests by a user or false if the
+     * user has no requests.
+     *
+     * @param int $uid
+     *
+     * @return object|bool
+     */
+    public function get_requests($uid)
+    {
+        $sql = 'SELECT * FROM requests WHERE user_id=:uid';
+
+        $query = $this->db->prepare($sql);
+        $query->execute(array(':uid' => $uid));
+
+        return $query->fetchAll(PDO::FETCH_OBJ);
     }
 
     /**

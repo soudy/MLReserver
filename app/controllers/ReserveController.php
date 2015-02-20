@@ -26,7 +26,6 @@
 class ReserveController extends MainController
 {
     protected $model;
-    protected $permissions;
 
     public function __construct()
     {
@@ -34,26 +33,27 @@ class ReserveController extends MainController
             header('Location: ' . URL . 'user/login');
 
         $this->model = new Reserve();
-        $this->permissions = $this->model->get_user_permissions($_SESSION['logged_in']);
     }
 
     public function index()
     {
-        if ($this->permissions->can_see_reservations) {
+        if ($this->model->get_permission('can_see_reservations')) {
             $this->all();
             return true;
-        } elseif ($this->permissions->can_reserve) {
+        } elseif ($this->model->get_permission('can_reserve')) {
             $this->reserve();
             return true;
-        } else {
+        } elseif ($this->model->get_permission('can_request')) {
             $this->request();
             return true;
+        } else {
+            header('Location: ' . URL);
         }
     }
 
     public function all()
     {
-        if (!$this->permissions->can_see_reservations) {
+        if (!$this->model->get_permission('can_see_reservations')) {
             $this->index();
             return false;
         }
@@ -64,14 +64,13 @@ class ReserveController extends MainController
 
     public function reserve($id)
     {
-        if (!$this->permissions->can_reserve) {
+        if (!$this->model->get_permission('can_reserve')) {
             $this->request();
             return false;
         }
 
-        if (!$this->model->get_item($id)) {
-            $this->error('Item not found.');
-        }
+        if (!$this->model->get_item($id))
+            $this->error('Item not found.', 404);
 
         $this->item = $this->model->get_item($id);
         $this->title = 'Reserver - Reserve item';
@@ -103,9 +102,50 @@ class ReserveController extends MainController
         $this->view('reserve', 'reserve');
     }
 
+    public function request($id)
+    {
+        if (!$this->model->get_permission('can_request')) {
+            $this->index();
+            return false;
+        }
+
+        if (!$this->model->get_item($id))
+            $this->error('Item not found.', 404);
+
+        $this->item = $this->model->get_item($id);
+        $this->title = 'Reserver - Request item';
+
+        if (isset($_POST['request_item'])) {
+            $user_id = $_SESSION['logged_in'];
+            $item_id = $_POST['item'];
+            $count   = $_POST['count'];
+            $message = $_POST['message'];
+
+            $hours = '%d-%d';
+            $hours = sprintf($hours, $_POST['hours_from'], $_POST['hours_to']);
+
+            $date_from = '%d-%d-%d';
+            $date_from = sprintf($date_from, $_POST['day_from'], $_POST['month_from'],
+                                 $_POST['year_from']);
+
+            $date_to = '%d-%d-%d';
+            $date_to = sprintf($date_to, $_POST['day_to'], $_POST['month_to'],
+                               $_POST['year_to']);
+
+            try {
+                $this->model->reserve_item($user_id, $item_id, $count, $date_from,
+                                           $date_to, $hours, $message);
+            } catch (Exception $e) {
+                $this->error_message = 'Failed to reserve item: ' . $e->getMessage();
+            }
+        }
+
+        $this->view('reserve', 'request');
+    }
+
     public function requests()
     {
-        if (!$this->permissions->can_allow_requests) {
+        if (!$this->model->get_permission('can_allow_requests')) {
             $this->index();
             return false;
         }
@@ -114,20 +154,9 @@ class ReserveController extends MainController
         $this->view('reserve', 'requests');
     }
 
-    public function request()
-    {
-        if (!$this->permissions->can_request) {
-            $this->index();
-            return false;
-        }
-
-        $this->title = 'Reserver - Request';
-        $this->view('reserve', 'request');
-    }
-
     public function approve($id = null)
     {
-        if (!$id || !$this->permissions->can_allow_requests) {
+        if (!$id || !$this->model->get_permission('can_allow_requests')) {
             $this->index();
             return false;
         }
@@ -135,7 +164,7 @@ class ReserveController extends MainController
 
     public function deny($id = null)
     {
-        if (!$id || !$this->permissions->can_allow_requests) {
+        if (!$id || !$this->model->get_permission('can_allow_requests')) {
             $this->index();
             return false;
         }
@@ -143,7 +172,7 @@ class ReserveController extends MainController
 
     public function remove($id)
     {
-        if (!$id || !$this->permissions->can_see_reservations) {
+        if (!$id || !$this->model->get_permission('can_see_reservations')) {
             $this->index();
             return false;
         }
@@ -160,7 +189,7 @@ class ReserveController extends MainController
 
     public function detail($id)
     {
-        if (!$id || !$this->permissions->can_allow_requests) {
+        if (!$id || !$this->model->get_permission('can_allow_requests')) {
             $this->index();
             return false;
         }

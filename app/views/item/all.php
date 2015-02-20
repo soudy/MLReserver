@@ -25,11 +25,11 @@
                 </p>
 
                 <input type="hidden" name="item_id" value="<?= $item->id ?>" />
-                <?php if ($this->permissions->can_reserve): ?>
+                <?php if ($this->model->get_permission('can_reserve')): ?>
                     <a id="goto" href="<?= URL . 'reserve/reserve/' . $item->id?>">
                         Reserve item &raquo;
                     </a>
-                <?php elseif ($this->permissions->can_request): ?>
+                <?php elseif ($this->model->get_permission('can_request')): ?>
                     <a id="goto" href="<?= URL . 'reserve/request/' . $item->id?>">
                         Request item &raquo;
                     </a>

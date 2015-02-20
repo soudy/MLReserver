@@ -38,6 +38,14 @@ class Reserve extends Model
         '8' => array('16:30', '17:30')
     );
 
+    /* @var Maximum length of a message when requesting an item. */
+    const MESSAGE_SIZE = 255;
+
+    /**
+     * Get all requests
+     *
+     * @return object|bool
+     */
     public function get_all_requests()
     {
         $sql = 'SELECT * FROM requests';
@@ -48,23 +56,12 @@ class Reserve extends Model
     }
 
     /**
-     * Get all reservations, or get all reservations of a specific user
-     *
-     * @param int $uid
+     * Get all reservations
      *
      * @return object|bool
      */
-    public function get_all_reservations($uid = null)
+    public function get_all_reservations()
     {
-        if (isset($uid)) {
-            $sql = 'SELECT * FROM reservations WHERE user_id=:uid';
-
-            $query = $this->db->prepare($sql);
-            $query->execute(array('uid' => $uid));
-
-            return $query->fetchAll(PDO::FETCH_OBJ);
-        }
-
         $sql = 'SELECT * FROM reservations';
 
         $query = $this->db->query($sql);
@@ -89,20 +86,19 @@ class Reserve extends Model
     {
         if (empty($user_id) || empty($item_id) || empty($count) || empty($date_from)
             || empty($date_to))
-              throw new Exception('Missing fields.');
+            throw new Exception('Missing fields.');
 
-        if ($count > $this->get_item($item_id)->available_count)
-              throw new Exception('You tried to reserve more items than there are available.');
+        // TODO: availability check
 
         if (!preg_match('/\b\d{1,2}\-\d{1,2}-\d{4}\b/', $date_from) ||
             !preg_match('/\b\d{1,2}\-\d{1,2}-\d{4}\b/', $date_to))
-              throw new Exception('Invalid date format.');
+            throw new Exception('Invalid date format.');
 
         if (!preg_match('/^[1-8]\-[1-8]/', $hours))
-              throw new Exception('Invalid hours format.');
+            throw new Exception('Invalid hours format.');
 
         if (strtotime($date_from) < strtotime(date('d-n-Y')))
-              throw new Exception('You can\'t reserve in the past!');
+            throw new Exception('You can\'t reserve in the past!');
 
         $dates = $this->date_range($date_from, $date_to);
 
@@ -143,6 +139,72 @@ class Reserve extends Model
     }
 
     /**
+     * Request an item
+     *
+     * @param int $user_id
+     * @param int $item_id
+     * @param int $count
+     * @param string $date_from
+     * @param string $date_to
+     * @param string $hours
+     * @param string $message
+     *
+     * @return bool
+     */
+    public function request_item($user_id, $item_id, $count, $date_from, $date_to,
+                                 $hours, $message)
+    {
+        if (empty($user_id) || empty($item_id) || empty($count) || empty($date_from)
+            || empty($date_to) || empty($message))
+            throw new Exception('Missing fields.');
+
+        if ($count > $this->get_item($item_id)->available_count)
+            throw new Exception('You tried to reserve more items than there are available.');
+
+        if (sizeof($message) > self::MESSAGE_SIZE)
+            throw new Exception('Message too long. Maximum size: ' . self::MESSAGE_SIZE);
+
+        if (!preg_match('/\b\d{1,2}\-\d{1,2}-\d{4}\b/', $date_from) ||
+            !preg_match('/\b\d{1,2}\-\d{1,2}-\d{4}\b/', $date_to))
+            throw new Exception('Invalid date format.');
+
+        if (!preg_match('/^[1-8]\-[1-8]/', $hours))
+            throw new Exception('Invalid hours format.');
+
+        if (strtotime($date_from) < strtotime(date('d-n-Y')))
+            throw new Exception('You can\'t reserve in the past!');
+
+        $dates = $this->date_range($date_from, $date_to);
+
+        if (sizeof($dates) > 14)
+            throw new Exception('The maximum amount of days you can reserve is 14 days.
+                                 Please shorten your reservation.');
+
+        if (sizeof($dates) > 1)
+            $hours = null;
+
+        $sql = 'INSERT INTO requests (id, item_id, user_id, reserved_at, date_from,
+                                      date_to, count, hours, message)
+                              VALUES (null, :item_id, :user_id, :reserved_at,
+                                      :date_from, :date_to, :count, :hours, :message)';
+
+        $query = $this->db->prepare($sql);
+
+        $params = array(
+            ':item_id'     => $item_id,
+            ':user_id'     => $user_id,
+            ':reserved_at' => date('d-m-Y G:i:s'),
+            ':date_from'   => $date_from,
+            ':date_to'     => $date_to,
+            ':count'       => $count,
+            ':hours'       => $hours,
+            ':message'     => $message
+        );
+
+        $query->execute($params);
+    }
+
+    /**
      * Get all dates inbetween 2 given dates
      *
      * @param string $from
@@ -163,17 +225,5 @@ class Reserve extends Model
         }
 
         return $dates;
-    }
-
-    /**
-     * After reserving an item, update the availability count of that item
-     *
-     * @param string $item
-     * @param string $count
-     *
-     * @return array
-     */
-    private function update_availability($item, $count)
-    {
     }
 }

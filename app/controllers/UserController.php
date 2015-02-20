@@ -26,14 +26,10 @@
 class UserController extends MainController
 {
     protected $model;
-    protected $permissions;
 
     public function __construct()
     {
         $this->model = new User();
-
-        if (isset($_SESSION['logged_in']))
-            $this->permissions = $this->model->get_user_permissions($_SESSION['logged_in']);
     }
 
     public function index()
@@ -69,7 +65,7 @@ class UserController extends MainController
     public function settings()
     {
         if (!isset($_SESSION['logged_in']))
-            $this->error('You need to be signed in to come here.');
+            header('Location: ' . URL . 'user/login');
 
         $this->user  = $this->model->get_user($_SESSION['logged_in']);
         $this->title = 'Reserver - Settings';
@@ -123,9 +119,9 @@ class UserController extends MainController
     public function add()
     {
         if (!isset($_SESSION['logged_in']))
-            $this->error('You need to be signed in to come here.');
+            header('Location: ' . URL . 'user/login');
 
-        if (!$this->permissions->can_change_users) {
+        if (!$this->model->get_permission('can_change_users')) {
             $this->index();
             return false;
         }
@@ -153,9 +149,9 @@ class UserController extends MainController
     public function all()
     {
         if (!isset($_SESSION['logged_in']))
-            $this->error('You need to be signed in to come here.');
+            header('Location: ' . URL . 'user/login');
 
-        if (!$this->permissions->can_change_users) {
+        if (!$this->model->get_permission('can_change_users')) {
             $this->index();
             return false;
         }
@@ -167,9 +163,9 @@ class UserController extends MainController
     public function edit($uid = null)
     {
         if (!isset($_SESSION['logged_in']))
-            $this->error('You need to be signed in to come here.');
+            header('Location: ' . URL . 'user/login');
 
-        if (!$this->model->get_user($uid) || !$this->permissions->can_change_users) {
+        if (!$this->model->get_user($uid) || !$this->model->get_permission('can_change_users')) {
             $this->index();
             return false;
         }
@@ -200,20 +196,20 @@ class UserController extends MainController
     public function remove($uid = null)
     {
         if (!isset($_SESSION['logged_in']))
-            $this->error('You need to be signed in to come here.');
+            header('Location: ' . URL . 'user/login');
 
         if (!$uid) {
             $this->remove_account();
             return false;
         }
 
-        if (!$this->permissions->can_change_users) {
-            $this->index();
+        if (!$this->model->get_permission('can_change_users')) {
+            $this->remove_account();
             return false;
         }
 
         if (!$this->user = $this->model->get_user($uid))
-            $this->error('User not found.');
+            $this->error('User not found.', 404);
 
         $this->title = 'Reserver - Remove user';
 
@@ -228,9 +224,9 @@ class UserController extends MainController
     public function import()
     {
         if (!isset($_SESSION['logged_in']))
-            $this->error('You need to be signed in to come here.');
+            header('Location: ' . URL . 'user/login');
 
-        if (!$this->permissions->can_change_users) {
+        if (!$this->model->get_permission('can_change_users')) {
             $this->index();
             return false;
         }
@@ -248,14 +244,14 @@ class UserController extends MainController
     private function remove_account()
     {
         if (!isset($_SESSION['logged_in']))
-            $this->error('You need to be signed in to come here.');
+            header('Location: ' . URL . 'user/login');
 
         $uid = $_SESSION['logged_in'];
 
         $this->title = 'Reserver - Remove account';
 
         if (!$this->user = $this->model->get_user($uid))
-            $this->error('User not found.');
+            $this->error('User not found.', 404);
 
         if (isset($_POST['remove_account'])) {
             $password         = $_POST['password'];

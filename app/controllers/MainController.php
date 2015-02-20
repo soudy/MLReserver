@@ -46,7 +46,7 @@ class MainController
         $this->route();
 
         if (!file_exists(APP . "controllers/$this->controller.php"))
-            $this->error('Page not found.');
+            $this->error('Page not found.', 404);
 
         $this->controller = new $this->controller();
 
@@ -59,9 +59,8 @@ class MainController
                 call_user_func(array($this->controller, $this->method));
             else
                 call_user_func_array(array($this->controller, $this->method), $this->params);
-        } else {
-            $this->error('Page not found.');
-        }
+        } else
+            $this->error('Page not found.', 404);
     }
 
     /**
@@ -82,7 +81,7 @@ class MainController
         $this->url_actions = explode('/', $this->url_actions);
 
         if (!array_key_exists($this->url_actions[0], $this->routes))
-            $this->error('Page not found.');
+            $this->error('Page not found.', 404);
 
         $this->controller = $this->routes[$this->url_actions[0]];
         $this->method     = isset($this->url_actions[1]) ? $this->url_actions[1] : null;
@@ -104,8 +103,9 @@ class MainController
         require_once APP . 'views/layout/footer.php';
     }
 
-    protected function error($error_message)
+    protected function error($error_message, $status_code = 200)
     {
+        http_response_code($status_code);
         $this->title = 'Reserver - Oops!';
 
         require_once APP . 'views/layout/head.php';
