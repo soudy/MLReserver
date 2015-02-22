@@ -142,12 +142,13 @@ class ItemController extends MainController
             $this->error('Item not found.', 404);
 
         $this->title = 'Reserver - Remove item';
-        $this->view('item', 'remove');
 
         if (isset($_POST['remove_item'])) {
             $this->model->remove_item($id);
             $this->success_message = 'Item ' . $this->model->get_item($id)->name . ' successfully removed.';
             header('Location:' . URL . 'item/all');
         }
+
+        $this->view('item', 'remove');
     }
 }

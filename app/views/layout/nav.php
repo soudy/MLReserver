@@ -12,13 +12,13 @@
 
         <?php if ($this->model->get_requests($_SESSION['logged_in'])): ?>
         <li id="user">
-            <a href="<?= URL . 'item/requests'?>">My requests</a>
+            <a href="<?= URL . 'request/user'?>">My requests</a>
         </li>
         <?php endif; ?>
 
         <?php if ($this->model->get_permission('can_allow_requests')): ?>
         <li id="request">
-            <a href="<?= URL . 'reserve/requests'?>">Requests <span class="badge">11</span></a>
+            <a href="<?= URL . 'request/all'?>">Requests <span class="badge">11</span></a>
         </li>
         <?php endif; ?>
 

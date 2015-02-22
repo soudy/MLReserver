@@ -25,6 +25,7 @@
 
 class MainController
 {
+    /* @var Method to call when none is defined */
     const DEFAULT_METHOD_NAME = 'index';
 
     private $controller;
@@ -35,7 +36,8 @@ class MainController
     private $routes = array(
         'user'    => 'UserController',
         'item'    => 'ItemController',
-        'reserve' => 'ReserveController'
+        'reserve' => 'ReserveController',
+        'request' => 'RequestController'
     );
 
     protected $title;

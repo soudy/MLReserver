@@ -30,7 +30,7 @@
                         Reserve item &raquo;
                     </a>
                 <?php elseif ($this->model->get_permission('can_request')): ?>
-                    <a id="goto" href="<?= URL . 'reserve/request/' . $item->id?>">
+                    <a id="goto" href="<?= URL . 'request/request/' . $item->id?>">
                         Request item &raquo;
                     </a>
                 <?php endif; ?>

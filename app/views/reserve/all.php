@@ -1,5 +1,5 @@
     <div id="content">
-        <h1>All reservations</h1>
+        <h1>Reservations</h1>
         <?php if (!$this->model->get_all_reservations()): ?>
             <div class="alert alert-info">
                 There are no reserved items.

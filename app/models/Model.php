@@ -76,24 +76,6 @@ class Model
     }
 
     /**
-     * Return an object of the user's permissions, or false if user id isn't set.
-     *
-     * @param int $uid
-     *
-     * @return object|bool
-     */
-    public function get_user_permissions($uid)
-    {
-        $access_group = $this->get_user($uid)->access_group;
-        $sql          = 'SELECT * FROM access_groups WHERE name=:name';
-
-        $query = $this->db->prepare($sql);
-        $query->execute(array(':name' => $access_group));
-
-        return $query->fetch(PDO::FETCH_OBJ);
-    }
-
-    /**
      * Returns an object containing all info of item by id, or null if it can't
      * be found.
      *
@@ -182,4 +164,21 @@ class Model
         return $query->fetch();
     }
 
+    /**
+     * Return an object of the user's permissions, or false if user id isn't set.
+     *
+     * @param int $uid
+     *
+     * @return object|bool
+     */
+    private function get_user_permissions($uid)
+    {
+        $access_group = $this->get_user($uid)->access_group;
+        $sql          = 'SELECT * FROM access_groups WHERE name=:name';
+
+        $query = $this->db->prepare($sql);
+        $query->execute(array(':name' => $access_group));
+
+        return $query->fetch(PDO::FETCH_OBJ);
+    }
 }

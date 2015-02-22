@@ -68,7 +68,7 @@ CREATE TABLE `items` (
 
 LOCK TABLES `items` WRITE;
 /*!40000 ALTER TABLE `items` DISABLE KEYS */;
-INSERT INTO `items` VALUES (3,'Raspberry Pi 2 Model B','The Raspberry Pi 2 Model B is the second generation Raspberry Pi. It replaced the original Raspberry Pi 1 Model B+ in February 2015.',30,1),(4,'Ooculus Rift','The Rift is an upcoming virtual reality head-mounted display, being developed by Oculus VR.',5,0),(5,' Arduino','Arduino is an open-source computer hardware and software company, project and user community that designs and manufactures kits for building digital devices and interactive objects that can sense and control the physical world.',20,4),(7,'Kiwifruit','The kiwifruit or Chinese gooseberry (sometimes shortened to kiwi outside New Zealand), is the edible berry of a woody vine in the genus Actinidia.',44,44),(8,'Asus MX239H 23\" IPS HD LED-backlit LCD Monitor','Monitor.',3,3),(9,'Raspberry Pi 2 Model A+','The Model A+ is the low-cost variant of the Raspberry Pi. It replaced the original Model A in November 2014.',10,10);
+INSERT INTO `items` VALUES (3,'Raspberry Pi 2 Model B','The Raspberry Pi 2 Model B is the second generation Raspberry Pi. It replaced the original Raspberry Pi 1 Model B+ in February 2015.',30,1),(4,'Ooculus Rift','The Rift is an upcoming virtual reality head-mounted display, being developed by Oculus VR.',8,0),(5,' Arduino','Arduino is an open-source computer hardware and software company, project and user community that designs and manufactures kits for building digital devices and interactive objects that can sense and control the physical world.',20,4),(7,'Kiwifruit','The kiwifruit or Chinese gooseberry (sometimes shortened to kiwi outside New Zealand), is the edible berry of a woody vine in the genus Actinidia.',44,44),(8,'Asus MX239H 23\" IPS HD LED-backlit LCD Monitor','Monitor.',3,3),(9,'Raspberry Pi 2 Model A+','The Model A+ is the low-cost variant of the Raspberry Pi. It replaced the original Model A in November 2014.',10,10);
 /*!40000 ALTER TABLE `items` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -83,15 +83,15 @@ CREATE TABLE `requests` (
   `id` int(1) NOT NULL AUTO_INCREMENT,
   `item_id` int(1) NOT NULL,
   `user_id` int(1) NOT NULL,
-  `requested_at` date NOT NULL,
-  `from_date` date NOT NULL,
-  `to_date` date NOT NULL,
-  `from_hour` int(1) NOT NULL,
-  `to_hour` int(1) NOT NULL,
-  `status` varchar(255) NOT NULL,
+  `requested_at` varchar(20) NOT NULL,
+  `date_from` varchar(10) NOT NULL,
+  `date_to` varchar(10) NOT NULL,
+  `count` int(1) NOT NULL,
+  `hours` varchar(5) NOT NULL,
   `message` text NOT NULL,
+  `status` int(1) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -100,6 +100,7 @@ CREATE TABLE `requests` (
 
 LOCK TABLES `requests` WRITE;
 /*!40000 ALTER TABLE `requests` DISABLE KEYS */;
+INSERT INTO `requests` VALUES (3,3,55,'22-02-2015 21:39:12','22-2-2015','22-2-2015',1,'1-2','chinese botnet',0);
 /*!40000 ALTER TABLE `requests` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -114,10 +115,13 @@ CREATE TABLE `reservations` (
   `id` int(1) NOT NULL AUTO_INCREMENT,
   `item_id` int(1) NOT NULL,
   `user_id` int(1) NOT NULL,
+  `reserved_at` varchar(20) NOT NULL,
+  `date_from` varchar(20) NOT NULL,
+  `date_to` varchar(20) NOT NULL,
   `count` int(1) NOT NULL,
   `hours` varchar(5) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -145,7 +149,7 @@ CREATE TABLE `users` (
   `access_group` varchar(255) NOT NULL,
   `send_reminders` int(1) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=56 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=58 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -154,7 +158,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (46,'soud','$2y$10$9iRjsUiUqgbR2OmoDkM//uNAIBBdh58c1TfAkZGqI2gmtaI9OhtyO','b@b.co.uk','Steven Oud','admin',0),(55,'ppom','$2y$10$Ly/0BFuYdlibHK6TDyqYg.Yo7gzZRvYITjyX8EmUzOpNBU5NU1qwe','ppom@gmail.com','Pim Pom','teacher',1);
+INSERT INTO `users` VALUES (55,'ppom','$2y$10$Ly/0BFuYdlibHK6TDyqYg.Yo7gzZRvYITjyX8EmUzOpNBU5NU1qwe','ppom@gmail.com','Pim Pom','student',1),(57,'soud','$2y$10$SrXrROY9m6UIOia4UqbJYeFbEyVb.k8P0OcBz9vuiscaLeV.hwB66','stevenoud@hotmail.nl','Steven Oud','admin',0);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -167,4 +171,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-02-19 12:41:19
+-- Dump completed on 2015-02-22 22:46:11

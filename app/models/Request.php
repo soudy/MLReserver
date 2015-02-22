@@ -1,6 +1,5 @@
 <?php
 /*
- *
  * MLReserver is a reservation system primarily made for making sharing items
  * easy and clear between a large group of people.
  * Copyright (C) 2015 soud
@@ -24,17 +23,25 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-class Reserve extends Model
+class Request extends Reserve
 {
+    /* @var Maximum length of a message when requesting an item. */
+    const MESSAGE_SIZE = 255;
+
+    const REQUEST_STATUS_CODES = array(
+        'pending'  => 0,
+        'approved' => 1,
+        'denied'   => 2
+    );
 
     /**
-     * Get all reservations
+     * Get all requests
      *
      * @return object|bool
      */
-    public function get_all_reservations()
+    public function get_all_requests()
     {
-        $sql = 'SELECT * FROM reservations';
+        $sql = 'SELECT * FROM requests';
 
         $query = $this->db->query($sql);
 
@@ -42,7 +49,22 @@ class Reserve extends Model
     }
 
     /**
-     * Reserve an item
+     * Get a requests
+     *
+     * @return object|bool
+     */
+    public function get_request($id)
+    {
+        $sql = 'SELECT * FROM requests WHERE id=:id';
+
+        $query = $this->db->prepare($sql);
+        $query->execute(array('id' => $id));
+
+        return $query->fetch(PDO::FETCH_OBJ);
+    }
+
+    /**
+     * Request an item
      *
      * @param int $user_id
      * @param int $item_id
@@ -50,17 +72,19 @@ class Reserve extends Model
      * @param string $date_from
      * @param string $date_to
      * @param string $hours
+     * @param string $message
      *
      * @return bool
      */
-    public function reserve_item($user_id, $item_id, $count, $date_from, $date_to,
-                                 $hours)
+    public function request_item($user_id, $item_id, $count, $date_from, $date_to,
+                                 $hours, $message)
     {
         if (empty($user_id) || empty($item_id) || empty($count) || empty($date_from)
-            || empty($date_to))
+            || empty($date_to) || empty($message))
             throw new Exception('Missing fields.');
 
-        // TODO: availability check
+        if (sizeof($message) > self::MESSAGE_SIZE)
+            throw new Exception('Message too long. Maximum size: ' . self::MESSAGE_SIZE);
 
         if (!preg_match('/\b\d{1,2}\-\d{1,2}-\d{4}\b/', $date_from) ||
             !preg_match('/\b\d{1,2}\-\d{1,2}-\d{4}\b/', $date_to))
@@ -70,80 +94,56 @@ class Reserve extends Model
             throw new Exception('Invalid hours format.');
 
         if (strtotime($date_from) < strtotime(date('d-n-Y')))
-            throw new Exception('You can\'t reserve in the past!');
+            throw new Exception('You can\'t request in the past!');
 
         $dates = $this->date_range($date_from, $date_to);
 
         if (sizeof($dates) > 14)
-            throw new Exception('The maximum amount of days you can reserve is 14 days.
-                                 Please shorten your reservation.');
+            throw new Exception('The maximum amount of days you can request is 14 days.
+                                 Please shorten the duration your request.');
 
         if (sizeof($dates) > 1)
             $hours = null;
 
-        $sql = 'INSERT INTO reservations (id, item_id, user_id, reserved_at, date_from,
-                                          date_to, count, hours)
-                                  VALUES (null, :item_id, :user_id, :reserved_at,
-                                          :date_from, :date_to, :count, :hours)';
+        $sql = 'INSERT INTO requests (id, item_id, user_id, requested_at, date_from,
+                                      date_to, count, hours, message, status)
+                              VALUES (null, :item_id, :user_id, :requested_at,
+                                      :date_from, :date_to, :count, :hours, :message, :status)';
 
         $query = $this->db->prepare($sql);
 
         $params = array(
-            ':item_id'     => $item_id,
-            ':user_id'     => $user_id,
-            ':reserved_at' => date('d-m-Y G:i:s'),
-            ':date_from'   => $date_from,
-            ':date_to'     => $date_to,
-            ':count'       => $count,
-            ':hours'       => $hours
+            ':item_id'      => $item_id,
+            ':user_id'      => $user_id,
+            ':requested_at' => date('d-m-Y G:i:s'),
+            ':date_from'    => $date_from,
+            ':date_to'      => $date_to,
+            ':count'        => $count,
+            ':hours'        => $hours,
+            ':message'      => $message,
+            ':status'       => self::REQUEST_STATUS_CODES['pending']
         );
 
         $query->execute($params);
     }
 
-    public function remove_reservation($id)
+    public function remove_request($id)
     {
-        $sql = 'DELETE FROM reservations WHERE id=:id';
-
-        $query = $this->db->prepare($sql);
-
-        return $query->execute(array('id' => $id));
+        // TODO
+        throw new Exception('Not yet implemented.');
     }
 
     /**
-     * Get all dates inbetween 2 given dates
-     *
-     * @param string $from
-     * @param string $to
-     *
-     * @return array
-     */
-    protected function date_range($from, $to)
-    {
-        $dates    = array();
-
-        $current  = strtotime($from);
-        $to       = strtotime($to);
-
-        while ($current <= $to) {
-            $dates[] = date('d-m-Y', $current);
-            $current = strtotime('+1 day', $current);
-        }
-
-        return $dates;
-    }
-
-    /**
-     * Check if user $uid created the reservation $rid
+     * Check if user $uid created the request $rid
      *
      * @param int $uid
      * @param int $rid
      *
      * @return bool
      */
-    protected function owns_reservation($uid, $rid)
+    public function owns_request($uid, $rid)
     {
-        $sql = 'SELECT user_id FROM reservations WHERE id=:rid';
+        $sql = 'SELECT user_id FROM requests WHERE id=:rid';
 
         $query = $this->db->prepare($sql);
         $query->execute(array(':rid' => $rid));
