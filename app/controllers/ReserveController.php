@@ -103,13 +103,15 @@ class ReserveController extends MainController
             return false;
         }
 
-        $this->title = 'Reserver - Remove reservation';
+        if (!$this->reservation = $this->model->get_reservation($id))
+            $this->error('Request not found.', 404);
 
         if (isset($_POST['remove_reservation'])) {
             $this->model->remove_reservation($id);
             header('Location:' . URL . 'reserve/all');
         }
 
+        $this->title = 'Reserver - Remove reservation';
         $this->view('reserve', 'remove');
     }
 

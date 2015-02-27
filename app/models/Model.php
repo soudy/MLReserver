@@ -25,8 +25,14 @@
 
 class Model
 {
+    const REQUEST_STATUS_CODES = array(
+        0 => 'pending',
+        1 => 'approved',
+        2 => 'denied'
+    );
+
     protected $db;
-    protected $permissions;
+    private $permissions;
 
     /*
      * Not using a singleton for database
@@ -64,9 +70,6 @@ class Model
      */
     public function get_user($uid)
     {
-        if (!isset($_SESSION['logged_in']) || !isset($uid))
-            return false;
-
         $sql = 'SELECT * FROM users WHERE id=:id';
 
         $query = $this->db->prepare($sql);
@@ -76,7 +79,7 @@ class Model
     }
 
     /**
-     * Returns an object containing all info of item by id, or null if it can't
+     * Returns an object containing all info of the item by id, or null if it can't
      * be found.
      *
      * @param int $id
@@ -92,6 +95,17 @@ class Model
 
         return $query->fetch(PDO::FETCH_OBJ);
     }
+
+    /**
+     * Get request status name by code
+     *
+     * @return string
+     */
+    public function get_status_code($status_code)
+    {
+        return self::REQUEST_STATUS_CODES[$status_code];
+    }
+
 
     /**
      * Returns an object containing all reservations by a user or false if the
@@ -137,6 +151,43 @@ class Model
     public function get_all_items()
     {
         $sql = 'SELECT * FROM items';
+
+        $query = $this->db->query($sql);
+
+        return $query->fetchAll(PDO::FETCH_OBJ);
+    }
+
+    /**
+     * Get all requests
+     *
+     * @return object|bool
+     */
+    public function get_all_requests($status_code = null)
+    {
+        if ($status_code) {
+            $sql = 'SELECT * FROM requests WHERE status=:status';
+
+            $query = $this->db->prepare($sql);
+            $query->execute(array(':status' => $status_code));
+
+            return $query->fetchAll(PDO::FETCH_OBJ);
+        }
+
+        $sql = 'SELECT * FROM requests';
+
+        $query = $this->db->query($sql);
+
+        return $query->fetchAll(PDO::FETCH_OBJ);
+    }
+
+    /**
+     * Get all reservations
+     *
+     * @return object|bool
+     */
+    public function get_all_reservations()
+    {
+        $sql = 'SELECT * FROM reservations';
 
         $query = $this->db->query($sql);
 

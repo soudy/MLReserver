@@ -1,9 +1,9 @@
     <div id="content">
         <h1>Requests</h1>
 
-        <?php if (!$this->model->get_all_requests()): ?>
+        <?php if (!$this->model->get_all_requests($this->model->get_status_code(0))): ?>
             <div class="alert alert-info">
-                There are no requests.
+                There are no pending requests.
             </div>
         <?php else: ?>
             <div class="panel panel-default">
@@ -19,11 +19,12 @@
                         <th>Requested to</th>
                         <th>Hours</th>
                         <th>Message</th>
+                        <th>Status</th>
                         <th>Action</th>
                     </thead>
 
                     <tbody>
-                        <?php foreach ($this->model->get_all_requests() as $request): ?>
+                        <?php foreach ($this->model->get_all_requests($this->model->get_status_code(0)) as $request): ?>
                         <tr>
                             <td><?= $request->id ?></td>
                             <td>
@@ -44,14 +45,22 @@
                                 : $request->message
                             ?>
                             </td>
+                            <td><?= ucfirst($this->model->get_status_code($request->status)) ?></td>
                             <td>
-                                <a href="<?= URL . "reserve/approve/$request->id"?>">
-                                    <i class="fa fa-check fa-lg"></i>
-                                </a>
-                                &nbsp;
-                                <a href="<?= URL . "reserve/deny/$request->id"?>">
-                                    <i class="fa fa-remove fa-lg"></i>
-                                </a>
+                                <?php if ($request->status): ?>
+                                    &nbsp;
+                                    <a href="<?= URL . "request/remove/$request->id"?>">
+                                        <i class="fa fa-trash fa-lg"></i>
+                                    </a>
+                                <?php else: ?>
+                                    <a href="<?= URL . "request/approve/$request->id"?>">
+                                        <i class="fa fa-check fa-lg"></i>
+                                    </a>
+                                    &nbsp;
+                                    <a href="<?= URL . "request/deny/$request->id"?>">
+                                        <i class="fa fa-remove fa-lg"></i>
+                                    </a>
+                                <?php endif; ?>
                             </td>
                         </tr>
                         <?php endforeach; ?>

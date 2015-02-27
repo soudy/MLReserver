@@ -48,8 +48,8 @@ class UserController extends MainController
         $this->title = 'Reserver - Log in';
 
         if (isset($_POST['login'])) {
-            $username       = $_POST['username'];
-            $password       = $_POST['password'];
+            $username = $_POST['username'];
+            $password = $_POST['password'];
 
             try {
                 $this->model->log_in($username, $password);
@@ -70,7 +70,6 @@ class UserController extends MainController
         $this->user  = $this->model->get_user($_SESSION['logged_in']);
         $this->title = 'Reserver - Settings';
 
-        // TODO: input verifying
         if (isset($_POST['change_settings'])) {
             $email                = $_POST['email'];
             $full_name            = $_POST['full_name'];
@@ -128,7 +127,6 @@ class UserController extends MainController
 
         $this->title = 'Reserver - Add user';
 
-        // TODO: check for valid email and full name
         if (isset($_POST['add_user'])) {
             $full_name    = $_POST['full_name'];
             $email        = $_POST['email'];

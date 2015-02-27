@@ -61,8 +61,9 @@ class MainController
                 call_user_func(array($this->controller, $this->method));
             else
                 call_user_func_array(array($this->controller, $this->method), $this->params);
-        } else
+        } else {
             $this->error('Page not found.', 404);
+        }
     }
 
     /**

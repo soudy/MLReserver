@@ -28,26 +28,6 @@ class Request extends Reserve
     /* @var Maximum length of a message when requesting an item. */
     const MESSAGE_SIZE = 255;
 
-    const REQUEST_STATUS_CODES = array(
-        'pending'  => 0,
-        'approved' => 1,
-        'denied'   => 2
-    );
-
-    /**
-     * Get all requests
-     *
-     * @return object|bool
-     */
-    public function get_all_requests()
-    {
-        $sql = 'SELECT * FROM requests';
-
-        $query = $this->db->query($sql);
-
-        return $query->fetchAll(PDO::FETCH_OBJ);
-    }
-
     /**
      * Get a requests
      *
@@ -121,16 +101,46 @@ class Request extends Reserve
             ':count'        => $count,
             ':hours'        => $hours,
             ':message'      => $message,
-            ':status'       => self::REQUEST_STATUS_CODES['pending']
+            ':status'       => self::REQUEST_STATUS_CODES[0]
         );
 
         $query->execute($params);
     }
 
+    /**
+     * Remove request
+     *
+     * @param int $id
+     *
+     * @return bool
+     */
     public function remove_request($id)
     {
-        // TODO
-        throw new Exception('Not yet implemented.');
+        $sql = 'DELETE FROM requests WHERE id=:id';
+
+        $query = $this->db->prepare($sql);
+        return $query->execute(array(':id' => $id));
+    }
+
+    /**
+     * Change the status of a request (pending, approved, denied)
+     *
+     * @param int $rid
+     * @param int $status
+     *
+     * @return bool
+     */
+    public function update_request_status($rid, $status)
+    {
+        $sql = 'UPDATE requests SET status=:status WHERE id=:rid';
+
+        $query = $this->db->prepare($sql);
+        $params = array(
+            ':status' => $status,
+            ':rid'    => $rid
+        );
+
+        return $query->execute($params);
     }
 
     /**

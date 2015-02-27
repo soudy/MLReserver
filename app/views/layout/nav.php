@@ -1,29 +1,23 @@
 <nav>
     <ul class="nav nav-tabs nav-justified">
-        <li id="all" class="active">
+        <li id="all_items" class="active">
             <a href="<?= URL . 'item/'?>">All items</a>
         </li>
 
         <?php if ($this->model->get_reservations($_SESSION['logged_in'])): ?>
-        <li id="user">
+        <li id="my_reservations">
             <a href="<?= URL . 'item/user'?>">My reservations</a>
         </li>
         <?php endif; ?>
 
         <?php if ($this->model->get_requests($_SESSION['logged_in'])): ?>
-        <li id="user">
+        <li id="my_requests">
             <a href="<?= URL . 'request/user'?>">My requests</a>
         </li>
         <?php endif; ?>
 
-        <?php if ($this->model->get_permission('can_allow_requests')): ?>
-        <li id="request">
-            <a href="<?= URL . 'request/all'?>">Requests <span class="badge">11</span></a>
-        </li>
-        <?php endif; ?>
-
         <?php if ($this->model->get_permission('can_change_users')): ?>
-        <li id="item" class="dropdown">
+        <li id="items" class="dropdown">
             <a href="<?= URL . 'item/all'?>">Items<span class="caret"></span></a>
             <ul class="dropdown-menu" role="menu">
                 <li>
@@ -37,7 +31,7 @@
         <?php endif; ?>
 
         <?php if ($this->model->get_permission('can_change_items')): ?>
-        <li id="item" class="dropdown">
+        <li id="users" class="dropdown">
             <a href="<?= URL . 'user/all'?>">Users<span class="caret"></span></a>
             <ul class="dropdown-menu" role="menu">
                 <li>
@@ -53,8 +47,21 @@
         </li>
         <?php endif; ?>
 
+        <?php if ($this->model->get_permission('can_allow_requests') && $this->model->get_all_requests()): ?>
+        <li id="all_requests">
+            <a href="<?= URL . 'request/all'?>">
+                Requests
+                <?php if (sizeof($this->model->get_all_requests($this->model->get_status_code(0))) > 0): ?>
+                <span class="badge">
+                    <?= sizeof($this->model->get_all_requests($this->model->get_status_code(0))) ?>
+                </span>
+                <?php endif; ?>
+            </a>
+        </li>
+        <?php endif; ?>
+
         <?php if ($this->model->get_permission('can_see_reservations')): ?>
-        <li id="item">
+        <li id="all_reservations">
             <a href="<?= URL . 'reserve/all'?>">Reservations</a>
         </li>
         <?php endif; ?>

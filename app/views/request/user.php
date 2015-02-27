@@ -17,6 +17,7 @@
                         <th>Requested to</th>
                         <th>Hours</th>
                         <th>Message</th>
+                        <th>Status</th>
                         <th>Action</th>
                     </thead>
 
@@ -40,6 +41,7 @@
                                 : $request->message
                             ?>
                             </td>
+                            <td><?= ucfirst($this->model->get_status_code($request->status)) ?></td>
                             <td>
                                 &nbsp;
                                 <a href="<?= URL . "request/remove/$request->id"?>">

@@ -28,17 +28,21 @@ class Reserve extends Model
 {
 
     /**
-     * Get all reservations
+     * Returns an object containing all info of the reservation by id, or null if it can't
+     * be found.
+     *
+     * @param int $rid
      *
      * @return object|bool
      */
-    public function get_all_reservations()
+    public function get_reservation($rid)
     {
-        $sql = 'SELECT * FROM reservations';
+        $sql = 'SELECT * FROM reservations WHERE id=:rid';
 
-        $query = $this->db->query($sql);
+        $query = $this->db->prepare($sql);
+        $query->execute(array(':rid' => $rid));
 
-        return $query->fetchAll(PDO::FETCH_OBJ);
+        return $query->fetch(PDO::FETCH_OBJ);
     }
 
     /**
