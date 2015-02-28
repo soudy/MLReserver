@@ -39,7 +39,7 @@
         if (!menu_items[item])
             continue;
 
-        if (menu_items[item].className.contains('dropdown'))
+        if (menu_items[item].className.indexOf('dropdown') > -1)
             menu_items[item].className = 'dropdown';
         else
             menu_items[item].className = '';
@@ -60,7 +60,7 @@
 
     switch (cat) {
         case 'item':
-            if (url[url_offset + 1] === 'all')
+            if (url[url_offset + 1] === 'all' || url[url_offset + 1] === 'add')
                 menu_items.items.className += ' active';
             else
                 menu_items.all_items.className += ' active';
