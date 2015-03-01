@@ -41,21 +41,18 @@ class ItemController extends MainController
         $this->view('item', 'all');
     }
 
-    public function all()
+    public function all($order = 'aname')
     {
         if (!$this->model->get_permission('can_change_items')) {
             $this->index();
             return false;
         }
 
+        $this->order = $order;
+        $this->items = $this->model->get_all_items($order);
+
         $this->title = 'Reserver - Edit items';
         $this->view('item', 'edit_all');
-    }
-
-    public function user()
-    {
-        $this->title = 'Reserver - My items';
-        $this->view('item', 'user');
     }
 
     public function edit($id = null)

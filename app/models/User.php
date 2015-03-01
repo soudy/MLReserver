@@ -39,9 +39,22 @@ class User extends Model
      *
      * @return object|bool
      */
-    public function get_all_users()
+    public function get_all_users($order = 'ausername')
     {
-        $sql = 'SELECT * FROM users';
+        $possible_orders = array('id', 'email', 'username', 'full_name', 'access_group');
+
+        if (!$order)
+            $order = 'ausername';
+
+        $direction = $order[0] === 'a' ? 'ASC' : 'DESC';
+        $order     = substr($order, 1);
+
+        if (!in_array($order, $possible_orders)) {
+            $direction = 'ASC';
+            $order     = 'username';
+        }
+
+        $sql = "SELECT * FROM users ORDER BY $order $direction";
 
         $query = $this->db->query($sql);
 

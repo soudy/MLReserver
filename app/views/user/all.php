@@ -5,16 +5,36 @@
         <table class="table">
 
             <thead>
-                <th>Id</th>
-                <th>Username</th>
-                <th>Email</th>
-                <th>Full name</th>
-                <th>Access group</th>
+                <th>
+                    <a href="<?= URL ?>user/all/<?= $this->order === 'did' ? 'aid' : 'did'?>">
+                        Id
+                    </a>
+                </th>
+                <th>
+                    <a href="<?= URL ?>user/all/<?= $this->order === 'dusername' ? 'ausername' : 'dusername'?>">
+                        Username
+                    </a>
+                </th>
+                <th>
+                    <a href="<?= URL ?>user/all/<?= $this->order === 'demail' ? 'aemail' : 'demail'?>">
+                        Email
+                    </a>
+                </th>
+                <th>
+                    <a href="<?= URL ?>user/all/<?= $this->order === 'dfull_name' ? 'afull_name' : 'dfull_name'?>">
+                        Full name
+                    </a>
+                </th>
+                <th>
+                    <a href="<?= URL ?>user/all/<?= $this->order === 'aaccess_group' ? 'daccess_group' : 'aaccess_group'?>">
+                        Access group
+                    </a>
+                </th>
                 <th>Change</th>
             </thead>
 
             <tbody>
-                <?php foreach ($this->model->get_all_users() as $user): ?>
+                <?php foreach ($this->users as $user): ?>
                 <tr>
                     <td id="<?= $user->id ?>"><?= $user->id ?></td>
                     <td><?= htmlspecialchars($user->username) ?></td>

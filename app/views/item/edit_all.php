@@ -5,15 +5,31 @@
         <table class="table">
 
             <thead>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Count</th>
+                <th>
+                    <a href="<?= URL ?>item/all/<?= $this->order === 'aid' ? 'did' : 'aid'?>">
+                        Id
+                    </a>
+                </th>
+                <th>
+                    <a href="<?= URL ?>item/all/<?= $this->order === 'dname' ? 'aname' : 'dname'?>">
+                        Name
+                    </a>
+                </th>
+                <th>
+                    <a href="<?= URL ?>item/all/<?= $this->order === 'adescription' ? 'ddescription' : 'adescription'?>">
+                        Description
+                    </a>
+                </th>
+                <th>
+                    <a href="<?= URL ?>item/all/<?= $this->order === 'acount' ? 'dcount' : 'acount'?>">
+                        Count
+                    </a>
+                </th>
                 <th>Change</th>
             </thead>
 
             <tbody>
-                <?php foreach ($this->model->get_all_items() as $item): ?>
+                <?php foreach ($this->items as $item): ?>
                 <tr>
                     <td id="<?= $item->id ?>"><?= $item->id ?></td>
                     <td>

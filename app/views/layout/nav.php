@@ -6,7 +6,7 @@
 
         <?php if ($this->model->get_reservations($_SESSION['logged_in'])): ?>
         <li id="my_reservations">
-            <a href="<?= URL . 'item/user'?>">My reservations</a>
+            <a href="<?= URL . 'reserve/user'?>">My reservations</a>
         </li>
         <?php endif; ?>
 

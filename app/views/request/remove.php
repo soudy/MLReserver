@@ -10,6 +10,7 @@
                     <th>Requested from</th>
                     <th>Requested to</th>
                     <th>Hours</th>
+                    <th>Status</th>
                     <th>Message</th>
                 </thead>
 
@@ -25,6 +26,7 @@
                         <td><?= $this->request->date_from ?></td>
                         <td><?= $this->request->date_to ?></td>
                         <td><?= $this->request->hours ?></td>
+                        <td><?= ucfirst($this->model->get_status_code($this->request->status)) ?></td>
                         <td>
                         <?=
                             strlen($this->request->message) > 75

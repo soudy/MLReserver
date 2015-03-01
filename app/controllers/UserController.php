@@ -144,7 +144,7 @@ class UserController extends MainController
         $this->view('user', 'add');
     }
 
-    public function all()
+    public function all($order = 'ausername')
     {
         if (!isset($_SESSION['logged_in']))
             header('Location: ' . URL . 'user/login');
@@ -153,6 +153,9 @@ class UserController extends MainController
             $this->index();
             return false;
         }
+
+        $this->order = $order;
+        $this->users = $this->model->get_all_users($order);
 
         $this->title = 'Reserver - Edit users';
         $this->view('user', 'all');

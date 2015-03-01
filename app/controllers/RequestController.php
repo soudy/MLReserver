@@ -54,7 +54,6 @@ class RequestController extends MainController
             $this->error('Item not found.', 404);
 
         $this->item = $this->model->get_item($id);
-        $this->title = 'Reserver - Request item';
 
         if (isset($_POST['request_item'])) {
             $user_id = $_SESSION['logged_in'];
@@ -62,16 +61,14 @@ class RequestController extends MainController
             $count   = $_POST['count'];
             $message = $_POST['message'];
 
-            $hours = '%d-%d';
-            $hours = sprintf($hours, $_POST['hours_from'], $_POST['hours_to']);
+            $date_format  = '%d-%d-%d';
+            $hours_format = '%d-%d';
 
-            $date_from = '%d-%d-%d';
-            $date_from = sprintf($date_from, $_POST['day_from'], $_POST['month_from'],
+            $hours     = sprintf($hours_format, $_POST['hours_from'], $_POST['hours_to']);
+            $date_from = sprintf($date_format, $_POST['day_from'], $_POST['month_from'],
                                  $_POST['year_from']);
-
-            $date_to = '%d-%d-%d';
-            $date_to = sprintf($date_to, $_POST['day_to'], $_POST['month_to'],
-                               $_POST['year_to']);
+            $date_to   = sprintf($date_format, $_POST['day_to'], $_POST['month_to'],
+                                 $_POST['year_to']);
 
             try {
                 $this->model->request_item($user_id, $item_id, $count, $date_from,
@@ -82,15 +79,20 @@ class RequestController extends MainController
             }
         }
 
+        $this->title = 'Reserver - Request item';
         $this->view('request', 'request');
     }
 
-    public function all()
+    public function all($order = 'aid')
     {
         if (!$this->model->get_permission('can_allow_requests')) {
             $this->index();
             return false;
         }
+
+        $this->order    = $order;
+        $this->requests = $this->model->get_all_requests($order,
+                                                         $this->model->get_status_code(0));
 
         $this->title = 'Reserver - Requests';
         $this->view('request', 'all');

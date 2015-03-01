@@ -1,7 +1,7 @@
     <div id="content">
         <h1>Requests</h1>
 
-        <?php if (!$this->model->get_all_requests($this->model->get_status_code(0))): ?>
+        <?php if (!$this->requests): ?>
             <div class="alert alert-info">
                 There are no pending requests.
             </div>
@@ -10,21 +10,53 @@
                 <table class="table">
 
                     <thead>
-                        <th>Id</th>
+                        <th>
+                            <a href="<?= URL ?>request/all/<?= $this->order === 'did' ? 'aid' : 'did'?>">
+                                Id
+                            </a>
+                        </th>
                         <th>Item</th>
-                        <th>Count</th>
                         <th>User</th>
-                        <th>Requested at</th>
-                        <th>Requested from</th>
-                        <th>Requested to</th>
-                        <th>Hours</th>
-                        <th>Message</th>
-                        <th>Status</th>
+                        <th>
+                            <a href="<?= URL ?>request/all/<?= $this->order === 'arequested_at' ? 'drequested_at' : 'arequested_at'?>">
+                                Requested at
+                            </a>
+                        </th>
+                        <th>
+                            <a href="<?= URL ?>request/all/<?= $this->order === 'adate_from' ? 'ddate_from' : 'adate_from'?>">
+                                Requested from
+                            </a>
+                        </th>
+                        <th>
+                            <a href="<?= URL ?>request/all/<?= $this->order === 'adate_to' ? 'ddate_to' : 'adate_to'?>">
+                                Requested to
+                            </a>
+                        </th>
+                        <th>
+                            <a href="<?= URL ?>request/all/<?= $this->order === 'ahours' ? 'dhours' : 'ahours'?>">
+                                Hours
+                            </a>
+                        </th>
+                        <th>
+                            <a href="<?= URL ?>request/all/<?= $this->order === 'acount' ? 'dcount' : 'acount'?>">
+                                Count
+                            </a>
+                        </th>
+                        <th>
+                            <a href="<?= URL ?>request/all/<?= $this->order === 'amessage' ? 'dmessage' : 'amessage'?>">
+                                Message
+                            </a>
+                        </th>
+                        <th>
+                            <a href="<?= URL ?>request/all/<?= $this->order === 'astatus' ? 'dstatus' : 'astatus'?>">
+                                Status
+                            </a>
+                        </th>
                         <th>Action</th>
                     </thead>
 
                     <tbody>
-                        <?php foreach ($this->model->get_all_requests($this->model->get_status_code(0)) as $request): ?>
+                        <?php foreach ($this->requests as $request): ?>
                         <tr>
                             <td><?= $request->id ?></td>
                             <td>
@@ -32,12 +64,12 @@
                                     <?= $this->model->get_item($request->item_id)->name ?>
                                 </a>
                             </td>
-                            <td><?= $request->count ?></td>
                             <td><?= htmlspecialchars($this->model->get_user($request->user_id)->full_name) ?></td>
                             <td><?= $request->requested_at ?></td>
                             <td><?= $request->date_from ?></td>
                             <td><?= $request->date_to ?></td>
                             <td><?= $request->hours ?></td>
+                            <td><?= $request->count ?></td>
                             <td>
                             <?=
                                 strlen($request->message) > 75

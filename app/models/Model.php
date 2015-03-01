@@ -148,9 +148,22 @@ class Model
      *
      * @return object|bool
      */
-    public function get_all_items()
+    public function get_all_items($order = 'aname')
     {
-        $sql = 'SELECT * FROM items';
+        $possible_orders = array('id', 'name', 'description', 'count');
+
+        if (!$order)
+            $order = 'aname';
+
+        $direction = $order[0] === 'a' ? 'ASC' : 'DESC';
+        $order     = substr($order, 1);
+
+        if (!in_array($order, $possible_orders)) {
+            $direction = 'ASC';
+            $order     = 'name';
+        }
+
+        $sql = "SELECT * FROM items ORDER BY $order $direction";
 
         $query = $this->db->query($sql);
 
@@ -162,10 +175,26 @@ class Model
      *
      * @return object|bool
      */
-    public function get_all_requests($status_code = null)
+    public function get_all_requests($order = 'aid', $status_code = null)
     {
+        $possible_orders = array(
+            'id', 'count', 'date_from', 'date_to', 'count', 'hours', 'message',
+            'status', 'requested_at'
+        );
+
+        if (!$order)
+            $order = 'aid';
+
+        $direction = $order[0] === 'a' ? 'ASC' : 'DESC';
+        $order     = substr($order, 1);
+
+        if (!in_array($order, $possible_orders)) {
+            $direction = 'ASC';
+            $order     = 'id';
+        }
+
         if ($status_code) {
-            $sql = 'SELECT * FROM requests WHERE status=:status';
+            $sql = "SELECT * FROM requests WHERE status=:status ORDER BY $order $direction";
 
             $query = $this->db->prepare($sql);
             $query->execute(array(':status' => $status_code));
@@ -173,7 +202,7 @@ class Model
             return $query->fetchAll(PDO::FETCH_OBJ);
         }
 
-        $sql = 'SELECT * FROM requests';
+        $sql = "SELECT * FROM requests ORDER BY $order $direction";
 
         $query = $this->db->query($sql);
 
@@ -185,9 +214,24 @@ class Model
      *
      * @return object|bool
      */
-    public function get_all_reservations()
+    public function get_all_reservations($order = 'areserved_at')
     {
-        $sql = 'SELECT * FROM reservations';
+        $possible_orders = array(
+            'id', 'reserved_at', 'date_from', 'date_to', 'hours', 'count'
+        );
+
+        if (!$order)
+            $order = 'areserved_at';
+
+        $direction = $order[0] === 'a' ? 'ASC' : 'DESC';
+        $order     = substr($order, 1);
+
+        if (!in_array($order, $possible_orders)) {
+            $direction = 'ASC';
+            $order     = 'reserved_at';
+        }
+
+        $sql = "SELECT * FROM reservations ORDER BY $order $direction";
 
         $query = $this->db->query($sql);
 

@@ -47,15 +47,24 @@ class ReserveController extends MainController
             header('Location: ' . URL);
     }
 
-    public function all()
+    public function all($order = 'areserved_at')
     {
         if (!$this->model->get_permission('can_see_reservations')) {
             $this->index();
             return false;
         }
 
+        $this->order        = $order;
+        $this->reservations = $this->model->get_all_reservations($order);
+
         $this->title = 'Reserver - All reservations';
         $this->view('reserve', 'all');
+    }
+
+    public function user()
+    {
+        $this->title = 'Reserver - My reservations';
+        $this->view('reserve', 'user');
     }
 
     public function reserve($id = null)

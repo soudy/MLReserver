@@ -70,11 +70,14 @@ class Request extends Reserve
             !preg_match('/\b\d{1,2}\-\d{1,2}-\d{4}\b/', $date_to))
             throw new Exception('Invalid date format.');
 
-        if (!preg_match('/^[1-8]\-[1-8]/', $hours))
+        if (!preg_match('/^[1-8]\-[2-8]/', $hours))
             throw new Exception('Invalid hours format.');
 
+        if ($count > $this->get_item($item_id)->count)
+            throw new Exception('You can\'t reserve more items than there are available.');
+
         if (strtotime($date_from) < strtotime(date('d-n-Y')))
-            throw new Exception('You can\'t request in the past!');
+            throw new Exception('You can\'t request in the past yet.');
 
         $dates = $this->date_range($date_from, $date_to);
 
