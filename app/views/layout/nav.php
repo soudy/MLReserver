@@ -51,9 +51,9 @@
         <li id="all_requests">
             <a href="<?= URL . 'request/all'?>">
                 Requests
-                <?php if (sizeof($this->model->get_all_requests($this->model->get_status_code(0))) > 0): ?>
+                <?php if (sizeof($this->model->get_all_requests(null, $this->model->get_status_code(0))) > 0): ?>
                 <span class="badge">
-                    <?= sizeof($this->model->get_all_requests($this->model->get_status_code(0))) ?>
+                    <?= sizeof($this->model->get_all_requests(null, $this->model->get_status_code(0))) ?>
                 </span>
                 <?php endif; ?>
             </a>

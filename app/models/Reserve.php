@@ -85,6 +85,7 @@ class Reserve extends Model
         if (sizeof($dates) > 1)
             $hours = null;
 
+        /* First, insert the reservation into the reservations table. */
         $sql = 'INSERT INTO reservations (id, item_id, user_id, reserved_at, date_from,
                                           date_to, count, hours)
                                   VALUES (null, :item_id, :user_id, :reserved_at,
@@ -103,6 +104,11 @@ class Reserve extends Model
         );
 
         $query->execute($params);
+
+        /* Then insert the date(s) into the calender table. */
+        $reservation_id = $this->db->lastInsertId('reservations');
+
+        $this->create_calender_days($reservation_id, $dates);
     }
 
     public function remove_reservation($id)
@@ -153,5 +159,39 @@ class Reserve extends Model
         $query->execute(array(':rid' => $rid));
 
         return $query->fetch()['user_id'] === $uid;
+    }
+
+    /**
+     * Insert dates into the calender with the fitting reservation id.
+     *
+     * @param int $reservation_id
+     * @param array $dates
+     *
+     * @return bool
+     */
+    private function create_calender_days($reservation_id, $dates)
+    {
+        $hours = null;
+        //
+        // Need to get the hours first too if it's a one-day reservation
+        if (sizeof($dates) > 1)
+            $hours = $this->db->query("SELECT hours FROM reservations
+                                       WHERE id=$reservation_id ");
+
+        $dates_format    = '(%s, %s, %d, %s)';
+        $dates_formatted = array();
+
+        foreach ($dates as $date) {
+            $date              = sprintf($dates_format, 'null', (string) $dates[$date],
+                                         $reservation_id, $hours);
+            $dates_formatted[] = $date;
+        }
+
+        var_dump($dates_formatted);
+
+        return;
+
+        $sql = "INSERT INTO calender (id, day, reservation_id, reservation_hours)
+                VALUES $dates";
     }
 }
