@@ -61,10 +61,6 @@
                             <td><?= $reservation->count ?></td>
                             <td>
                                 &nbsp;
-                                <a href="<?= URL . "reserve/edit/$reservation->id"?>">
-                                    <i class="fa fa-pencil fa-lg"></i>
-                                </a>
-                                &nbsp;
                                 <a href="<?= URL . "reserve/remove/$reservation->id"?>">
                                     <span class="fa fa-trash fa-lg"></span>
                                 </a>
