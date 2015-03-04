@@ -1,8 +1,8 @@
--- MySQL dump 10.15  Distrib 10.0.16-MariaDB, for Linux (x86_64)
+-- MySQL dump 10.15  Distrib 10.0.15-MariaDB, for Linux (x86_64)
 --
 -- Host: localhost    Database: reserver
 -- ------------------------------------------------------
--- Server version	10.0.16-MariaDB-log
+-- Server version	10.0.15-MariaDB
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -53,13 +53,9 @@ DROP TABLE IF EXISTS `calender`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `calender` (
-  `id` int(1) NOT NULL AUTO_INCREMENT,
   `date` varchar(10) NOT NULL,
-  `reservation_id` int(1) NOT NULL,
-  `reservation_hours` varchar(5) DEFAULT NULL,
-  `reservation_count` int(1) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8;
+  `reservation_id` int(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -68,6 +64,7 @@ CREATE TABLE `calender` (
 
 LOCK TABLES `calender` WRITE;
 /*!40000 ALTER TABLE `calender` DISABLE KEYS */;
+INSERT INTO `calender` VALUES ('04-03-2015',52),('05-03-2015',52),('06-03-2015',52),('07-03-2015',52),('08-03-2015',52),('04-03-2015',53),('05-03-2015',53),('06-03-2015',53),('07-03-2015',53),('08-03-2015',53),('09-03-2015',53),('10-03-2015',53),('11-03-2015',54),('12-03-2015',54),('13-03-2015',54),('14-03-2015',54),('15-03-2015',54),('16-03-2015',54),('17-03-2015',54),('18-03-2015',54),('04-03-2015',55),('04-03-2015',56),('05-03-2015',56),('06-03-2015',56),('04-03-2015',57),('05-03-2015',57),('06-03-2015',57),('07-03-2015',57),('08-03-2015',57),('09-03-2015',57),('10-03-2015',57);
 /*!40000 ALTER TABLE `calender` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -94,7 +91,7 @@ CREATE TABLE `items` (
 
 LOCK TABLES `items` WRITE;
 /*!40000 ALTER TABLE `items` DISABLE KEYS */;
-INSERT INTO `items` VALUES (3,'Raspberry Pi 2 Model B','The Raspberry Pi 2 Model B is the second generation Raspberry Pi. It replaced the original Raspberry Pi 1 Model B+ in February 2015.',30,1),(4,'Ooculus Rift','The Rift is an upcoming virtual reality head-mounted display, being developed by Oculus VR.',8,0),(5,' Arduino','Arduino is an open-source computer hardware and software company, project and user community that designs and manufactures kits for building digital devices and interactive objects that can sense and control the physical world.',20,4),(7,'Kiwifruit','The kiwifruit or Chinese gooseberry (sometimes shortened to kiwi outside New Zealand), is the edible berry of a woody vine in the genus Actinidia.',44,44),(8,'Asus MX239H 23\" IPS HD LED-backlit LCD Monitor','Monitor.',3,3),(9,'Raspberry Pi 2 Model A+','The Model A+ is the low-cost variant of the Raspberry Pi. It replaced the original Model A in November 2014.',10,10);
+INSERT INTO `items` VALUES (3,'Raspberry Pi 2 Model B','The Raspberry Pi 2 Model B is the second generation Raspberry Pi. It replaced the original Raspberry Pi 1 Model B+ in February 2015.',25,1),(4,'Ooculus Rift','The Rift is an upcoming virtual reality head-mounted display, being developed by Oculus VR.',8,0),(5,' Arduino','Arduino is an open-source computer hardware and software company, project and user community that designs and manufactures kits for building digital devices and interactive objects that can sense and control the physical world.',20,4),(7,'Kiwifruit','The kiwifruit or Chinese gooseberry (sometimes shortened to kiwi outside New Zealand), is the edible berry of a woody vine in the genus Actinidia.',44,44),(8,'Asus MX239H 23\" IPS HD LED-backlit LCD Monitor','Monitor.',3,3),(9,'Raspberry Pi 2 Model A+','The Model A+ is the low-cost variant of the Raspberry Pi. It replaced the original Model A in November 2014.',10,10);
 /*!40000 ALTER TABLE `items` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -147,7 +144,7 @@ CREATE TABLE `reservations` (
   `count` int(1) NOT NULL,
   `hours` varchar(5) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=58 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -156,7 +153,7 @@ CREATE TABLE `reservations` (
 
 LOCK TABLES `reservations` WRITE;
 /*!40000 ALTER TABLE `reservations` DISABLE KEYS */;
-INSERT INTO `reservations` VALUES (44,9,57,'02-03-2015 21:45:09','2-3-2015','8-3-2015',6,NULL);
+INSERT INTO `reservations` VALUES (46,7,57,'03-03-2015 11:31:07','3-3-2015','9-3-2015',5,NULL),(55,9,57,'04-03-2015 13:58:00','4-3-2015','4-3-2015',7,'1-2'),(56,5,57,'04-03-2015 15:02:28','4-3-2015','6-3-2015',1,NULL),(57,5,57,'04-03-2015 15:02:40','4-3-2015','10-3-2015',1,NULL);
 /*!40000 ALTER TABLE `reservations` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -198,4 +195,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-03-03  0:30:47
+-- Dump completed on 2015-03-04 15:38:14

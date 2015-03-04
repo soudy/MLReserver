@@ -64,8 +64,6 @@ class Reserve extends Model
             || empty($date_to))
             throw new Exception('Missing fields.');
 
-        // TODO: availability check
-
         if (!preg_match('/\b\d{1,2}\-\d{1,2}-\d{4}\b/', $date_from) ||
             !preg_match('/\b\d{1,2}\-\d{1,2}-\d{4}\b/', $date_to))
             throw new Exception('Invalid date format.');
@@ -85,6 +83,9 @@ class Reserve extends Model
         if (sizeof($dates) > 1)
             $hours = null;
 
+        if ($count > $this->get_available_count($date_from, $date_to, null))
+            throw new Exception('You can\'t reserve in the past!');
+
         /* First, insert the reservation into the reservations table. */
         $sql = 'INSERT INTO reservations (id, item_id, user_id, reserved_at, date_from,
                                           date_to, count, hours)
@@ -103,16 +104,12 @@ class Reserve extends Model
             ':hours'       => $hours
         );
 
-        // TODO
-        /* $this->get_available_count($date_from, $date_to, null); */
-
         $query->execute($params);
 
         /* Then insert the date(s) into the calender table. */
         $reservation_id = $this->db->lastInsertId('reservations');
-        $reservation    = $this->get_reservation($reservation_id);
 
-        $this->create_calender_dates($reservation, $dates);
+        $this->create_calender_dates($reservation_id);
     }
 
     public function remove_reservation($id)
@@ -184,47 +181,46 @@ class Reserve extends Model
 
         $formatted_dates = implode(' OR ', $dates);
 
-        // TODO: fuck this ill finish it later
-        $sql = "SELECT SUM(reservation_count) as sum
+        $sql = "SELECT SUM(reservation.count) AS reservation_count
                 FROM (
-                    SELECT DISTINCT reservation_id, reservation_count, date
+                    SELECT calender.date, calender.reservation_id, reservations.count
                     FROM calender
-                ) x
-                WHERE date=$formatted_dates";
+                    INNER JOIN reservations
+                        ON reservations.id = calender.reservation_id
+                    WHERE date=$formatted_dates
+                    GROUP BY reservation_id
+                ) reservation";
 
         $query = $this->db->query($sql);
 
-        var_dump($query->fetch());
-        exit(1);
-
-        return $query->fetchAll(PDO::FETCH_OBJ);
+        return $query->fetch()['reservation_count'];
     }
 
     /**
      * Insert dates into the calender with the fitting reservation id.
      *
-     * @param object $reservation
-     * @param array|string $dates
+     * @param int $reservation
      *
      * @return bool
      */
-    private function create_calender_dates($reservation, $dates)
+    private function create_calender_dates($rid)
     {
         $dates_formatted = array();
 
+        $reservation     = $this->get_reservation($rid);
+        $dates           = $this->date_range($reservation->date_from,
+                                             $reservation->date_to);
+
         // Fill the array with properly formatted database insert entries.
         foreach ($dates as $date) {
-            $date              = sprintf('(%s, "%s", %d, "%s", %d)', 'null', $date,
-                                         $reservation->id, $reservation->hours,
-                                         $reservation->count);
+            $date              = sprintf('("%s", %d)', $date, $reservation->id);
             $dates_formatted[] = $date;
         }
 
         // Concatenate the whole array into a string, ready for insertion.
         $dates = implode(',', $dates_formatted);
 
-        $sql = "INSERT INTO calender (id, date, reservation_id, reservation_hours,
-                                      reservation_count)
+        $sql = "INSERT INTO calender (date, reservation_id)
                 VALUES $dates";
 
         return $this->db->query($sql);
