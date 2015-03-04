@@ -35,7 +35,7 @@ class Request extends Reserve
      */
     public function get_request($id)
     {
-        $sql = 'SELECT * FROM requests WHERE id=:id';
+        $sql = 'SELECT * FROM requests WHERE id = :id';
 
         $query = $this->db->prepare($sql);
         $query->execute(array('id' => $id));
@@ -88,6 +88,10 @@ class Request extends Reserve
         if (sizeof($dates) > 1)
             $hours = null;
 
+        if ($count > $this->get_available_count($item_id, $date_from, $date_to))
+            throw new Exception('You tried to request more items then there are
+                                 available in that time period.');
+
         $sql = 'INSERT INTO requests (id, item_id, user_id, requested_at, date_from,
                                       date_to, count, hours, message, status)
                               VALUES (null, :item_id, :user_id, :requested_at,
@@ -98,7 +102,7 @@ class Request extends Reserve
         $params = array(
             ':item_id'      => $item_id,
             ':user_id'      => $user_id,
-            ':requested_at' => date('d-m-Y G:i:s'),
+            ':requested_at' => date('Y-m-d G:i:s'),
             ':date_from'    => $date_from,
             ':date_to'      => $date_to,
             ':count'        => $count,
@@ -119,7 +123,7 @@ class Request extends Reserve
      */
     public function remove_request($id)
     {
-        $sql = 'DELETE FROM requests WHERE id=:id';
+        $sql = 'DELETE FROM requests WHERE id = :id';
 
         $query = $this->db->prepare($sql);
         return $query->execute(array(':id' => $id));
@@ -135,7 +139,7 @@ class Request extends Reserve
      */
     public function update_request_status($rid, $status)
     {
-        $sql = 'UPDATE requests SET status=:status WHERE id=:rid';
+        $sql = 'UPDATE requests SET status = :status WHERE id = :rid';
 
         $query = $this->db->prepare($sql);
         $params = array(
@@ -156,7 +160,7 @@ class Request extends Reserve
      */
     public function owns_request($uid, $rid)
     {
-        $sql = 'SELECT user_id FROM requests WHERE id=:rid';
+        $sql = 'SELECT user_id FROM requests WHERE id = :rid';
 
         $query = $this->db->prepare($sql);
         $query->execute(array(':rid' => $rid));

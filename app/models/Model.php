@@ -70,7 +70,7 @@ class Model
      */
     public function get_user($uid)
     {
-        $sql = 'SELECT * FROM users WHERE id=:id';
+        $sql = 'SELECT * FROM users WHERE id = :id';
 
         $query = $this->db->prepare($sql);
         $query->execute(array(':id' => $uid));
@@ -88,7 +88,7 @@ class Model
      */
     public function get_item($id)
     {
-        $sql = 'SELECT * FROM items WHERE id=:id';
+        $sql = 'SELECT * FROM items WHERE id = :id';
 
         $query = $this->db->prepare($sql);
         $query->execute(array(':id' => $id));
@@ -117,7 +117,7 @@ class Model
      */
     public function get_reservations($uid)
     {
-        $sql = 'SELECT * FROM reservations WHERE user_id=:uid';
+        $sql = 'SELECT * FROM reservations WHERE user_id = :uid';
 
         $query = $this->db->prepare($sql);
         $query->execute(array(':uid' => $uid));
@@ -135,7 +135,7 @@ class Model
      */
     public function get_requests($uid)
     {
-        $sql = 'SELECT * FROM requests WHERE user_id=:uid';
+        $sql = 'SELECT * FROM requests WHERE user_id = :uid';
 
         $query = $this->db->prepare($sql);
         $query->execute(array(':uid' => $uid));
@@ -194,7 +194,8 @@ class Model
         }
 
         if ($status_code) {
-            $sql = "SELECT * FROM requests WHERE status=:status ORDER BY $order $direction";
+            $sql = "SELECT * FROM requests WHERE status = :status
+                    ORDER BY $order $direction";
 
             $query = $this->db->prepare($sql);
             $query->execute(array(':status' => $status_code));
@@ -269,7 +270,7 @@ class Model
     private function get_user_permissions($uid)
     {
         $access_group = $this->get_user($uid)->access_group;
-        $sql          = 'SELECT * FROM access_groups WHERE name=:name';
+        $sql          = 'SELECT * FROM access_groups WHERE name = :name';
 
         $query = $this->db->prepare($sql);
         $query->execute(array(':name' => $access_group));

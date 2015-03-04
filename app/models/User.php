@@ -183,7 +183,7 @@ class User extends Model
         if (!$this->get_user($uid))
             throw new Exception('User not found.');
 
-        $sql   = 'DELETE FROM users WHERE id=:id';
+        $sql   = 'DELETE FROM users WHERE id = :id';
         $query = $this->db->prepare($sql);
 
         return $query->execute(array(':id' => $uid));
@@ -237,9 +237,9 @@ class User extends Model
         if (!preg_match('/^[A-Z0-9._%+=]+\@[A-Z0-9.-]+\.[A-Z]{2,4}$/i', $email))
             throw new Exception('Invalid e-mail address.');
 
-        $sql = 'UPDATE users SET username=:username, email=:email,
-                                 full_name=:full_name, access_group=:access_group
-                             WHERE id=:uid';
+        $sql = 'UPDATE users SET username = :username, email = :email,
+                                 full_name = :full_name, access_group = :access_group
+                             WHERE id = :uid';
 
         $query = $this->db->prepare($sql);
         $params = array(
@@ -273,8 +273,8 @@ class User extends Model
         if (!preg_match('/^[A-Z0-9._%+=]+\@[A-Z0-9.-]+\.[A-Z]{2,4}$/i', $email))
             throw new Exception('Invalid email.');
 
-        $sql = 'UPDATE users SET email=:email, full_name=:full_name,
-                                 password=:password, send_reminders=:send_reminders
+        $sql = 'UPDATE users SET email = :email, full_name = :full_name,
+                                 password = :password, send_reminders = :send_reminders
                              WHERE id=:uid';
 
         $query = $this->db->prepare($sql);

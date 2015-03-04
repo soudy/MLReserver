@@ -26,7 +26,7 @@
             <div id="date_from" class="date">
                 <select name="day_from" class="form-control">
                     <?php for ($i = 1; $i <= date('t'); ++$i): ?>
-                        <?php if ($i == date('j')): ?>
+                        <?php if ($i == date('d')): ?>
                             <option selected="selected"><?= $i ?></option>
                         <?php else: ?>
                             <option><?= $i ?></option>

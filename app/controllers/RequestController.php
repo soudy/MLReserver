@@ -62,13 +62,19 @@ class RequestController extends MainController
             $message = $_POST['message'];
 
             $date_format  = '%d-%d-%d';
-            $hours_format = '%d-%d';
 
-            $hours     = sprintf($hours_format, $_POST['hours_from'], $_POST['hours_to']);
-            $date_from = sprintf($date_format, $_POST['day_from'], $_POST['month_from'],
-                                 $_POST['year_from']);
-            $date_to   = sprintf($date_format, $_POST['day_to'], $_POST['month_to'],
-                                 $_POST['year_to']);
+            $hour  = '%d-%d';
+            $hours = sprintf($hours_format, $_POST['hours_from'], $_POST['hours_to']);
+
+            $date_from = sprintf($date_format, $_POST['year_from'], $_POST['month_from'],
+                                 $_POST['day_from']);
+
+            $date_to = sprintf($date_format, $_POST['year_to'], $_POST['month_to'],
+                               $_POST['day_to']);
+
+            // Formatting dates for SQL date
+            $date_to   = date('Y-m-d', strtotime($date_to));
+            $date_from = date('Y-m-d', strtotime($date_from));
 
             try {
                 $this->model->request_item($user_id, $item_id, $count, $date_from,

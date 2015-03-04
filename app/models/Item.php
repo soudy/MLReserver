@@ -47,9 +47,9 @@ class Item extends Model
 
         $query = $this->db->prepare($sql);
         $params = array(
-            ':name'            => $name,
-            ':description'     => $description,
-            ':count'           => $count
+            ':name'        => $name,
+            ':description' => $description,
+            ':count'       => $count
         );
 
         return $query->execute($params);
@@ -70,15 +70,15 @@ class Item extends Model
         if (!intval($count))
             throw new Exception('No valid count number specified.');
 
-        $sql = 'UPDATE items SET name=:name, description=:description, count=:count
-                             WHERE id=:id';
+        $sql = 'UPDATE items SET name = :name, description = :description, count = :count
+                             WHERE id = :id';
 
         $query = $this->db->prepare($sql);
         $params = array(
-            ':name'            => $name,
-            ':description'     => $description,
-            ':count'           => $count,
-            ':id'              => $id
+            ':name'        => $name,
+            ':description' => $description,
+            ':count'       => $count,
+            ':id'          => $id
         );
 
         return $query->execute($params);
@@ -109,7 +109,7 @@ class Item extends Model
         if (!$this->get_item($id))
             throw new Exception('Item not found.');
 
-        $sql   = 'DELETE FROM items WHERE id=:id';
+        $sql = 'DELETE FROM items WHERE id = :id';
 
         $query = $this->db->prepare($sql);
 

@@ -83,16 +83,21 @@ class ReserveController extends MainController
             $item_id = $_POST['item'];
             $count   = $_POST['count'];
 
+            $date_format = '%d-%d-%d';
+
+            // Concatenating dates
             $hours = '%d-%d';
             $hours = sprintf($hours, $_POST['hours_from'], $_POST['hours_to']);
 
-            $date_from = '%d-%d-%d';
-            $date_from = sprintf($date_from, $_POST['day_from'], $_POST['month_from'],
-                                 $_POST['year_from']);
+            $date_from = sprintf($date_format, $_POST['year_from'], $_POST['month_from'],
+                                 $_POST['day_from']);
 
-            $date_to = '%d-%d-%d';
-            $date_to = sprintf($date_to, $_POST['day_to'], $_POST['month_to'],
-                               $_POST['year_to']);
+            $date_to = sprintf($date_format, $_POST['year_from'], $_POST['month_to'],
+                               $_POST['day_to']);
+
+            // Formatting dates for SQL date
+            $date_to   = date('Y-m-d', strtotime($date_to));
+            $date_from = date('Y-m-d', strtotime($date_from));
 
             try {
                 $this->model->reserve_item($user_id, $item_id, $count, $date_from,
@@ -122,15 +127,5 @@ class ReserveController extends MainController
 
         $this->title = 'Reserver - Remove reservation';
         $this->view('reserve', 'remove');
-    }
-
-    public function detail($id)
-    {
-        if (!$id || !$this->model->get_permission('can_allow_requests')) {
-            $this->index();
-            return false;
-        }
-
-        $this->title = 'Reserver - Show reservation';
     }
 }
