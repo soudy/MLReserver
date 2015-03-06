@@ -62,10 +62,9 @@ class ItemController extends MainController
             return false;
         }
 
-        if (!$this->model->get_item($id))
+        if (!($this->item = !$this->model->get_item($id)))
             $this->error('Item not found.', 404);
 
-        $this->item  = $this->model->get_item($id);
         $this->title = 'Reserver - Edit item';
 
         if (isset($_POST['edit_item'])) {
@@ -93,9 +92,7 @@ class ItemController extends MainController
 
     public function detail($id = null)
     {
-        $this->item = $this->model->get_item($id);
-
-        if (!$this->item)
+        if (!($this->item = $this->model->get_item($id)))
             $this->error('Item not found.', 404);
 
         $this->title = 'Reserver - ' . $this->item->name;
@@ -108,8 +105,6 @@ class ItemController extends MainController
             $this->index();
             return false;
         }
-
-        $this->title = 'Reserver - Add item';
 
         if (isset($_POST['add_item'])) {
             $name        = $_POST['name'];
@@ -125,6 +120,7 @@ class ItemController extends MainController
             }
         }
 
+        $this->title = 'Reserver - Add item';
         $this->view('item', 'add');
     }
 
@@ -135,10 +131,8 @@ class ItemController extends MainController
             return false;
         }
 
-        if (!$this->item = $this->model->get_item($id))
+        if (!($this->item = $this->model->get_item($id)))
             $this->error('Item not found.', 404);
-
-        $this->title = 'Reserver - Remove item';
 
         if (isset($_POST['remove_item'])) {
             $this->model->remove_item($id);
@@ -146,6 +140,7 @@ class ItemController extends MainController
             header('Location:' . URL . 'item/all');
         }
 
+        $this->title = 'Reserver - Remove item';
         $this->view('item', 'remove');
     }
 }

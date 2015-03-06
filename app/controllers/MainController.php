@@ -109,6 +109,7 @@ class MainController
     protected function error($error_message, $status_code = 200)
     {
         http_response_code($status_code);
+
         $this->title = 'Reserver - Oops!';
 
         require_once APP . 'views/layout/head.php';

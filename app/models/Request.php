@@ -66,8 +66,8 @@ class Request extends Reserve
         if (sizeof($message) > self::MESSAGE_SIZE)
             throw new Exception('Message too long. Maximum size: ' . self::MESSAGE_SIZE);
 
-        if (!preg_match('/\b\d{1,2}\-\d{1,2}-\d{4}\b/', $date_from) ||
-            !preg_match('/\b\d{1,2}\-\d{1,2}-\d{4}\b/', $date_to))
+        if (!preg_match('/\b\d{4}\-\d{2}-\d{2}\b/', $date_from) ||
+            !preg_match('/\b\d{4}\-\d{2}-\d{2}\b/', $date_to))
             throw new Exception('Invalid date format.');
 
         if (!preg_match('/^[1-8]\-[2-8]/', $hours))
@@ -111,7 +111,7 @@ class Request extends Reserve
             ':status'       => self::REQUEST_STATUS_CODES[0]
         );
 
-        $query->execute($params);
+        return $query->execute($params);
     }
 
     /**

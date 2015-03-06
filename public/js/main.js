@@ -1,5 +1,4 @@
 /*
- *
  * MLReserver is a reservation system primarily made for making sharing items
  * easy and clear between a large group of people.
  * Copyright (C) 2015 soud

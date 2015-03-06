@@ -72,11 +72,8 @@ class ReserveController extends MainController
         if (!$this->model->get_permission('can_reserve'))
             header('Location: ' . URL . "reserve/request/$id");
 
-        if (!$this->model->get_item($id))
+        if (!($this->item = $this->model->get_item($id)))
             $this->error('Item not found.', 404);
-
-        $this->item = $this->model->get_item($id);
-        $this->title = 'Reserver - Reserve item';
 
         if (isset($_POST['reserve_item'])) {
             $user_id = $_SESSION['logged_in'];
@@ -96,17 +93,20 @@ class ReserveController extends MainController
                                $_POST['day_to']);
 
             // Formatting dates for SQL date
-            $date_to   = date('Y-m-d', strtotime($date_to));
             $date_from = date('Y-m-d', strtotime($date_from));
+            $date_to   = date('Y-m-d', strtotime($date_to));
 
             try {
                 $this->model->reserve_item($user_id, $item_id, $count, $date_from,
                                            $date_to, $hours);
+                $this->success_message = "Successfully reserved $count " . 
+                                          $this->item->name . 's.';
             } catch (Exception $e) {
                 $this->error_message = 'Failed to reserve item: ' . $e->getMessage();
             }
         }
 
+        $this->title = 'Reserver - Reserve item';
         $this->view('reserve', 'reserve');
     }
 
@@ -117,7 +117,7 @@ class ReserveController extends MainController
             return false;
         }
 
-        if (!$this->reservation = $this->model->get_reservation($id))
+        if (!($this->reservation = $this->model->get_reservation($id)))
             $this->error('Request not found.', 404);
 
         if (isset($_POST['remove_reservation'])) {

@@ -64,7 +64,7 @@ class RequestController extends MainController
             $date_format  = '%d-%d-%d';
 
             $hour  = '%d-%d';
-            $hours = sprintf($hours_format, $_POST['hours_from'], $_POST['hours_to']);
+            $hours = sprintf($hour, $_POST['hours_from'], $_POST['hours_to']);
 
             $date_from = sprintf($date_format, $_POST['year_from'], $_POST['month_from'],
                                  $_POST['day_from']);
@@ -73,8 +73,8 @@ class RequestController extends MainController
                                $_POST['day_to']);
 
             // Formatting dates for SQL date
-            $date_to   = date('Y-m-d', strtotime($date_to));
             $date_from = date('Y-m-d', strtotime($date_from));
+            $date_to   = date('Y-m-d', strtotime($date_to));
 
             try {
                 $this->model->request_item($user_id, $item_id, $count, $date_from,
@@ -108,7 +108,6 @@ class RequestController extends MainController
     {
         $this->title = 'Reserver - My requests';
         $this->view('request', 'user');
-
     }
 
     public function remove($id = null)
@@ -119,7 +118,7 @@ class RequestController extends MainController
                 return false;
             }
 
-        if (!$this->request = $this->model->get_request($id))
+        if (!($this->request = $this->model->get_request($id)))
             $this->error('Request not found.', 404);
 
         if (isset($_POST['remove_request'])) {
@@ -142,7 +141,7 @@ class RequestController extends MainController
             return false;
         }
 
-        if (!$request = $this->model->get_request($id)) {
+        if (!($request = $this->model->get_request($id))) {
             $this->error_message = "Request $id not found.";
             $this->all();
         }
@@ -157,6 +156,7 @@ class RequestController extends MainController
                                        $request->date_to, $request->hours);
 
             $this->success_message = 'Request successfully approved and reserved.';
+            $this->all();
         } catch (Exception $e) {
             $this->error_message = 'Failed to approve request: ' . $e->getMessage();
         }
@@ -181,6 +181,7 @@ class RequestController extends MainController
             // Set status to denied (2).
             $this->model->update_request_status($id, 2);
             $this->success_message = 'Request successfully denied.';
+            $this->all();
         } catch (Exception $e) {
             $this->error_message = 'Failed to deny request: ' . $e->getMessage();
         }

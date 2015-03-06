@@ -1,8 +1,8 @@
--- MySQL dump 10.15  Distrib 10.0.16-MariaDB, for Linux (x86_64)
+-- MySQL dump 10.15  Distrib 10.0.15-MariaDB, for Linux (x86_64)
 --
 -- Host: localhost    Database: reserver
 -- ------------------------------------------------------
--- Server version	10.0.16-MariaDB-log
+-- Server version	10.0.15-MariaDB
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -46,6 +46,29 @@ INSERT INTO `access_groups` VALUES (1,'student',0,1,0,0,0,0),(2,'teacher',1,0,1,
 UNLOCK TABLES;
 
 --
+-- Table structure for table `calender`
+--
+
+DROP TABLE IF EXISTS `calender`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `calender` (
+  `date` varchar(10) NOT NULL,
+  `reservation_id` int(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `calender`
+--
+
+LOCK TABLES `calender` WRITE;
+/*!40000 ALTER TABLE `calender` DISABLE KEYS */;
+INSERT INTO `calender` VALUES ('04-03-2015',52),('05-03-2015',52),('06-03-2015',52),('07-03-2015',52),('08-03-2015',52),('04-03-2015',53),('05-03-2015',53),('06-03-2015',53),('07-03-2015',53),('08-03-2015',53),('09-03-2015',53),('10-03-2015',53),('11-03-2015',54),('12-03-2015',54),('13-03-2015',54),('14-03-2015',54),('15-03-2015',54),('16-03-2015',54),('17-03-2015',54),('18-03-2015',54),('04-03-2015',55),('04-03-2015',56),('05-03-2015',56),('06-03-2015',56),('04-03-2015',57),('05-03-2015',57),('06-03-2015',57),('07-03-2015',57),('08-03-2015',57),('09-03-2015',57),('10-03-2015',57);
+/*!40000 ALTER TABLE `calender` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `items`
 --
 
@@ -83,15 +106,15 @@ CREATE TABLE `requests` (
   `id` int(1) NOT NULL AUTO_INCREMENT,
   `item_id` int(1) NOT NULL,
   `user_id` int(1) NOT NULL,
-  `requested_at` varchar(20) NOT NULL,
-  `date_from` varchar(10) NOT NULL,
-  `date_to` varchar(10) NOT NULL,
+  `requested_at` datetime NOT NULL,
+  `date_from` date NOT NULL,
+  `date_to` date NOT NULL,
   `count` int(1) NOT NULL,
   `hours` varchar(5) NOT NULL,
   `message` text NOT NULL,
   `status` int(1) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -100,7 +123,7 @@ CREATE TABLE `requests` (
 
 LOCK TABLES `requests` WRITE;
 /*!40000 ALTER TABLE `requests` DISABLE KEYS */;
-INSERT INTO `requests` VALUES (3,3,55,'22-02-2015 21:39:12','22-2-2015','22-2-2015',1,'1-2','chinese botnet',2);
+INSERT INTO `requests` VALUES (5,9,55,'2015-03-06 15:46:29','2015-03-06','2015-03-06',6,'1-2','building a chinese botnet',1);
 /*!40000 ALTER TABLE `requests` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -121,7 +144,7 @@ CREATE TABLE `reservations` (
   `count` int(1) NOT NULL,
   `hours` varchar(5) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=62 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=81 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -130,6 +153,7 @@ CREATE TABLE `reservations` (
 
 LOCK TABLES `reservations` WRITE;
 /*!40000 ALTER TABLE `reservations` DISABLE KEYS */;
+INSERT INTO `reservations` VALUES (80,9,55,'2015-03-06 15:46:50','2015-03-06','2015-03-06',6,'1-2');
 /*!40000 ALTER TABLE `reservations` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -171,4 +195,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-03-04 19:23:47
+-- Dump completed on 2015-03-06 17:09:54

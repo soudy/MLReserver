@@ -1,6 +1,5 @@
 <?php
 /*
- *
  * MLReserver is a reservation system primarily made for making sharing items
  * easy and clear between a large group of people.
  * Copyright (C) 2015 soud
@@ -201,22 +200,31 @@ class Reserve extends Model
         $dates           = $this->date_range($date_from, $date_to);
         $formatted_dates = array();
 
-        // Add quotes to dates for query to work.
+        // Add quotes and cast to date to dates for query to work.
         for ($i = 0; $i < sizeof($dates); ++$i)
-            $dates[$i] = $this->db->quote($dates[$i]);
+            $dates[$i] =  $this->db->quote($dates[$i]) .
+                          ' BETWEEN date_from AND date_to';
 
-        $formatted_dates = implode(' OR ', $dates);
+        $formatted_dates_query = implode(' OR ', $dates);
 
-        $sql = "SELECT (items.count - sum(reservations.count)) AS available_count
-                FROM reservations
-                INNER JOIN items
-                    ON items.id = reservations.item_id
-                WHERE ($formatted_dates BETWEEN $date_from AND $date_to)
-                    AND item_id = $item_id;";
+        $sql = "SELECT available_count
+                FROM (
+                    SELECT (items.count - sum(reservations.count)) AS available_count,
+                        reservations.date_from, reservations.date_to
+                    FROM reserver.reservations
+                    INNER JOIN reserver.items
+                        ON items.id = reservations.item_id
+                    WHERE item_id = $item_id
+                        AND $formatted_dates_query
+                ) reservation";
 
         $query = $this->db->query($sql);
+        $result = $query->fetch()['available_count'];
 
-        return $query->fetch()['available_count'];
+        if ($result === NULL)
+            return $this->get_item($item_id)->count;
+        else
+            return $result;
+
     }
 }
-

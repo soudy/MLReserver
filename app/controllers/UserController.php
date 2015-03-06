@@ -45,8 +45,6 @@ class UserController extends MainController
         if (isset($_SESSION['logged_in']))
             $this->error('You\'re already signed in.');
 
-        $this->title = 'Reserver - Log in';
-
         if (isset($_POST['login'])) {
             $username = $_POST['username'];
             $password = $_POST['password'];
@@ -59,6 +57,7 @@ class UserController extends MainController
             }
         }
 
+        $this->title = 'Reserver - Log in';
         $this->view('user', 'login');
     }
 
@@ -68,7 +67,6 @@ class UserController extends MainController
             header('Location: ' . URL . 'user/login');
 
         $this->user  = $this->model->get_user($_SESSION['logged_in']);
-        $this->title = 'Reserver - Settings';
 
         if (isset($_POST['change_settings'])) {
             $email                = $_POST['email'];
@@ -101,6 +99,7 @@ class UserController extends MainController
             }
         }
 
+        $this->title = 'Reserver - Settings';
         $this->view('user', 'settings');
     }
 
@@ -125,8 +124,6 @@ class UserController extends MainController
             return false;
         }
 
-        $this->title = 'Reserver - Add user';
-
         if (isset($_POST['add_user'])) {
             $full_name    = $_POST['full_name'];
             $email        = $_POST['email'];
@@ -141,6 +138,7 @@ class UserController extends MainController
             }
         }
 
+        $this->title = 'Reserver - Add user';
         $this->view('user', 'add');
     }
 
@@ -172,7 +170,6 @@ class UserController extends MainController
         }
 
         $this->user  = $this->model->get_user($uid);
-        $this->title = 'Reserver - Edit user';
 
         if (isset($_POST['edit_user'])) {
             $username     = $_POST['username'];
@@ -191,6 +188,7 @@ class UserController extends MainController
             }
         }
 
+        $this->title = 'Reserver - Edit user';
         $this->view('user', 'edit');
     }
 
@@ -209,16 +207,15 @@ class UserController extends MainController
             return false;
         }
 
-        if (!$this->user = $this->model->get_user($uid))
+        if (!($this->user = $this->model->get_user($uid)))
             $this->error('User not found.', 404);
-
-        $this->title = 'Reserver - Remove user';
 
         if (isset($_POST['remove_user'])) {
             $this->model->remove_user($uid);
             header('Location:' . URL . 'user/all');
         }
 
+        $this->title = 'Reserver - Remove user';
         $this->view('user', 'remove');
     }
 
@@ -249,8 +246,6 @@ class UserController extends MainController
 
         $uid = $_SESSION['logged_in'];
 
-        $this->title = 'Reserver - Remove account';
-
         if (!$this->user = $this->model->get_user($uid))
             $this->error('User not found.', 404);
 
@@ -266,6 +261,7 @@ class UserController extends MainController
             }
         }
 
+        $this->title = 'Reserver - Remove account';
         $this->view('user', 'remove_account');
     }
 }
