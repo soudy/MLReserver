@@ -99,8 +99,12 @@ class ReserveController extends MainController
             try {
                 $this->model->reserve_item($user_id, $item_id, $count, $date_from,
                                            $date_to, $hours);
-                $this->success_message = "Successfully reserved $count " . 
-                                          $this->item->name . 's.';
+                if ($count > 1)
+                    $this->success_message = "Successfully reserved $count " .
+                                              $this->item->name . '\'s.';
+                else
+                    $this->success_message = "Successfully reserved $count " .
+                                              $this->item->name . '.';
             } catch (Exception $e) {
                 $this->error_message = 'Failed to reserve item: ' . $e->getMessage();
             }
@@ -108,6 +112,26 @@ class ReserveController extends MainController
 
         $this->title = 'Reserver - Reserve item';
         $this->view('reserve', 'reserve');
+    }
+
+    public function calender($month = null, $year = null, $item_id = null)
+    {
+        if (!$year)
+            $year = date('Y');
+
+        if (!$month)
+            $month = date('m');
+
+        if (!$this->model->get_item($item_id))
+            $item_id = null;
+
+        $this->days_in_month = date('t', mktime(0, 0, 0, $month, 1, $year));
+        $this->year          = $year;
+        $this->month         = $month;
+        $this->item_id       = $item_id;
+
+        $this->title = 'Reserver - Calender reservations';
+        $this->view('reserve', 'calender');
     }
 
     public function remove($id)

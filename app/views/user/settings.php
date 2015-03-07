@@ -5,8 +5,8 @@
             <label for="email">Email</label>
             <input type="text" class="form-control" name="email" placeholder="Email address" value="<?= $this->user->email ?>" />
 
-            <label for="full_name">Full name</label>
-            <input type="text" class="form-control" name="full_name" placeholder="Full name" value="<?= $this->user->full_name ?>" />
+            <label for="username">Username</label>
+            <input type="text" class="form-control" name="username" placeholder="Username" value="<?= $this->user->username ?>" />
 
             <label for="send_reminders">
                 Send reminders

@@ -264,23 +264,26 @@ class User extends Model
      *
      * @return bool
      */
-    public function edit_settings($uid, $email = '', $full_name = '',
+    public function edit_settings($uid, $email = '', $username = '',
                                   $password = '', $send_reminders = '')
     {
         if (!$this->get_user($uid))
             throw new Exception('User not found.');
 
+        if ($this->check_existance('users', 'username', $username))
+            throw new Exception('Username already taken.');
+
         if (!preg_match('/^[A-Z0-9._%+=]+\@[A-Z0-9.-]+\.[A-Z]{2,4}$/i', $email))
             throw new Exception('Invalid email.');
 
-        $sql = 'UPDATE users SET email = :email, full_name = :full_name,
+        $sql = 'UPDATE users SET email = :email, username = :username,
                                  password = :password, send_reminders = :send_reminders
                              WHERE id=:uid';
 
         $query = $this->db->prepare($sql);
         $params = array(
             ':email'          => $email,
-            ':full_name'      => $full_name,
+            ':username'       => $username,
             ':password'       => $password,
             ':send_reminders' => $send_reminders,
             ':uid'            => $uid

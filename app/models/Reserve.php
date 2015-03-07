@@ -67,6 +67,9 @@ class Reserve extends Model
             !preg_match('/\b\d{4}\-\d{2}-\d{2}\b/', $date_to))
             throw new Exception('Invalid date format.');
 
+        if ($count <= 0)
+            throw new Exception('Please enter a valid count.');
+
         if (!preg_match('/^[1-8]\-[1-8]/', $hours))
             throw new Exception('Invalid hours format.');
 
@@ -123,6 +126,58 @@ class Reserve extends Model
     }
 
     /**
+     * Get the amount of items reserved at a specific date. If no $item_id is
+     * given, get all reservations on $date.
+     *
+     * @param int $item_id
+     * @param string $date
+     *
+     * @return int
+     */
+    public function get_reservation_count($item_id = null, $date = null)
+    {
+        if (!isset($item_id) && !isset($date))
+            return false;
+
+        if (!$date) {
+            $sql = 'SELECT * FROM reservations WHERE item_id = :item_id';
+
+            $query = $this->db->prepare($sql);
+            $query->execute(array('item_id' => $item_id));
+
+            return $query->rowCount();
+        }
+
+        if ($item_id)
+            $sql = 'SELECT reservation_count
+                    FROM (
+                        SELECT date_to, date_from, sum(count) AS reservation_count
+                        FROM reservations
+                        WHERE item_id = :item_id
+                        AND :date BETWEEN date_from AND date_to
+                    ) reservation';
+        else
+            $sql = 'SELECT reservation_count
+                    FROM (
+                        SELECT date_to, date_from, sum(count) AS reservation_count
+                        FROM reservations
+                        WHERE :date BETWEEN date_from AND date_to
+                    ) reservation';
+
+        $query = $this->db->prepare($sql);
+
+        if ($item_id)
+            $query->bindParam(':item_id', $item_id);
+
+        $query->bindParam(':date', $date);
+
+        $query->execute();
+        $result = $query->fetch()['reservation_count'];
+
+        return $result ? $result : 0;
+    }
+
+    /**
      * Get all dates inbetween 2 given dates
      *
      * @param string $from
@@ -165,23 +220,6 @@ class Reserve extends Model
     }
 
     /**
-     * Check if an item has been reserved.
-     *
-     * @param int $item_id
-     *
-     * @return int
-     */
-    protected function has_reservations($item_id)
-    {
-        $sql = 'SELECT * FROM reservations WHERE item_id = :item_id';
-
-        $query = $this->db->prepare($sql);
-        $query->execute(array('item_id' => $item_id));
-
-        return $query->rowCount();
-    }
-
-    /**
      * Get the amount of available items in a time period.
      * TODO: implement hours support
      *
@@ -194,7 +232,7 @@ class Reserve extends Model
      */
     protected function get_available_count($item_id, $date_from, $date_to, $hours = null)
     {
-        if (!$this->has_reservations($item_id))
+        if (!$this->get_reservation_count($item_id))
             return $this->get_item($item_id)->count;
 
         $dates           = $this->date_range($date_from, $date_to);

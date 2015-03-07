@@ -66,6 +66,9 @@ class Request extends Reserve
         if (sizeof($message) > self::MESSAGE_SIZE)
             throw new Exception('Message too long. Maximum size: ' . self::MESSAGE_SIZE);
 
+        if ($count <= 0)
+            throw new Exception('Please enter a valid count.');
+
         if (!preg_match('/\b\d{4}\-\d{2}-\d{2}\b/', $date_from) ||
             !preg_match('/\b\d{4}\-\d{2}-\d{2}\b/', $date_to))
             throw new Exception('Invalid date format.');

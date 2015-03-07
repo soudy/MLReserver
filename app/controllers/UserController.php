@@ -70,7 +70,7 @@ class UserController extends MainController
 
         if (isset($_POST['change_settings'])) {
             $email                = $_POST['email'];
-            $full_name            = $_POST['full_name'];
+            $username             = $_POST['username'];
             $current_password     = $_POST['current_password'];
             $new_password         = $_POST['new_password'];
             $confirm_new_password = $_POST['confirm_new_password'];
@@ -91,7 +91,7 @@ class UserController extends MainController
 
             try {
                 $this->model->edit_settings($this->user->id, $email,
-                                            $full_name, $password, $send_reminders);
+                                            $username, $password, $send_reminders);
                 $this->success_message = 'Settings successfully changed.';
                 /* header('Location: ' . URL . 'user/settings'); */
             } catch (Exception $e) {

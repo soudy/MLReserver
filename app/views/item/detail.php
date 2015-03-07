@@ -2,6 +2,7 @@
     <a href="#" onclick="history.go(-1);">&laquo; Back</a>
         <form id="detail" action="" method="post">
             <h1><?= $this->item->name; ?></h1>
+            Count: <strong><?= $this->item->count; ?></strong>
             <p><?= $this->item->description ?></p>
         </form>
         <?php if($this->model->get_permission('can_reserve')): ?>

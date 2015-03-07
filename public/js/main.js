@@ -71,7 +71,7 @@
             break;
 
         case 'reserve':
-            if (url[url_offset + 1] === 'all')
+            if (url[url_offset + 1] === 'all' || url[url_offset + 1] === 'calender')
                 menu_items.all_reservations.className += ' active';
             else if (url[url_offset + 1] === 'user')
                 menu_items.my_reservations.className += ' active';
