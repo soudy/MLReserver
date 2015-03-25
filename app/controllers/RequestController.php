@@ -63,8 +63,7 @@ class RequestController extends MainController
 
             $date_format  = '%d-%d-%d';
 
-            $hour  = '%d-%d';
-            $hours = sprintf($hour, $_POST['hours_from'], $_POST['hours_to']);
+            $hours = sprintf('%d-%d', $_POST['hours_from'], $_POST['hours_to']);
 
             $date_from = sprintf($date_format, $_POST['year_from'], $_POST['month_from'],
                                  $_POST['day_from']);

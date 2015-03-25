@@ -1,8 +1,8 @@
--- MySQL dump 10.15  Distrib 10.0.16-MariaDB, for Linux (x86_64)
+-- MySQL dump 10.15  Distrib 10.0.17-MariaDB, for Linux (x86_64)
 --
 -- Host: localhost    Database: reserver
 -- ------------------------------------------------------
--- Server version	10.0.16-MariaDB-log
+-- Server version	10.0.17-MariaDB-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -87,11 +87,11 @@ CREATE TABLE `requests` (
   `date_from` date NOT NULL,
   `date_to` date NOT NULL,
   `count` int(1) NOT NULL,
-  `hours` varchar(5) NOT NULL,
+  `hours` varchar(5) DEFAULT NULL,
   `message` text NOT NULL,
   `status` int(1) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -100,6 +100,7 @@ CREATE TABLE `requests` (
 
 LOCK TABLES `requests` WRITE;
 /*!40000 ALTER TABLE `requests` DISABLE KEYS */;
+INSERT INTO `requests` VALUES (9,1,2,'2015-10-10 10:00:00','2015-10-10','2015-10-11',5,NULL,'please',0);
 /*!40000 ALTER TABLE `requests` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -120,7 +121,7 @@ CREATE TABLE `reservations` (
   `count` int(1) NOT NULL,
   `hours` varchar(5) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=85 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=87 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -129,7 +130,6 @@ CREATE TABLE `reservations` (
 
 LOCK TABLES `reservations` WRITE;
 /*!40000 ALTER TABLE `reservations` DISABLE KEYS */;
-INSERT INTO `reservations` VALUES (80,9,55,'2015-03-06 15:46:50','2015-03-06','2015-03-06',6,'1-2'),(81,9,57,'2015-03-06 23:40:31','2015-03-06','2015-03-06',4,'1-2'),(83,9,57,'2015-03-07 00:12:23','2015-09-07','2015-09-17',5,NULL),(84,5,57,'2015-03-07 00:16:30','2015-09-07','2015-09-15',4,NULL);
 /*!40000 ALTER TABLE `reservations` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -171,4 +171,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-03-07  1:46:54
+-- Dump completed on 2015-03-25 10:00:26

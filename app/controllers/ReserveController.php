@@ -83,8 +83,7 @@ class ReserveController extends MainController
             $date_format = '%d-%d-%d';
 
             // Concatenating dates
-            $hours = '%d-%d';
-            $hours = sprintf($hours, $_POST['hours_from'], $_POST['hours_to']);
+            $hours = sprintf('%d-%d', $_POST['hours_from'], $_POST['hours_to']);
 
             $date_from = sprintf($date_format, $_POST['year_from'], $_POST['month_from'],
                                  $_POST['day_from']);
